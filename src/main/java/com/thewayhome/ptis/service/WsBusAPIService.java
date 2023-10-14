@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.service;
 
-import com.thewayhome.ptis.vo.wsbus.getstationbynamelist.IServiceResult;
+import com.thewayhome.ptis.vo.wsbus.IServiceResult;
 import com.thewayhome.ptis.vo.wsbus.getstationbynamelist.ServiceResultErrorVoImpl;
 import com.thewayhome.ptis.vo.wsbus.getstationbynamelist.ServiceResultNormalVoImpl;
 import io.netty.channel.ChannelOption;
@@ -20,8 +20,6 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.ZonedDateTime;

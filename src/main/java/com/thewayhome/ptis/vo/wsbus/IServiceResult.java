@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.vo.wsbus.getstationbynamelist;
+package com.thewayhome.ptis.vo.wsbus;
 
 public interface IServiceResult {
     IMsgHeader getMsgHeader();

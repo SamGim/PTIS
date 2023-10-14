@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.controller;
 
 import com.thewayhome.ptis.service.WsBusAPIService;
-import com.thewayhome.ptis.vo.wsbus.getstationbynamelist.IServiceResult;
+import com.thewayhome.ptis.vo.wsbus.IServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

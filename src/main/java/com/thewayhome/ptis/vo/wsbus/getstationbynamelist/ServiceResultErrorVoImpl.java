@@ -1,5 +1,7 @@
 package com.thewayhome.ptis.vo.wsbus.getstationbynamelist;
 
+import com.thewayhome.ptis.vo.wsbus.IMsgHeader;
+import com.thewayhome.ptis.vo.wsbus.IServiceResult;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
