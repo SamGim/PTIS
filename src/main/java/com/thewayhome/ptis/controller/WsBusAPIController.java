@@ -19,10 +19,6 @@ public class WsBusAPIController {
 
     @GetMapping(name="getStationByNameList", path="station")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
-        try {
-            return wsBusAPIService.getStationByNameList(stationName);
-        } catch (UnsupportedEncodingException | MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+        return wsBusAPIService.getStationByNameList(stationName);
     }
 }

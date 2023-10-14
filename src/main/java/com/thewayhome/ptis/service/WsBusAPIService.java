@@ -44,7 +44,7 @@ public class WsBusAPIService {
         this.pathOfGetStationByNameList = pathOfGetStationByNameList;
     }
 
-    public Mono<IServiceResult> getStationByNameList(String stationName) throws UnsupportedEncodingException, MalformedURLException {
+    public Mono<IServiceResult> getStationByNameList(String stationName) {
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                 .responseTimeout(Duration.ofMillis(5000))
