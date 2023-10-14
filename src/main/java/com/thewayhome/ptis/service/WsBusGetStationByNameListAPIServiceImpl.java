@@ -13,12 +13,12 @@ public class WsBusGetStationByNameListAPIServiceImpl extends AbstractWsBusAPISer
     public WsBusGetStationByNameListAPIServiceImpl(
             @Value("${openapi.arrinfo.bus.endpoint}") String endpoint,
             @Value("${openapi.data-gov.key.decoding}") String apiKey,
-            @Value("${openapi.arrinfo.bus.path.getstationbyname}") String path
+            @Value("${openapi.arrinfo.bus.path.getstationbynamelist}") String path
     ) {
-        super(apiKey, endpoint, path, GetStationByNameAPINrmRespVoImpl.class, CommAPIErrRespVoImpl.class);
+        super(apiKey, endpoint, path, GetStationByNameListAPINrmRespVoImpl.class, CommAPIErrRespVoImpl.class);
     }
 
-    public Mono<IServiceResult> getStationByNameList(@Valid GetStationByNameAPIReqVo req) {
+    public Mono<IServiceResult> getStationByNameList(@Valid GetStationByNameListAPIReqVo req) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("stSrch", req.getStSrch());
 

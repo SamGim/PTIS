@@ -4,10 +4,9 @@ import com.thewayhome.ptis.service.WsBusGetRouteByStationAPIServiceImpl;
 import com.thewayhome.ptis.service.WsBusGetStationByNameListAPIServiceImpl;
 import com.thewayhome.ptis.service.WsBusGetStationByUidAPIServiceImpl;
 import com.thewayhome.ptis.vo.wsbus.GetRouteByStationAPIReqVo;
-import com.thewayhome.ptis.vo.wsbus.GetStationByNameAPIReqVo;
+import com.thewayhome.ptis.vo.wsbus.GetStationByNameListAPIReqVo;
 import com.thewayhome.ptis.vo.wsbus.GetStationByUidAPIReqVo;
 import com.thewayhome.ptis.vo.wsbus.IServiceResult;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +26,7 @@ public class WsBusAPIController {
     @GetMapping(name="getStationByNameList", path="stationByName")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
         return wsBusGetStationByNameListAPIService.getStationByNameList(
-                GetStationByNameAPIReqVo.builder()
+                GetStationByNameListAPIReqVo.builder()
                         .stSrch(stationName)
                         .build()
         );
