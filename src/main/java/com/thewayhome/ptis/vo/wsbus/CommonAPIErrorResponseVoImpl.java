@@ -1,7 +1,5 @@
-package com.thewayhome.ptis.vo.wsbus.getstationbyuid;
+package com.thewayhome.ptis.vo.wsbus;
 
-import com.thewayhome.ptis.vo.wsbus.IMsgHeader;
-import com.thewayhome.ptis.vo.wsbus.IServiceResult;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
@@ -10,7 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @XmlRootElement(name = "ServiceResult")
-public class ServiceResultErrorVoImpl implements IServiceResult {
+public class CommonAPIErrorResponseVoImpl implements IServiceResult {
 
     @XmlElement(name = "msgHeader")
     private MsgHeaderImpl msgHeader;

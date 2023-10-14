@@ -1,8 +1,8 @@
 package com.thewayhome.ptis.service;
 
 import com.thewayhome.ptis.vo.wsbus.IServiceResult;
-import com.thewayhome.ptis.vo.wsbus.getroutebystation.ServiceResultErrorVoImpl;
-import com.thewayhome.ptis.vo.wsbus.getroutebystation.ServiceResultNormalVoImpl;
+import com.thewayhome.ptis.vo.wsbus.GetRouteByStationAPINormalResponseVoImpl;
+import com.thewayhome.ptis.vo.wsbus.CommonAPIErrorResponseVoImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,7 +16,7 @@ public class WsBusGetRouteByStationAPIServiceImpl extends AbstractWsBusAPIServic
             @Value("${openapi.data-gov.key.decoding}") String apiKey,
             @Value("${openapi.arrinfo.bus.path.getroutebystation}") String path
     ) {
-        super(apiKey, endpoint, path, ServiceResultNormalVoImpl.class, ServiceResultErrorVoImpl.class);
+        super(apiKey, endpoint, path, GetRouteByStationAPINormalResponseVoImpl.class, CommonAPIErrorResponseVoImpl.class);
     }
 
     public Mono<IServiceResult> getRouteByStation(String arsId) {
