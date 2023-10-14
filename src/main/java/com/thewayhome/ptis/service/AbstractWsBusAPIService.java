@@ -45,7 +45,7 @@ public abstract class AbstractWsBusAPIService {
 
     }
 
-    public Mono<IServiceResult> getDataFromOpenAPI(MultiValueMap<String, String> queryParams) {
+    protected Mono<IServiceResult> getDataFromOpenAPI(MultiValueMap<String, String> queryParams) {
         queryParams.add("serviceKey", this.apiKey);
 
         HttpClient httpClient = HttpClient.create()
