@@ -1,9 +1,9 @@
 package com.thewayhome.ptis.controller;
 
-import com.thewayhome.ptis.service.WsBusGetRouteByStationAPIServiceImpl;
+import com.thewayhome.ptis.service.WsBusGetRouteByStationListAPIServiceImpl;
 import com.thewayhome.ptis.service.WsBusGetStationByNameListAPIServiceImpl;
 import com.thewayhome.ptis.service.WsBusGetStationByUidItemAPIServiceImpl;
-import com.thewayhome.ptis.vo.wsbus.GetRouteByStationAPIReqVo;
+import com.thewayhome.ptis.vo.wsbus.GetRouteByStationListAPIReqVo;
 import com.thewayhome.ptis.vo.wsbus.GetStationByNameListAPIReqVo;
 import com.thewayhome.ptis.vo.wsbus.GetStationByUidItemAPIReqVo;
 import com.thewayhome.ptis.vo.wsbus.IServiceResult;
@@ -21,7 +21,7 @@ public class WsBusAPIController {
     @Autowired
     private WsBusGetStationByUidItemAPIServiceImpl wsBusGetStationByUidAPIService;
     @Autowired
-    private WsBusGetRouteByStationAPIServiceImpl wsBusGetRouteByStationAPIService;
+    private WsBusGetRouteByStationListAPIServiceImpl wsBusGetRouteByStationAPIService;
 
     @GetMapping(name="getStationByNameList", path="stationByName")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
@@ -43,8 +43,8 @@ public class WsBusAPIController {
 
     @GetMapping(name="getRouteByStation", path="routeByUid")
     public Mono<IServiceResult> getRouteByStation(@RequestParam String arsId) {
-        return wsBusGetRouteByStationAPIService.getRouteByStation(
-                GetRouteByStationAPIReqVo.builder()
+        return wsBusGetRouteByStationAPIService.getRouteByStationList(
+                GetRouteByStationListAPIReqVo.builder()
                         .arsId(arsId)
                         .build()
         );
