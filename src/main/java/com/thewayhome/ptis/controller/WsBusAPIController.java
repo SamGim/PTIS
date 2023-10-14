@@ -17,7 +17,7 @@ public class WsBusAPIController {
     @Autowired
     private WsBusAPIService wsBusAPIService;
 
-    @GetMapping(name="getStationByNameList", path="station")
+    @GetMapping(name="getStationByNameList", path="stationByName")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
         return wsBusAPIService.getStationByNameList(stationName);
     }
