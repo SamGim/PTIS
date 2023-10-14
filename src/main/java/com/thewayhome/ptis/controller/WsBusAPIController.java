@@ -19,11 +19,11 @@ public class WsBusAPIController {
     @Autowired
     private WsBusGetStationByNameListAPIServiceImpl wsBusGetStationByNameListAPIService;
     @Autowired
-    private WsBusGetStationByUidItemAPIServiceImpl wsBusGetStationByUidAPIService;
+    private WsBusGetStationByUidItemAPIServiceImpl wsBusGetStationByUidItemAPIService;
     @Autowired
-    private WsBusGetRouteByStationListAPIServiceImpl wsBusGetRouteByStationAPIService;
+    private WsBusGetRouteByStationListAPIServiceImpl wsBusGetRouteByStationListAPIService;
 
-    @GetMapping(name="getStationByNameList", path="stationByName")
+    @GetMapping(name="getStationByNameList", path="getStationByNameList")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
         return wsBusGetStationByNameListAPIService.getStationByNameList(
                 GetStationByNameListAPIReqVo.builder()
@@ -32,18 +32,18 @@ public class WsBusAPIController {
         );
     }
 
-    @GetMapping(name="getStationByUid", path="stationByUid")
-    public Mono<IServiceResult> getStationByUid(@RequestParam String arsId) {
-        return wsBusGetStationByUidAPIService.getStationByUidItem(
+    @GetMapping(name="getStationByUidItem", path="getStationByUidItem")
+    public Mono<IServiceResult> getStationByUidItem(@RequestParam String arsId) {
+        return wsBusGetStationByUidItemAPIService.getStationByUidItem(
                 GetStationByUidItemAPIReqVo.builder()
                         .arsId(arsId)
                         .build()
         );
     }
 
-    @GetMapping(name="getRouteByStation", path="routeByUid")
-    public Mono<IServiceResult> getRouteByStation(@RequestParam String arsId) {
-        return wsBusGetRouteByStationAPIService.getRouteByStationList(
+    @GetMapping(name="getRouteByStationList", path="getRouteByStationList")
+    public Mono<IServiceResult> getRouteByStationList(@RequestParam String arsId) {
+        return wsBusGetRouteByStationListAPIService.getRouteByStationList(
                 GetRouteByStationListAPIReqVo.builder()
                         .arsId(arsId)
                         .build()
