@@ -30,17 +30,20 @@ public class WsBusAPIService {
     private final String endpoint;
     private final String pathOfGetStationByNameList;
     private final String pathOfGetStationByUid;
+    private final String pathOfGetRouteByStation;
 
     public WsBusAPIService(
             @Value("${openapi.arrinfo.bus.endpoint}") String endpoint,
             @Value("${openapi.data-gov.key.decoding}") String apiKey,
             @Value("${openapi.arrinfo.bus.path.getstationbyname}") String pathOfGetStationByNameList,
-            @Value("${openapi.arrinfo.bus.path.getstationbyuid}") String pathOfGetStationByUid
+            @Value("${openapi.arrinfo.bus.path.getstationbyuid}") String pathOfGetStationByUid,
+            @Value("${openapi.arrinfo.bus.path.getroutebystation}") String pathOfGetRouteByStation
     ) {
         this.endpoint = endpoint;
         this.apiKey = apiKey;
         this.pathOfGetStationByNameList = pathOfGetStationByNameList;
         this.pathOfGetStationByUid = pathOfGetStationByUid;
+        this.pathOfGetRouteByStation = pathOfGetRouteByStation;
     }
 
     public Mono<IServiceResult> getStationByNameList(String stationName) {
@@ -163,6 +166,73 @@ public class WsBusAPIService {
                                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                                 StringReader reader = new StringReader(errorBody.getMessage());
                                 IServiceResult result = (com.thewayhome.ptis.vo.wsbus.getstationbyuid.ServiceResultErrorVoImpl) unmarshaller.unmarshal(reader);
+
+                                return Mono.just(result);
+                            } catch (JAXBException e) {
+                                return Mono.error(new RuntimeException("XML 언마셜링 실패: " + e.getMessage(), e));
+                            }
+                        });
+            } else if (response.statusCode().is4xxClientError()) {
+                return Mono.error(new RuntimeException("클라이언트 에러: " + response.statusCode()));
+            } else {
+                return Mono.error(new RuntimeException("서버 에러: " + response.statusCode()));
+            }
+        });
+    }
+
+    public Mono<IServiceResult> getRouteByStation(String arsId) {
+        HttpClient httpClient = HttpClient.create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+                .responseTimeout(Duration.ofMillis(5000))
+                .doOnConnected(conn -> conn
+                        .addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS))
+                        .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS))
+                );
+
+        WebClient client = WebClient.builder()
+                .baseUrl(endpoint)
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .build();
+
+        WebClient.UriSpec<WebClient.RequestBodySpec> uriSpec = client.method(HttpMethod.GET);
+
+        WebClient.RequestBodySpec bodySpec = uriSpec.uri(uriBuilder -> uriBuilder
+                .path(pathOfGetRouteByStation)
+                .queryParam("serviceKey", apiKey)
+                .queryParam("arsId", arsId)
+                .build()
+        );
+
+        WebClient.ResponseSpec responseSpec = bodySpec
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
+                .acceptCharset(StandardCharsets.UTF_8)
+                .ifNoneMatch("*")
+                .ifModifiedSince(ZonedDateTime.now())
+                .retrieve();
+
+        return bodySpec.exchangeToMono(response -> {
+            if (response.statusCode().is2xxSuccessful()) {
+                return response
+                        .bodyToMono(String.class)
+                        .flatMap(body -> {
+                            try {
+                                JAXBContext jaxbContext = JAXBContext.newInstance(com.thewayhome.ptis.vo.wsbus.getroutebystation.ServiceResultNormalVoImpl.class);
+                                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                                StringReader reader = new StringReader(body);
+                                IServiceResult result = (com.thewayhome.ptis.vo.wsbus.getroutebystation.ServiceResultNormalVoImpl) unmarshaller.unmarshal(reader);
+
+                                return Mono.just(result);
+                            } catch (JAXBException e) {
+                                return Mono.error(new RuntimeException(body));
+                            }
+                        })
+                        .onErrorResume(errorBody -> {
+                            try {
+                                JAXBContext jaxbContext = JAXBContext.newInstance(com.thewayhome.ptis.vo.wsbus.getroutebystation.ServiceResultErrorVoImpl.class);
+                                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                                StringReader reader = new StringReader(errorBody.getMessage());
+                                IServiceResult result = (com.thewayhome.ptis.vo.wsbus.getroutebystation.ServiceResultErrorVoImpl) unmarshaller.unmarshal(reader);
 
                                 return Mono.just(result);
                             } catch (JAXBException e) {

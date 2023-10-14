@@ -23,4 +23,9 @@ public class WsBusAPIController {
     public Mono<IServiceResult> getStationByUid(@RequestParam String arsId) {
         return wsBusAPIService.getStationByUid(arsId);
     }
+
+    @GetMapping(name="getRouteByStation", path="routeByUid")
+    public Mono<IServiceResult> getRouteByStation(@RequestParam String arsId) {
+        return wsBusAPIService.getRouteByStation(arsId);
+    }
 }
