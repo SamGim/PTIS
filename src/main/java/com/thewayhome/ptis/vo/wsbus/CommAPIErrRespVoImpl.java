@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @XmlRootElement(name = "ServiceResult")
-public class CommonAPIErrorResponseVoImpl implements IServiceResult {
+public class CommAPIErrRespVoImpl implements IServiceResult {
 
     @XmlElement(name = "msgHeader")
     private MsgHeaderImpl msgHeader;

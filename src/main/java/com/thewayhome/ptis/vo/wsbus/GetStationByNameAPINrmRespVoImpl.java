@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @ToString
 @XmlRootElement(name = "ServiceResult")
-public class GetStationByNameAPINormalResponseVoImpl implements IServiceResult {
+public class GetStationByNameAPINrmRespVoImpl implements IServiceResult {
 
     @XmlElement(name = "msgHeader")
     private MsgHeaderImpl msgHeader;
