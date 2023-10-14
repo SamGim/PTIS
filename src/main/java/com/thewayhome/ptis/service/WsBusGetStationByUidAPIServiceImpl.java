@@ -1,8 +1,7 @@
 package com.thewayhome.ptis.service;
 
-import com.thewayhome.ptis.vo.wsbus.IServiceResult;
-import com.thewayhome.ptis.vo.wsbus.GetStationByUidAPINrmRespVoImpl;
-import com.thewayhome.ptis.vo.wsbus.CommAPIErrRespVoImpl;
+import com.thewayhome.ptis.vo.wsbus.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,9 +18,9 @@ public class WsBusGetStationByUidAPIServiceImpl extends AbstractWsBusAPIService 
         super(apiKey, endpoint, path, GetStationByUidAPINrmRespVoImpl.class, CommAPIErrRespVoImpl.class);
     }
 
-    public Mono<IServiceResult> getStationByUid(String arsId) {
+    public Mono<IServiceResult> getStationByUid(@Valid GetStationByUidAPIReqVo req) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("arsId", arsId);
+        queryParams.add("arsId", req.getArsId());
 
         return this.getDataFromOpenAPI(queryParams);
     }
