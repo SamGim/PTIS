@@ -1,9 +1,6 @@
 package com.thewayhome.ptis.controller;
 
-import com.thewayhome.ptis.service.WsBusGetBustimeByStationListAPIServiceImpl;
-import com.thewayhome.ptis.service.WsBusGetRouteByStationListAPIServiceImpl;
-import com.thewayhome.ptis.service.WsBusGetStationByNameListAPIServiceImpl;
-import com.thewayhome.ptis.service.WsBusGetStationByUidItemAPIServiceImpl;
+import com.thewayhome.ptis.service.*;
 import com.thewayhome.ptis.vo.wsbus.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +19,8 @@ public class WsBusAPIController {
     private WsBusGetRouteByStationListAPIServiceImpl wsBusGetRouteByStationListAPIService;
     @Autowired
     private WsBusGetBustimeByStationListAPIServiceImpl wsBusGetBustimeByStationListAPIService;
+    @Autowired
+    private WsBusGetStationsByPosListAPIServiceImpl wsBusGetStationsByPosListAPIService;
 
     @GetMapping(name="getStationByNameList", path="getStationByNameList")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
@@ -59,6 +58,21 @@ public class WsBusAPIController {
                 GetBustimeByStationListAPIReqVo.builder()
                         .arsId(arsId)
                         .busRouteId(busRouteId)
+                        .build()
+        );
+    }
+
+    @GetMapping(name="getStationsByPosList", path="getStationsByPosList")
+    public Mono<IServiceResult> getStationsByPosList(
+            @RequestParam String tmX,
+            @RequestParam String tmY,
+            @RequestParam String radius
+    ) {
+        return wsBusGetStationsByPosListAPIService.getStationsByPosList(
+                GetStationsByPosListAPIReqVo.builder()
+                        .tmX(tmX)
+                        .tmY(tmY)
+                        .radius(radius)
                         .build()
         );
     }
