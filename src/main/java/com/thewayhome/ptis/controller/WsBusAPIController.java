@@ -1,12 +1,10 @@
 package com.thewayhome.ptis.controller;
 
+import com.thewayhome.ptis.service.WsBusGetBustimeByStationListAPIServiceImpl;
 import com.thewayhome.ptis.service.WsBusGetRouteByStationListAPIServiceImpl;
 import com.thewayhome.ptis.service.WsBusGetStationByNameListAPIServiceImpl;
 import com.thewayhome.ptis.service.WsBusGetStationByUidItemAPIServiceImpl;
-import com.thewayhome.ptis.vo.wsbus.GetRouteByStationListAPIReqVo;
-import com.thewayhome.ptis.vo.wsbus.GetStationByNameListAPIReqVo;
-import com.thewayhome.ptis.vo.wsbus.GetStationByUidItemAPIReqVo;
-import com.thewayhome.ptis.vo.wsbus.IServiceResult;
+import com.thewayhome.ptis.vo.wsbus.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +20,8 @@ public class WsBusAPIController {
     private WsBusGetStationByUidItemAPIServiceImpl wsBusGetStationByUidItemAPIService;
     @Autowired
     private WsBusGetRouteByStationListAPIServiceImpl wsBusGetRouteByStationListAPIService;
+    @Autowired
+    private WsBusGetBustimeByStationListAPIServiceImpl wsBusGetBustimeByStationListAPIService;
 
     @GetMapping(name="getStationByNameList", path="getStationByNameList")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
@@ -46,6 +46,19 @@ public class WsBusAPIController {
         return wsBusGetRouteByStationListAPIService.getRouteByStationList(
                 GetRouteByStationListAPIReqVo.builder()
                         .arsId(arsId)
+                        .build()
+        );
+    }
+
+    @GetMapping(name="getBustimeByStationList", path="getBustimeByStationList")
+    public Mono<IServiceResult> getBustimeByStationList(
+            @RequestParam String arsId,
+            @RequestParam String busRouteId
+    ) {
+        return wsBusGetBustimeByStationListAPIService.getBustimeByStationList(
+                GetBustimeByStationListAPIReqVo.builder()
+                        .arsId(arsId)
+                        .busRouteId(busRouteId)
                         .build()
         );
     }
