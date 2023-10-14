@@ -9,16 +9,16 @@ import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
 
 @Service
-public class WsBusGetStationByUidAPIServiceImpl extends AbstractWsBusAPIService {
-    public WsBusGetStationByUidAPIServiceImpl(
+public class WsBusGetStationByUidItemAPIServiceImpl extends AbstractWsBusAPIService {
+    public WsBusGetStationByUidItemAPIServiceImpl(
             @Value("${openapi.arrinfo.bus.endpoint}") String endpoint,
             @Value("${openapi.data-gov.key.decoding}") String apiKey,
-            @Value("${openapi.arrinfo.bus.path.getstationbyuid}") String path
+            @Value("${openapi.arrinfo.bus.path.getstationbyuiditem}") String path
     ) {
-        super(apiKey, endpoint, path, GetStationByUidAPINrmRespVoImpl.class, CommAPIErrRespVoImpl.class);
+        super(apiKey, endpoint, path, GetStationByUidItemAPINrmRespVoImpl.class, CommAPIErrRespVoImpl.class);
     }
 
-    public Mono<IServiceResult> getStationByUid(@Valid GetStationByUidAPIReqVo req) {
+    public Mono<IServiceResult> getStationByUidItem(@Valid GetStationByUidItemAPIReqVo req) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("arsId", req.getArsId());
 

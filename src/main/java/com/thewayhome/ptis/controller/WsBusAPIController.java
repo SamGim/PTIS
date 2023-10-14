@@ -2,10 +2,10 @@ package com.thewayhome.ptis.controller;
 
 import com.thewayhome.ptis.service.WsBusGetRouteByStationAPIServiceImpl;
 import com.thewayhome.ptis.service.WsBusGetStationByNameListAPIServiceImpl;
-import com.thewayhome.ptis.service.WsBusGetStationByUidAPIServiceImpl;
+import com.thewayhome.ptis.service.WsBusGetStationByUidItemAPIServiceImpl;
 import com.thewayhome.ptis.vo.wsbus.GetRouteByStationAPIReqVo;
 import com.thewayhome.ptis.vo.wsbus.GetStationByNameListAPIReqVo;
-import com.thewayhome.ptis.vo.wsbus.GetStationByUidAPIReqVo;
+import com.thewayhome.ptis.vo.wsbus.GetStationByUidItemAPIReqVo;
 import com.thewayhome.ptis.vo.wsbus.IServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class WsBusAPIController {
     @Autowired
     private WsBusGetStationByNameListAPIServiceImpl wsBusGetStationByNameListAPIService;
     @Autowired
-    private WsBusGetStationByUidAPIServiceImpl wsBusGetStationByUidAPIService;
+    private WsBusGetStationByUidItemAPIServiceImpl wsBusGetStationByUidAPIService;
     @Autowired
     private WsBusGetRouteByStationAPIServiceImpl wsBusGetRouteByStationAPIService;
 
@@ -34,8 +34,8 @@ public class WsBusAPIController {
 
     @GetMapping(name="getStationByUid", path="stationByUid")
     public Mono<IServiceResult> getStationByUid(@RequestParam String arsId) {
-        return wsBusGetStationByUidAPIService.getStationByUid(
-                GetStationByUidAPIReqVo.builder()
+        return wsBusGetStationByUidAPIService.getStationByUidItem(
+                GetStationByUidItemAPIReqVo.builder()
                         .arsId(arsId)
                         .build()
         );
