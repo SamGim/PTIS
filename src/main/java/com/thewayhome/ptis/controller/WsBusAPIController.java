@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-
 @RestController
 public class WsBusAPIController {
 
@@ -20,5 +17,10 @@ public class WsBusAPIController {
     @GetMapping(name="getStationByNameList", path="stationByName")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
         return wsBusAPIService.getStationByNameList(stationName);
+    }
+
+    @GetMapping(name="getStationByUid", path="stationByUid")
+    public Mono<IServiceResult> getStationByUid(@RequestParam String arsId) {
+        return wsBusAPIService.getStationByUid(arsId);
     }
 }
