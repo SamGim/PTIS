@@ -1,6 +1,8 @@
 package com.thewayhome.ptis.controller;
 
-import com.thewayhome.ptis.service.WsBusAPIService;
+import com.thewayhome.ptis.service.WsBusGetRouteByStationAPIServiceImpl;
+import com.thewayhome.ptis.service.WsBusGetStationByNameListAPIServiceImpl;
+import com.thewayhome.ptis.service.WsBusGetStationByUidAPIServiceImpl;
 import com.thewayhome.ptis.vo.wsbus.IServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,20 +14,24 @@ import reactor.core.publisher.Mono;
 public class WsBusAPIController {
 
     @Autowired
-    private WsBusAPIService wsBusAPIService;
+    private WsBusGetStationByNameListAPIServiceImpl wsBusGetStationByNameListAPIService;
+    @Autowired
+    private WsBusGetStationByUidAPIServiceImpl wsBusGetStationByUidAPIService;
+    @Autowired
+    private WsBusGetRouteByStationAPIServiceImpl wsBusGetRouteByStationAPIService;
 
     @GetMapping(name="getStationByNameList", path="stationByName")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
-        return wsBusAPIService.getStationByNameList(stationName);
+        return wsBusGetStationByNameListAPIService.getStationByNameList(stationName);
     }
 
     @GetMapping(name="getStationByUid", path="stationByUid")
     public Mono<IServiceResult> getStationByUid(@RequestParam String arsId) {
-        return wsBusAPIService.getStationByUid(arsId);
+        return wsBusGetStationByUidAPIService.getStationByUid(arsId);
     }
 
     @GetMapping(name="getRouteByStation", path="routeByUid")
     public Mono<IServiceResult> getRouteByStation(@RequestParam String arsId) {
-        return wsBusAPIService.getRouteByStation(arsId);
+        return wsBusGetRouteByStationAPIService.getRouteByStation(arsId);
     }
 }
