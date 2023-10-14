@@ -1,6 +1,8 @@
 package com.thewayhome.ptis.service;
 
-import com.thewayhome.ptis.vo.*;
+import com.thewayhome.ptis.vo.wsbus.getstationbynamelist.IServiceResult;
+import com.thewayhome.ptis.vo.wsbus.getstationbynamelist.ServiceResultErrorVoImpl;
+import com.thewayhome.ptis.vo.wsbus.getstationbynamelist.ServiceResultNormalVoImpl;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -10,11 +12,9 @@ import jakarta.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -25,19 +25,16 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class MainService {
+public class WsBusAPIService {
 
     private final String apiKey;
     private final String endpoint;
     private final String pathOfGetStationByNameList;
 
-    public MainService(
+    public WsBusAPIService(
             @Value("${openapi.arrinfo.bus.endpoint}") String endpoint,
             @Value("${openapi.data-gov.key.decoding}") String apiKey,
             @Value("${openapi.arrinfo.bus.path.getstationbyname}") String pathOfGetStationByNameList
