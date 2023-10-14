@@ -15,7 +15,7 @@ public class WsBusGetStationByNameListAPIServiceImpl extends AbstractWsBusAPISer
             @Value("${openapi.data-gov.key.decoding}") String apiKey,
             @Value("${openapi.arrinfo.bus.path.getstationbyname}") String path
     ) {
-        super(apiKey, endpoint, path, GetStationByUidAPINrmRespVoImpl.class, CommAPIErrRespVoImpl.class);
+        super(apiKey, endpoint, path, GetStationByNameAPINrmRespVoImpl.class, CommAPIErrRespVoImpl.class);
     }
 
     public Mono<IServiceResult> getStationByNameList(@Valid GetStationByNameAPIReqVo req) {
