@@ -79,10 +79,10 @@ public class WsBusAPIService {
                         .bodyToMono(String.class)
                         .flatMap(body -> {
                             try {
-                                JAXBContext jaxbContext = JAXBContext.newInstance(ServiceResultNormalVoImpl.class);
+                                JAXBContext jaxbContext = JAXBContext.newInstance(com.thewayhome.ptis.vo.wsbus.getstationbynamelist.ServiceResultNormalVoImpl.class);
                                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                                 StringReader reader = new StringReader(body);
-                                IServiceResult result = (ServiceResultNormalVoImpl) unmarshaller.unmarshal(reader);
+                                IServiceResult result = (com.thewayhome.ptis.vo.wsbus.getstationbynamelist.ServiceResultNormalVoImpl) unmarshaller.unmarshal(reader);
 
                                 return Mono.just(result);
                             } catch (JAXBException e) {
@@ -91,10 +91,10 @@ public class WsBusAPIService {
                         })
                         .onErrorResume(errorBody -> {
                             try {
-                                JAXBContext jaxbContext = JAXBContext.newInstance(ServiceResultErrorVoImpl.class);
+                                JAXBContext jaxbContext = JAXBContext.newInstance(com.thewayhome.ptis.vo.wsbus.getstationbynamelist.ServiceResultErrorVoImpl.class);
                                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                                 StringReader reader = new StringReader(errorBody.getMessage());
-                                IServiceResult result = (ServiceResultNormalVoImpl) unmarshaller.unmarshal(reader);
+                                IServiceResult result = (com.thewayhome.ptis.vo.wsbus.getstationbynamelist.ServiceResultErrorVoImpl) unmarshaller.unmarshal(reader);
 
                                 return Mono.just(result);
                             } catch (JAXBException e) {
