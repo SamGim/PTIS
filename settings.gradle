@@ -1,1 +1,4 @@
 rootProject.name = 'ptis'
+//include('ptis-core')
+include('ptis-api')
+//include('ptis-batch')
