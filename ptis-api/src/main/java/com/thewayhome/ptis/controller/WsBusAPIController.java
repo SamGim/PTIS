@@ -107,4 +107,18 @@ public class WsBusAPIController {
                         .build()
         );
     }
+
+    @GetMapping(name="getRoutePathList", path="getRoutePathList")
+    public Mono<IServiceResult> getRoutePathList(
+            @RequestParam String busRouteId
+    ) {
+        return wsBusGetRoutePathListAPIService.getRoutePathList(
+                GetRoutePathListAPIReqVo.builder()
+                        .busRouteId(busRouteId)
+                        .build()
+        );
+    }
+
+
+
 }
