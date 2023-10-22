@@ -96,4 +96,15 @@ public class WsBusAPIController {
                         .build()
         );
     }
+
+    @GetMapping(name="getRouteInfoItem", path="getRouteInfoItem")
+    public Mono<IServiceResult> getRouteInfoItem(
+            @RequestParam String busRouteId
+    ) {
+        return wsBusGetRouteInfoItemAPIService.getRouteInfoItem(
+                GetRouteInfoItemAPIReqVo.builder()
+                        .busRouteId(busRouteId)
+                        .build()
+        );
+    }
 }
