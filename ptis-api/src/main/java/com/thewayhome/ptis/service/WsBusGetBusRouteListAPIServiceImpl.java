@@ -16,7 +16,7 @@ public class WsBusGetBusRouteListAPIServiceImpl extends AbstractWsBusAPIService 
         super(apiKey, endpoint, path, GetBusRouteListAPINrmRespVoImpl.class, CommAPIErrRespVoImpl.class);
     }
 
-    public Mono<IServiceResult> getDataFromOpenAPI(@Valid GetBusRouteListAPIReqVo req) {
+    public Mono<IServiceResult> getBusRouteList(@Valid GetBusRouteListAPIReqVo req) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("strSrch", req.getBusRouteNo());
 
