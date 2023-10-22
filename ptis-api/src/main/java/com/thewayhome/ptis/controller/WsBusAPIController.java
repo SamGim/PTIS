@@ -21,6 +21,15 @@ public class WsBusAPIController {
     private WsBusGetBustimeByStationListAPIServiceImpl wsBusGetBustimeByStationListAPIService;
     @Autowired
     private WsBusGetStationsByPosListAPIServiceImpl wsBusGetStationsByPosListAPIService;
+    @Autowired
+    private WsBusGetStationsByRouteListAPIServiceImpl wsBusGetStationsByRouteListAPIService;
+    @Autowired
+    private WsBusGetRouteInfoItemAPIServiceImpl wsBusGetRouteInfoItemAPIService;
+    @Autowired
+    private WsBusGetRoutePathListAPIServiceImpl wsBusGetRoutePathListAPIService;
+    @Autowired
+    private WsBusGetBusRouteListAPIServiceImpl wsBusGetBusRouteListAPIService;
+
 
     @GetMapping(name="getStationByNameList", path="getStationByNameList")
     public Mono<IServiceResult> getStationByNameList(@RequestParam String stationName) {
@@ -73,6 +82,17 @@ public class WsBusAPIController {
                         .tmX(tmX)
                         .tmY(tmY)
                         .radius(radius)
+                        .build()
+        );
+    }
+
+    @GetMapping(name="getStationsByRouteList", path="getStationsByRouteList")
+    public Mono<IServiceResult> getStationsByRouteList(
+            @RequestParam String busRouteId
+    ) {
+        return wsBusGetStationsByRouteListAPIService.getStationsByRouteList(
+                GetStationsByRouteListAPIReqVo.builder()
+                        .busRouteId(busRouteId)
                         .build()
         );
     }
