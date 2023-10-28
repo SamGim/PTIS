@@ -1,5 +1,6 @@
-package com.thewayhome.ptis.api.service;
+package com.thewayhome.ptis.api.service.tago;
 
+import com.thewayhome.ptis.api.service.AbstractTagoBusAPIService;
 import com.thewayhome.ptis.api.vo.tago.CommAPIErrRespVoImpl;
 import com.thewayhome.ptis.api.vo.tago.GetRouteInfoItemAPINrmRespVoImpl;
 import com.thewayhome.ptis.api.vo.tago.GetRouteInfoItemAPIReqVo;

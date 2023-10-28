@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.api.controller;
 
-import com.thewayhome.ptis.api.service.TagoBusGetRouteInfoIemAPIServiceImpl;
+import com.thewayhome.ptis.api.service.tago.TagoBusGetRouteInfoIemAPIServiceImpl;
 import com.thewayhome.ptis.api.vo.tago.GetRouteInfoItemAPIReqVo;
 import com.thewayhome.ptis.api.vo.tago.IResponse;
 import org.springframework.beans.factory.annotation.Autowired;

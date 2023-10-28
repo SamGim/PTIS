@@ -1,5 +1,6 @@
-package com.thewayhome.ptis.api.service;
+package com.thewayhome.ptis.api.service.wsbus;
 
+import com.thewayhome.ptis.api.service.AbstractWsBusAPIService;
 import com.thewayhome.ptis.api.vo.wsbus.CommAPIErrRespVoImpl;
 import com.thewayhome.ptis.api.vo.wsbus.GetStationByNameListAPINrmRespVoImpl;
 import com.thewayhome.ptis.api.vo.wsbus.GetStationByNameListAPIReqVo;
