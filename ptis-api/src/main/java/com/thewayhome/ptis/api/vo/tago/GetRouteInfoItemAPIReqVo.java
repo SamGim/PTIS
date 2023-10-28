@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.vo.tago;
+package com.thewayhome.ptis.api.vo.tago;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

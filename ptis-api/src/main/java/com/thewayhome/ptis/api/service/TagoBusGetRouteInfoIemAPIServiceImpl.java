@@ -1,9 +1,9 @@
-package com.thewayhome.ptis.service;
+package com.thewayhome.ptis.api.service;
 
-import com.thewayhome.ptis.vo.tago.CommAPIErrRespVoImpl;
-import com.thewayhome.ptis.vo.tago.GetRouteInfoItemAPINrmRespVoImpl;
-import com.thewayhome.ptis.vo.tago.GetRouteInfoItemAPIReqVo;
-import com.thewayhome.ptis.vo.tago.IResponse;
+import com.thewayhome.ptis.api.vo.tago.CommAPIErrRespVoImpl;
+import com.thewayhome.ptis.api.vo.tago.GetRouteInfoItemAPINrmRespVoImpl;
+import com.thewayhome.ptis.api.vo.tago.GetRouteInfoItemAPIReqVo;
+import com.thewayhome.ptis.api.vo.tago.IResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

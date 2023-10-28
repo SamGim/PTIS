@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.vo;
+package com.thewayhome.ptis.api.vo.tago;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;

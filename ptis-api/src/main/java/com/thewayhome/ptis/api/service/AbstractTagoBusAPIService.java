@@ -1,6 +1,6 @@
-package com.thewayhome.ptis.service;
+package com.thewayhome.ptis.api.service;
 
-import com.thewayhome.ptis.vo.tago.IResponse;
+import com.thewayhome.ptis.api.vo.tago.IResponse;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
