@@ -36,6 +36,7 @@ subprojects {
 		annotationProcessor 'org.projectlombok:lombok'
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'org.springframework.batch:spring-batch-test'
 		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
 		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 	}
@@ -45,24 +46,13 @@ subprojects {
 	}
 }
 
-//project(':ptis-core') {
-//	// 공통 코드
-//
-//	bootJar { enabled = false }
-//	jar { enabled = true }
-//
-//	dependencies {
-//		//compile project(':ptis-core')
-//		implementation 'org.springframework.boot:spring-boot-starter-web'
-//	}
-//}
+project(':ptis-core') {
+	// 공통 코드
 
-project(':ptis-api') {
-	bootJar { enabled = true }
-	jar { enabled = false }
+	bootJar { enabled = false }
+	jar { enabled = true }
 
 	dependencies {
-		//compile project(':ptis-core')
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'mysql:mysql-connector-java:8.0.25'
@@ -71,11 +61,31 @@ project(':ptis-api') {
 	}
 }
 
-//project(':ptis-batch') {
-//	bootJar { enabled = true }
-//	jar { enabled = false }
-//
-//	dependencies {
-//		//compile project(':ptis-core')
-//	}
-//}
+project(':ptis-api') {
+	bootJar { enabled = true }
+	jar { enabled = false }
+
+	dependencies {
+		implementation project(':ptis-core')
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'mysql:mysql-connector-java:8.0.25'
+		implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+		implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	}
+}
+
+project(':ptis-batch') {
+	bootJar { enabled = true }
+	jar { enabled = false }
+
+	dependencies {
+		implementation project(':ptis-core')
+		implementation 'org.springframework.boot:spring-boot-starter-batch'
+		implementation 'mysql:mysql-connector-java:8.0.25'
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+		implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	}
+}
