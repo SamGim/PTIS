@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.vo;
+package com.thewayhome.ptis.api.vo;
 
 import lombok.Getter;
 import lombok.ToString;

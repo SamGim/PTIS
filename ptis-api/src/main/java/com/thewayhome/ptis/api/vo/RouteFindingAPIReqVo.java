@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.vo;
+package com.thewayhome.ptis.api.vo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
