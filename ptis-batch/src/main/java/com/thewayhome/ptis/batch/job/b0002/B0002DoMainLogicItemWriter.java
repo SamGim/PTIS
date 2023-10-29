@@ -1,6 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0002;
 
 import com.thewayhome.ptis.core.service.BusRouteService;
+import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.MessageService;
 import com.thewayhome.ptis.core.vo.BusRouteRegisterReqVo;
 import lombok.extern.slf4j.Slf4j;
@@ -24,17 +25,20 @@ public class B0002DoMainLogicItemWriter implements ItemWriter<B0002DoMainLogicIt
     private StepExecution stepExecution;
     private final MessageService messageService;
     private final BusRouteService busRouteService;
+    private final BusStationService busStationService;
 
     public B0002DoMainLogicItemWriter(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             MessageService messageService,
-            BusRouteService busRouteService
+            BusRouteService busRouteService,
+            BusStationService busStationService
     ) {
         this.jobName = jobName;
         this.jobDate = jobDate;
         this.messageService = messageService;
         this.busRouteService = busRouteService;
+        this.busStationService = busStationService;
     }
 
     @BeforeStep
@@ -49,6 +53,8 @@ public class B0002DoMainLogicItemWriter implements ItemWriter<B0002DoMainLogicIt
         }
 
         for (B0002DoMainLogicItemOutput item : chunk.getItems()) {
+            busStationService.changeBusStationGatheringStatusCode(item.getBusStationProcessRegisterReqVo());
+
             for (BusRouteRegisterReqVo req : item.getBusRouteRegisterReqVoList()) {
                 busRouteService.saveBusRoute(req);
             }
