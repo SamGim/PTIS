@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BusStationService {
@@ -27,6 +28,10 @@ public class BusStationService {
         return busStationRepository.findAll();
     }
 
+
+    public Optional<BusStation> findByArsId(String arsId) {
+        return busStationRepository.findByBusStationId(arsId);
+    }
     public List<BusStation> findBusStationByGatheringStatusCode(String gatheringStatusCode, boolean notCondition) {
         List<BusStationProcess> busStationProcess = notCondition ?
                 busStationProcessRepository.findByGatheringStatusCodeNot(gatheringStatusCode) :
