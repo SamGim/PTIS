@@ -28,12 +28,6 @@ public class B0001DoMainLogicChunkListener implements ChunkListener {
         StepContext stepContext = context.getStepContext();
         StepExecution stepExecution = stepContext.getStepExecution();
 
-        try {
-            Thread.sleep(10 * 1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
         log.info("[" + stepExecution.getStepName() + "]" + " Chunk Commit #" + stepExecution.getCommitCount());
     }
 
