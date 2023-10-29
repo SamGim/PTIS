@@ -1,8 +1,11 @@
 package com.thewayhome.ptis.batch.job.b0002;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thewayhome.ptis.batch.service.ParamService;
 import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.batch.vo.Param;
+import com.thewayhome.ptis.core.vo.BusRouteRegisterReqVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -29,14 +32,17 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
     private final String jobDate;
     private StepExecution stepExecution;
     private ParamService paramService;
+    private ObjectMapper objectMapper;
     public B0002DoMainLogicItemProcessor(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
-            ParamService paramService
+            ParamService paramService,
+            ObjectMapper objectMapper
     ) {
         this.jobName = jobName;
         this.jobDate = jobDate;
         this.paramService = paramService;
+        this.objectMapper = objectMapper;
     }
 
     @BeforeStep
@@ -50,7 +56,6 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
         }
 
         final String arsId = input.getArsId();
-        final List<B0002DoMainLogicItemOutputSub> busRouteList = new ArrayList<>();
 
         Optional<Param> jobOptional = paramService.getBatchJobInputParam(jobName);
         if (jobOptional.isEmpty()) {
@@ -73,10 +78,31 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
             throw new IllegalArgumentException();
         }
 
+        List<BusRouteRegisterReqVo> reqList = new ArrayList<>();
+        try {
+            JsonNode rootNode = objectMapper.readTree(dataFromAPI);
+
+            for (JsonNode item : rootNode) {
+                String busRouteAbrv = item.get("busRouteAbrv").asText();
+                String busRouteId = item.get("busRouteId").asText();
+                String busRouteNm = item.get("busRouteNm").asText();
+
+                BusRouteRegisterReqVo req = new BusRouteRegisterReqVo();
+                req.setBusRouteId(busRouteId);
+                req.setOperatorId(jobName);
+                req.setBusRouteName(busRouteNm);
+                req.setBusRouteNo(busRouteAbrv);
+                req.setBusRouteSubNo(busRouteNm.substring(busRouteAbrv.length()));
+
+                reqList.add(req);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return B0002DoMainLogicItemOutput.builder()
                 .arsId(arsId)
-                .message(dataFromAPI)
-                //.busRouteList(busRouteList)
+                .busRouteRegisterReqVoList(reqList)
                 .build();
     }
 }

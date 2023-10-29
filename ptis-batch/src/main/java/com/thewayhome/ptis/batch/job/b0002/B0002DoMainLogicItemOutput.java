@@ -1,8 +1,6 @@
 package com.thewayhome.ptis.batch.job.b0002;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Size;
+import com.thewayhome.ptis.core.vo.BusRouteRegisterReqVo;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,6 +10,5 @@ import java.util.List;
 @Builder
 public class B0002DoMainLogicItemOutput {
     private String arsId;
-    private String message;
-    //private List<B0002DoMainLogicItemOutputSub> busRouteList;
+    private List<BusRouteRegisterReqVo> busRouteRegisterReqVoList;
 }
