@@ -90,6 +90,24 @@ public class WsBusPurifiedAPIController {
         });
     }
 
+    @GetMapping(name="getBusRouteList", path="getBusRouteList")
+    public Mono<List<GetBusRouteListAPINrmRespVoImpl.MsgBody.ItemList>> getBusRouteList(
+            @RequestParam String busRouteNo
+    ) {
+        return wsBusGetBusRouteListAPIService.getBusRouteList(
+                GetBusRouteListAPIReqVo.builder()
+                        .busRouteNo(busRouteNo)
+                        .build()
+        ).map(rawData -> (GetBusRouteListAPINrmRespVoImpl) rawData)
+        .mapNotNull(castedData -> {
+            if (castedData.getMsgBody() == null){
+                return new ArrayList<>();
+            } else {
+                return castedData.getMsgBody().getItemList();
+            }
+        });
+    }
+
     @GetMapping(name="getBustimeByStationList", path="getBustimeByStationList")
     public Mono<IServiceResult> getBustimeByStationList(
             @RequestParam String arsId,
@@ -136,17 +154,6 @@ public class WsBusPurifiedAPIController {
         return wsBusGetRoutePathListAPIService.getRoutePathList(
                 GetRoutePathListAPIReqVo.builder()
                         .busRouteId(busRouteId)
-                        .build()
-        );
-    }
-
-    @GetMapping(name="getBusRouteList", path="getBusRouteList")
-    public Mono<IServiceResult> getBusRouteList(
-            @RequestParam String busRouteNo
-    ) {
-        return wsBusGetBusRouteListAPIService.getBusRouteList(
-                GetBusRouteListAPIReqVo.builder()
-                        .busRouteNo(busRouteNo)
                         .build()
         );
     }
