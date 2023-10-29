@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class B0002DoMainLogicRetryTemplate {
     private static final int MAX_ATTEMPTS = 5;
-    private static final long BACK_OFF_PERIOD = 10000;  // 10 seconds
+    private static final long BACK_OFF_PERIOD = 60000;
 
     public RetryPolicy retryPolicy() {
         SimpleRetryPolicy policy = new SimpleRetryPolicy();
