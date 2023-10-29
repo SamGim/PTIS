@@ -87,6 +87,7 @@ public class BusStationService {
             busStationProcess.setCreatedAt(LocalDateTime.now());
             busStationProcess.setCreatedBy(req.getOperatorId());
             busStationProcess.setFirstGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+            busStationProcess.setGatheringStatusCode("01");
         }
         busStationProcess.setUpdatedAt(LocalDateTime.now());
         busStationProcess.setUpdatedBy(req.getOperatorId());
@@ -94,9 +95,6 @@ public class BusStationService {
 
         // ID
         busStationProcess.setId(busStation.getId());
-
-        // DATA
-        busStationProcess.setGatheringStatusCode("01");
 
         busStationProcessRepository.save(busStationProcess);
 

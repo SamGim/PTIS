@@ -77,6 +77,7 @@ public class BusRouteService {
             busRouteProcess.setCreatedAt(LocalDateTime.now());
             busRouteProcess.setCreatedBy(req.getOperatorId());
             busRouteProcess.setFirstGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+            busRouteProcess.setGatheringStatusCode("01");
         }
         busRouteProcess.setUpdatedAt(LocalDateTime.now());
         busRouteProcess.setUpdatedBy(req.getOperatorId());
@@ -84,9 +85,6 @@ public class BusRouteService {
 
         // ID
         busRouteProcess.setId(busRoute.getId());
-
-        // DATA
-        busRouteProcess.setGatheringStatusCode("01");
 
         busRouteProcessRepository.save(busRouteProcess);
 
