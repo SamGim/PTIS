@@ -55,6 +55,7 @@ public class B0002DoMainLogicItemReader implements ItemReader<B0002DoMainLogicIt
         for (BusStation busStation : busStationList) {
             this.items.add(B0002DoMainLogicItemInput
                     .builder()
+                    .id(busStation.getId())
                     .arsId(busStation.getBusStationNo())
                     .build()
             );
