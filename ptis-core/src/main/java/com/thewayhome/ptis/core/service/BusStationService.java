@@ -3,10 +3,7 @@ package com.thewayhome.ptis.core.service;
 import com.thewayhome.ptis.core.repository.BusStationProcessRepository;
 import com.thewayhome.ptis.core.repository.BusStationRepository;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
-import com.thewayhome.ptis.core.vo.BusStation;
-import com.thewayhome.ptis.core.vo.BusStationProcess;
-import com.thewayhome.ptis.core.vo.BusStationRegisterReqVo;
-import com.thewayhome.ptis.core.vo.IdSequence;
+import com.thewayhome.ptis.core.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -104,5 +101,19 @@ public class BusStationService {
         busStationProcessRepository.save(busStationProcess);
 
         return busStationRepository.save(busStation);
+    }
+
+    public void changeBusStationGatheringStatusCode(BusStationProcessRegisterReqVo req) {
+        // ID
+        BusStationProcess busStationProcess = busStationProcessRepository.findById(req.getId()).orElseThrow(IllegalStateException::new);
+
+        // DATA
+        busStationProcess.setGatheringStatusCode(req.getGatheringStatusCode());
+
+        // DB
+        busStationProcess.setUpdatedAt(LocalDateTime.now());
+        busStationProcess.setUpdatedBy(req.getOperatorId());
+
+        busStationProcessRepository.save(busStationProcess);
     }
 }
