@@ -92,4 +92,18 @@ public class BusRouteService {
 
         return busRouteRepository.save(busRoute);
     }
+
+    public void changeBusRouteGatheringStatusCode(BusRouteProcessRegisterReqVo req) {
+        // ID
+        BusRouteProcess busRouteProcess = busRouteProcessRepository.findById(req.getId()).orElseThrow(IllegalStateException::new);
+
+        // DATA
+        busRouteProcess.setGatheringStatusCode(req.getGatheringStatusCode());
+
+        // DB
+        busRouteProcess.setUpdatedAt(LocalDateTime.now());
+        busRouteProcess.setUpdatedBy(req.getOperatorId());
+
+        busRouteProcessRepository.save(busRouteProcess);
+    }
 }
