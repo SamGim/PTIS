@@ -4,7 +4,6 @@ import com.thewayhome.ptis.core.repository.BusRouteRepository;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
 import com.thewayhome.ptis.core.vo.BusRoute;
 import com.thewayhome.ptis.core.vo.BusRouteRegisterReqVo;
-import com.thewayhome.ptis.core.vo.BusStation;
 import com.thewayhome.ptis.core.vo.IdSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
