@@ -1,10 +1,12 @@
 package com.thewayhome.ptis.core.vo;
 
-import com.thewayhome.ptis.core.vo.AbstractDataEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -40,4 +42,7 @@ public class BusStation extends AbstractDataEntity {
 
     @Column(name="bus_station_pos_y", nullable = false)
     private double busStationPosY;
+
+    @ManyToMany(mappedBy = "stations")
+    private List<BusRoute> routes = new ArrayList<>();
 }

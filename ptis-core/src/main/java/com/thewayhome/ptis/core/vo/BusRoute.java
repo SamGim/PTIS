@@ -5,6 +5,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
@@ -45,4 +48,14 @@ public class BusRoute extends AbstractDataEntity {
     @ManyToOne
     @JoinColumn(name = "bus_station_ed", nullable = true)
     private BusStation busStationEd;
+
+    @ManyToMany
+    @JoinTable(
+            name = "bus_station_route",
+            joinColumns = @JoinColumn(name = "bus_route_id"),
+            inverseJoinColumns = @JoinColumn(name = "bus_station_id")
+    )
+    @OrderColumn(name = "route_order")
+    private List<BusStation> stations = new ArrayList<>();
+
 }
