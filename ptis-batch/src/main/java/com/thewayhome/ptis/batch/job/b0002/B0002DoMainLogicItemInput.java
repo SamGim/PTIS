@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class B0002DoMainLogicItemInput {
+    private String id;
     private String arsId;
 }
