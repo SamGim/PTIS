@@ -88,6 +88,8 @@ public class BusRouteService {
         // DATA
         busRouteProcess.setGatheringStatusCode("01");
 
+        busRouteProcessRepository.save(busRouteProcess);
+
         return busRouteRepository.save(busRoute);
     }
 }
