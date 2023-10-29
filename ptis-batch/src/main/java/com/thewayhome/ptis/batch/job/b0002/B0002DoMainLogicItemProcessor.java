@@ -87,6 +87,7 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
         BusStationProcessRegisterReqVo stationProcessReq = new BusStationProcessRegisterReqVo();
         stationProcessReq.setId(id);
         stationProcessReq.setGatheringStatusCode("02");
+        stationProcessReq.setOperatorId(jobName);
 
         List<BusRouteRegisterReqVo> routeReqList = new ArrayList<>();
         try {
