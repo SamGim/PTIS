@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thewayhome.ptis.batch.service.ParamService;
 import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.batch.vo.Param;
+import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.vo.BusRouteRegisterReqVo;
+import com.thewayhome.ptis.core.vo.BusStationProcessRegisterReqVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -33,16 +35,19 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
     private StepExecution stepExecution;
     private ParamService paramService;
     private ObjectMapper objectMapper;
+    private BusStationService busStationService;
     public B0002DoMainLogicItemProcessor(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             ParamService paramService,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            BusStationService busStationService
     ) {
         this.jobName = jobName;
         this.jobDate = jobDate;
         this.paramService = paramService;
         this.objectMapper = objectMapper;
+        this.busStationService = busStationService;
     }
 
     @BeforeStep
@@ -55,6 +60,7 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
             throw new JobInterruptedException("Job is stopping");
         }
 
+        final String id = input.getId();
         final String arsId = input.getArsId();
 
         Optional<Param> jobOptional = paramService.getBatchJobInputParam(jobName);
@@ -78,7 +84,11 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
             throw new IllegalArgumentException();
         }
 
-        List<BusRouteRegisterReqVo> reqList = new ArrayList<>();
+        BusStationProcessRegisterReqVo stationProcessReq = new BusStationProcessRegisterReqVo();
+        stationProcessReq.setId(id);
+        stationProcessReq.setGatheringStatusCode("02");
+
+        List<BusRouteRegisterReqVo> routeReqList = new ArrayList<>();
         try {
             JsonNode rootNode = objectMapper.readTree(dataFromAPI);
 
@@ -94,15 +104,17 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
                 req.setBusRouteNo(busRouteAbrv);
                 req.setBusRouteSubNo(busRouteNm.substring(busRouteAbrv.length()));
 
-                reqList.add(req);
+                routeReqList.add(req);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return B0002DoMainLogicItemOutput.builder()
+                .id(id)
                 .arsId(arsId)
-                .busRouteRegisterReqVoList(reqList)
+                .busStationProcessRegisterReqVo(stationProcessReq)
+                .busRouteRegisterReqVoList(routeReqList)
                 .build();
     }
 }
