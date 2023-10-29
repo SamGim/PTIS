@@ -31,8 +31,8 @@ public class BusStationService {
     }
     public List<BusStation> findBusStationByGatheringStatusCode(String gatheringStatusCode, boolean notCondition) {
         List<BusStationProcess> busStationProcess = notCondition ?
-                busStationProcessRepository.findByGatheringStatusCodeNot(gatheringStatusCode) :
-                busStationProcessRepository.findByGatheringStatusCode(gatheringStatusCode);
+                busStationProcessRepository.findByGatheringStatusCodeNotOrderById(gatheringStatusCode) :
+                busStationProcessRepository.findByGatheringStatusCodeOrderById(gatheringStatusCode);
         return busStationProcess != null ? busStationProcess.stream().map(BusStationProcess::getBusStation).toList() : null;
     }
 
