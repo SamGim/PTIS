@@ -8,10 +8,9 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BatchJobRegisterReqVo extends BaseRequestVo {
-    private String name;
-    private String inputType;
-    private String inputFilename;
-    private String inputDelimiter;
+public class ParamsRegisterReqVo extends BaseRequestVo {
+    private String groupName;
+    private String paramName;
+    private String value;
     private String useYn;
 }

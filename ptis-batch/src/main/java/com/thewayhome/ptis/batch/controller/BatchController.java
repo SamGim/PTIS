@@ -1,17 +1,10 @@
 package com.thewayhome.ptis.batch.controller;
 
-import com.thewayhome.ptis.batch.repository.BatchJobRepository;
-import com.thewayhome.ptis.batch.service.BatchJobService;
+import com.thewayhome.ptis.batch.util.BatchJobManipulateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobExecutionNotRunningException;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.NoSuchJobException;
-import org.springframework.batch.core.launch.NoSuchJobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -21,7 +14,7 @@ import java.util.Map;
 public class BatchController {
 
     @Autowired
-    private BatchJobService batchJobService;
+    private BatchJobManipulateUtil batchJobManipulateUtil;
 
     @Autowired
     private JobLauncher jobLauncher;
@@ -45,7 +38,7 @@ public class BatchController {
 
         try {
             log.warn(jobParamBuilder.toJobParameters().toString());
-            batchJobService.launchJob(jobName, jobParamBuilder.toJobParameters());
+            batchJobManipulateUtil.launchJob(jobName, jobParamBuilder.toJobParameters());
         } catch (Exception e) {
             return "Error starting the batch job " + jobName + ". " + e.getMessage();
         }
@@ -57,7 +50,7 @@ public class BatchController {
     public String stopBatchJob(
             @RequestParam String jobName
     ) {
-        batchJobService.stopJobExecution(jobName);
+        batchJobManipulateUtil.stopJobExecution(jobName);
         return "Batch job " + jobName +" has been stopped.";
     }
 }
