@@ -51,7 +51,7 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         ParamsRegisterReqVo B0002InputParams = new ParamsRegisterReqVo();
         B0002InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
         B0002InputParams.setParamName("B0002");
-        B0002InputParams.setValue(" ");
+        B0002InputParams.setValue("http://localhost:8081|/ws-pure/getRouteByStationList");
         B0002InputParams.setUseYn("Y");
         B0002InputParams.setOperatorId(jobName);
         paramService.saveParam(B0002InputParams);
