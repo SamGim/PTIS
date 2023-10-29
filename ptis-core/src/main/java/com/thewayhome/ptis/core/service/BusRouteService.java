@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -68,6 +69,24 @@ public class BusRouteService {
         // DB
         busRoute.setUpdatedAt(LocalDateTime.now());
         busRoute.setUpdatedBy(req.getOperatorId());
+
+        BusRouteProcess busRouteProcess = busRouteProcessRepository.findById(busRoute.getId()).orElse(new BusRouteProcess());
+
+        // DB
+        if (busRouteProcess.getId() == null) {
+            busRouteProcess.setCreatedAt(LocalDateTime.now());
+            busRouteProcess.setCreatedBy(req.getOperatorId());
+            busRouteProcess.setFirstGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        }
+        busRouteProcess.setUpdatedAt(LocalDateTime.now());
+        busRouteProcess.setUpdatedBy(req.getOperatorId());
+        busRouteProcess.setLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
+        // ID
+        busRouteProcess.setId(busRoute.getId());
+
+        // DATA
+        busRouteProcess.setGatheringStatusCode("01");
 
         return busRouteRepository.save(busRoute);
     }
