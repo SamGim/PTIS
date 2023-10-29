@@ -29,7 +29,7 @@ public class B0002DoMainLogicChunkListener implements ChunkListener {
         StepExecution stepExecution = stepContext.getStepExecution();
 
         try {
-            Thread.sleep(10 * 1000);
+            Thread.sleep(15 * 1000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
