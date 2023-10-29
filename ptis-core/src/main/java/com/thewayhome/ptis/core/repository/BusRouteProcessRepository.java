@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface BusRouteProcessRepository extends JpaRepository<BusRouteProcess, String> {
-    List<BusRouteProcess> findByGatheringStatusCode(String gatheringStatusCode);
-    List<BusRouteProcess> findByGatheringStatusCodeNot(String gatheringStatusCode);
+    List<BusRouteProcess> findByGatheringStatusCodeOrderById(String gatheringStatusCode);
+    List<BusRouteProcess> findByGatheringStatusCodeNotOrderById(String gatheringStatusCode);
     @Query("SELECT o FROM BusRouteProcess o WHERE o.firstGatheringDate >= :startDate AND o.firstGatheringDate <= :endDate")
     List<BusRouteProcess> findByFirstGatheringDateInDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
     @Query("SELECT o FROM BusRouteProcess o WHERE o.lastGatheringDate >= :startDate AND o.lastGatheringDate <= :endDate")

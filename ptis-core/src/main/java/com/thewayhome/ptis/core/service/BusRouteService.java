@@ -22,8 +22,8 @@ public class BusRouteService {
 
     public List<BusRoute> findBusRouteByGatheringStatusCode(String gatheringStatusCode, boolean notCondition) {
         List<BusRouteProcess> busRouteProcess = notCondition ?
-                busRouteProcessRepository.findByGatheringStatusCodeNot(gatheringStatusCode) :
-                busRouteProcessRepository.findByGatheringStatusCode(gatheringStatusCode);
+                busRouteProcessRepository.findByGatheringStatusCodeNotOrderById(gatheringStatusCode) :
+                busRouteProcessRepository.findByGatheringStatusCodeOrderById(gatheringStatusCode);
         return busRouteProcess != null ? busRouteProcess.stream().map(BusRouteProcess::getBusRoute).toList() : null;
     }
 
