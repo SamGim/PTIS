@@ -1,8 +1,5 @@
 package com.thewayhome.ptis.batch.job.b0002;
 
-import com.mysql.cj.util.StringUtils;
-import com.thewayhome.ptis.batch.service.BatchJobService;
-import com.thewayhome.ptis.batch.vo.BatchJob;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.vo.BusStation;
 import lombok.extern.slf4j.Slf4j;
@@ -10,17 +7,14 @@ import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Component

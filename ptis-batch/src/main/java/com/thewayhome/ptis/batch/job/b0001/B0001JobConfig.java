@@ -1,6 +1,9 @@
 package com.thewayhome.ptis.batch.job.b0001;
 
-import com.thewayhome.ptis.batch.job.base.*;
+import com.thewayhome.ptis.batch.job.base.AbstractFailureHandlingTasklet;
+import com.thewayhome.ptis.batch.job.base.AbstractFinalizeJobTasklet;
+import com.thewayhome.ptis.batch.job.base.AbstractInitValueTasklet;
+import com.thewayhome.ptis.batch.job.base.AbstractValidateInputTasklet;
 import com.thewayhome.ptis.batch.job.util.BatchJobStatusNotificationListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +81,8 @@ public class B0001JobConfig {
             @Qualifier("B0001DoMainLogicItemReader") ItemReader<B0001DoMainLogicItemInput> doMainLogicItemReader,
             @Qualifier("B0001DoMainLogicItemProcessor") ItemProcessor<B0001DoMainLogicItemInput, B0001DoMainLogicItemOutput> doMainLogicItemProcessor,
             @Qualifier("B0001DoMainLogicItemWriter") ItemWriter<B0001DoMainLogicItemOutput> doMainLogicItemWriter,
-            B0001DoMainLogicRetryTemplate retryTemplate
+            B0001DoMainLogicRetryTemplate retryTemplate,
+            B0001DoMainLogicChunkListener doMainLogicChunkListener
     ) {
         return new StepBuilder("B0001DoMainLogicStep", jobRepository)
                 .<B0001DoMainLogicItemInput, B0001DoMainLogicItemOutput> chunk(100, transactionManager)
@@ -89,6 +93,7 @@ public class B0001JobConfig {
                 .retry(IOException.class)
                 .retryPolicy(retryTemplate.retryPolicy())
                 .backOffPolicy(retryTemplate.backOffPolicy())
+                .listener(doMainLogicChunkListener)
                 .build();
     }
 

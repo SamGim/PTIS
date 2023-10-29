@@ -89,6 +89,7 @@ public class B0002JobConfig {
                 .faultTolerant()
                 .retryPolicy(retryTemplate.retryPolicy())
                 .backOffPolicy(retryTemplate.backOffPolicy())
+                .listener(doMainLogicChunkListener)
                 .build();
     }
 

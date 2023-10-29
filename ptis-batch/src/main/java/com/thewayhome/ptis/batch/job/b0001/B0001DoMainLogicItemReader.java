@@ -1,15 +1,12 @@
 package com.thewayhome.ptis.batch.job.b0001;
 
 import com.mysql.cj.util.StringUtils;
-import com.thewayhome.ptis.batch.service.BatchJobService;
-import com.thewayhome.ptis.batch.vo.BatchJob;
+import com.thewayhome.ptis.batch.service.ParamService;
+import com.thewayhome.ptis.batch.vo.Param;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -35,20 +32,23 @@ public class B0001DoMainLogicItemReader implements ItemReader<B0001DoMainLogicIt
     public B0001DoMainLogicItemReader(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
-            BatchJobService batchJobService
+            ParamService paramService
     ) throws IOException, IndexOutOfBoundsException, NoSuchJobException {
         this.jobName = jobName;
         this.jobDate = jobDate;
 
-        Optional<BatchJob> jobOptional = batchJobService.findBatchJob(jobName);
+        Optional<Param> jobOptional = paramService.getBatchJobInputParam(jobName);
         if (jobOptional.isEmpty()) {
-            throw new NoSuchJobException("No such Job [" + jobName + "] exists");
+            throw new NoSuchJobException("No such Job Param exists. Jobname: [" + jobName + "]");
         }
 
-        BatchJob batchJob = jobOptional.get();
-        this.type = batchJob.getInputType();
-        this.filename = batchJob.getInputFilename();
-        this.delimiter = batchJob.getInputDelimiter();
+        Param param = jobOptional.get();
+        String[] paramList = param.getValue().split("\\|");
+        int paramIdx = 0;
+
+        this.type = paramList[paramIdx++];
+        this.filename = paramList[paramIdx++];
+        this.delimiter = paramList[paramIdx++];
 
         this.items = new ArrayList<>();
         initialize();

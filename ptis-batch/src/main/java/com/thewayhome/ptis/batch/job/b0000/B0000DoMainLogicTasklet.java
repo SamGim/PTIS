@@ -1,8 +1,8 @@
 package com.thewayhome.ptis.batch.job.b0000;
 
 import com.thewayhome.ptis.batch.job.base.AbstractDoMainLogicTasklet;
-import com.thewayhome.ptis.batch.service.BatchJobService;
-import com.thewayhome.ptis.batch.vo.BatchJobRegisterReqVo;
+import com.thewayhome.ptis.batch.service.ParamService;
+import com.thewayhome.ptis.batch.vo.ParamsRegisterReqVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -20,15 +20,15 @@ import java.io.IOException;
 @StepScope
 public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
 
-    private final BatchJobService batchJobService;
+    private final ParamService paramService;
 
     public B0000DoMainLogicTasklet(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
-            BatchJobService batchJobService
+            ParamService paramService
     ) {
         super(jobName, jobDate);
-        this.batchJobService = batchJobService;
+        this.paramService = paramService;
     }
 
     @Override
@@ -40,23 +40,21 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         log.info("[" + taskletName + "] jobName = " + jobName);
         log.info("[" + taskletName + "] jobDate = " + jobDate);
 
-        BatchJobRegisterReqVo batchJob_B0001 = new BatchJobRegisterReqVo();
-        batchJob_B0001.setName("B0001");
-        batchJob_B0001.setInputType("R");
-        batchJob_B0001.setInputFilename("ws_bus_st_20230914.csv");
-        batchJob_B0001.setInputDelimiter(",");
-        batchJob_B0001.setUseYn("Y");
-        batchJob_B0001.setOperatorId(jobName);
-        batchJobService.saveBatchJob(batchJob_B0001);
+        ParamsRegisterReqVo B0001InputParams = new ParamsRegisterReqVo();
+        B0001InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
+        B0001InputParams.setParamName("B0001");
+        B0001InputParams.setValue("R|ws_bus_st_20230914.csv|,");
+        B0001InputParams.setUseYn("Y");
+        B0001InputParams.setOperatorId(jobName);
+        paramService.saveParam(B0001InputParams);
 
-        BatchJobRegisterReqVo batchJob_B0002 = new BatchJobRegisterReqVo();
-        batchJob_B0002.setName("B0002");
-        batchJob_B0002.setInputType(" ");
-        batchJob_B0002.setInputFilename(" ");
-        batchJob_B0002.setInputDelimiter(" ");
-        batchJob_B0002.setUseYn("Y");
-        batchJob_B0002.setOperatorId(jobName);
-        batchJobService.saveBatchJob(batchJob_B0002);
+        ParamsRegisterReqVo B0002InputParams = new ParamsRegisterReqVo();
+        B0002InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
+        B0002InputParams.setParamName("B0002");
+        B0002InputParams.setValue(" ");
+        B0002InputParams.setUseYn("Y");
+        B0002InputParams.setOperatorId(jobName);
+        paramService.saveParam(B0002InputParams);
 
         return RepeatStatus.FINISHED;
     }
