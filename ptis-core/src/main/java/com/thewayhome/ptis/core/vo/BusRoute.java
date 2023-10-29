@@ -35,7 +35,7 @@ public class BusRoute extends AbstractDataEntity {
     private String busRouteNo;
 
     @Column(name="bus_route_sub_no", nullable = true)
-    @Size(max=1)
+    @Size(max=10)
     private String busRouteSubNo;
 
     @ManyToOne
