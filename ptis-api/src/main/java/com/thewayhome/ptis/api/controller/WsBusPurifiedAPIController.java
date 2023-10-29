@@ -55,12 +55,32 @@ public class WsBusPurifiedAPIController {
     }
 
     @GetMapping(name="getRouteByStationList", path="getRouteByStationList")
-    public Mono<List<GetRouteByStationListAPINrmRespVoImpl.MsgBody.ItemList>> getRouteByStationList(@RequestParam String arsId) {
+    public Mono<List<GetRouteByStationListAPINrmRespVoImpl.MsgBody.ItemList>> getRouteByStationList(
+            @RequestParam String arsId
+    ) {
         return wsBusGetRouteByStationListAPIService.getRouteByStationList(
                 GetRouteByStationListAPIReqVo.builder()
                         .arsId(arsId)
                         .build()
         ).map(rawData -> (GetRouteByStationListAPINrmRespVoImpl) rawData)
+        .mapNotNull(castedData -> {
+            if (castedData.getMsgBody() == null){
+                return new ArrayList<>();
+            } else {
+                return castedData.getMsgBody().getItemList();
+            }
+        });
+    }
+
+    @GetMapping(name="getStationsByRouteList", path="getStationsByRouteList")
+    public Mono<List<GetStationsByRouteListAPINrmRespVoImpl.MsgBody.ItemList>> getStationsByRouteList(
+            @RequestParam String busRouteId
+    ) {
+        return wsBusGetStationsByRouteListAPIService.getStationsByRouteList(
+                        GetStationsByRouteListAPIReqVo.builder()
+                                .busRouteId(busRouteId)
+                                .build()
+        ).map(rawData -> (GetStationsByRouteListAPINrmRespVoImpl) rawData)
         .mapNotNull(castedData -> {
             if (castedData.getMsgBody() == null){
                 return new ArrayList<>();
@@ -94,17 +114,6 @@ public class WsBusPurifiedAPIController {
                         .tmX(tmX)
                         .tmY(tmY)
                         .radius(radius)
-                        .build()
-        );
-    }
-
-    @GetMapping(name="getStationsByRouteList", path="getStationsByRouteList")
-    public Mono<IServiceResult> getStationsByRouteList(
-            @RequestParam String busRouteId
-    ) {
-        return wsBusGetStationsByRouteListAPIService.getStationsByRouteList(
-                GetStationsByRouteListAPIReqVo.builder()
-                        .busRouteId(busRouteId)
                         .build()
         );
     }
