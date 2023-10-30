@@ -6,7 +6,6 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.launch.*;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -19,7 +18,6 @@ public class BatchJobManipulateUtil {
     private final JobRegistry jobRegistry;
     private final JobOperator jobOperator;
 
-    @Async("jobExecutor")
     public void stopJobExecution(String jobName) {
         Set<Long> executions = null;
         try {
@@ -32,7 +30,6 @@ public class BatchJobManipulateUtil {
         }
     }
 
-    @Async("jobExecutor")
     public void stopJobExecution(Long executionId) {
         try {
             log.info("Stopping Job: " + executionId);
@@ -42,7 +39,6 @@ public class BatchJobManipulateUtil {
         }
     }
 
-    @Async("jobExecutor")
     public void launchJob(String jobName, JobParameters jobParameters) throws Exception {
         Job job = jobRegistry.getJob(jobName);
         jobLauncher.run(job, jobParameters);
