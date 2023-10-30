@@ -20,14 +20,17 @@ import java.io.IOException;
 @StepScope
 public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
 
+    private final String apiEndpoint;
     private final ParamService paramService;
 
     public B0000DoMainLogicTasklet(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
+            @Value("${server.endpoint.api}") String apiEndpoint,
             ParamService paramService
     ) {
         super(jobName, jobDate);
+        this.apiEndpoint = apiEndpoint;
         this.paramService = paramService;
     }
 
@@ -51,7 +54,7 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         ParamsRegisterReqVo B0002InputParams = new ParamsRegisterReqVo();
         B0002InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
         B0002InputParams.setParamName("B0002");
-        B0002InputParams.setValue("http://localhost:8081|/ws-pure/getRouteByStationList");
+        B0002InputParams.setValue(this.apiEndpoint+"|/ws-pure/getRouteByStationList");
         B0002InputParams.setUseYn("Y");
         B0002InputParams.setOperatorId(jobName);
         paramService.saveParam(B0002InputParams);
@@ -59,7 +62,7 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         ParamsRegisterReqVo B0003InputParams = new ParamsRegisterReqVo();
         B0003InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
         B0003InputParams.setParamName("B0003");
-        B0003InputParams.setValue("http://localhost:8081|/ws-pure/getStationsByRouteList");
+        B0003InputParams.setValue(this.apiEndpoint+"|/ws-pure/getStationsByRouteList");
         B0003InputParams.setUseYn("Y");
         B0003InputParams.setOperatorId(jobName);
         paramService.saveParam(B0003InputParams);
