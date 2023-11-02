@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.job.b0004;
+package com.thewayhome.ptis.batch.job.b0005;
 
 import lombok.Getter;
 import org.springframework.retry.RetryPolicy;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class B0004DoMainLogicRetryTemplate {
+public class B0005DoMainLogicRetryTemplate {
     private static final int MAX_ATTEMPTS = 5;
     private static final long BACK_OFF_PERIOD = 60000;
 

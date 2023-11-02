@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.job.b0004;
+package com.thewayhome.ptis.batch.job.b0005;
 
 import com.thewayhome.ptis.batch.job.base.AbstractValidateInputTasklet;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Qualifier("B0004ValidateInputTasklet")
+@Qualifier("B0005ValidateInputTasklet")
 @StepScope
-public class B0004ValidateInputTasklet extends AbstractValidateInputTasklet {
+public class B0005ValidateInputTasklet extends AbstractValidateInputTasklet {
     private StepExecution stepExecution;
-    public B0004ValidateInputTasklet(
+    public B0005ValidateInputTasklet(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate
     ) {

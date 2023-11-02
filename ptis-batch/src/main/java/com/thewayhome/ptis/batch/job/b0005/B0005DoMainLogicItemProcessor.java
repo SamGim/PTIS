@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.job.b0004;
+package com.thewayhome.ptis.batch.job.b0005;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,16 +27,16 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-@Qualifier("B0004DoMainLogicItemProcessor")
+@Qualifier("B0005DoMainLogicItemProcessor")
 @StepScope
-public class B0004DoMainLogicItemProcessor implements ItemProcessor<B0004DoMainLogicItemInput, B0004DoMainLogicItemOutput> {
+public class B0005DoMainLogicItemProcessor implements ItemProcessor<B0005DoMainLogicItemInput, B0005DoMainLogicItemOutput> {
     private final String jobName;
     private final String jobDate;
     private StepExecution stepExecution;
     private ParamService paramService;
     private ObjectMapper objectMapper;
     private BusStationService busStationService;
-    public B0004DoMainLogicItemProcessor(
+    public B0005DoMainLogicItemProcessor(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             ParamService paramService,
@@ -55,7 +55,7 @@ public class B0004DoMainLogicItemProcessor implements ItemProcessor<B0004DoMainL
         this.stepExecution = stepExecution;
     }
     @Override
-    public B0004DoMainLogicItemOutput process(B0004DoMainLogicItemInput input) throws Exception {
+    public B0005DoMainLogicItemOutput process(B0005DoMainLogicItemInput input) throws Exception {
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
             throw new JobInterruptedException("Job is stopping");
         }
@@ -114,7 +114,7 @@ public class B0004DoMainLogicItemProcessor implements ItemProcessor<B0004DoMainL
             e.printStackTrace();
         }
 
-        return B0004DoMainLogicItemOutput.builder()
+        return B0005DoMainLogicItemOutput.builder()
                 .id(id)
                 .arsId(busRouteId)
                 .busRouteProcessRegisterReqVo(routeProcessReq)

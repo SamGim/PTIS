@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.job.b0004;
+package com.thewayhome.ptis.batch.job.b0005;
 
 import com.thewayhome.ptis.batch.job.base.AbstractFailureHandlingTasklet;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Qualifier("B0004FailureHandlingTasklet")
+@Qualifier("B0005FailureHandlingTasklet")
 @StepScope
-public class B0004FailureHandlingTasklet extends AbstractFailureHandlingTasklet {
+public class B0005FailureHandlingTasklet extends AbstractFailureHandlingTasklet {
     private StepExecution stepExecution;
-    public B0004FailureHandlingTasklet(
+    public B0005FailureHandlingTasklet(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate
     ) {

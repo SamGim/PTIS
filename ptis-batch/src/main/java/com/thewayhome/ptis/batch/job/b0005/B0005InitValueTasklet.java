@@ -1,6 +1,6 @@
-package com.thewayhome.ptis.batch.job.b0004;
+package com.thewayhome.ptis.batch.job.b0005;
 
-import com.thewayhome.ptis.batch.job.base.AbstractFinalizeJobTasklet;
+import com.thewayhome.ptis.batch.job.base.AbstractInitValueTasklet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobExecutionException;
 import org.springframework.batch.core.JobInterruptedException;
@@ -16,12 +16,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Qualifier("B0004FinalizeJobTasklet")
+@Qualifier("B0005InitValueTasklet")
 @StepScope
-public class B0004FinalizeJobTasklet extends AbstractFinalizeJobTasklet {
+public class B0005InitValueTasklet extends AbstractInitValueTasklet {
     private StepExecution stepExecution;
-
-    public B0004FinalizeJobTasklet(
+    public B0005InitValueTasklet(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate
     ) {

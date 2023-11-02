@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.job.b0004;
+package com.thewayhome.ptis.batch.job.b0005;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ChunkListener;
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Qualifier("B0004DoMainLogicChunkListener")
+@Qualifier("B0005DoMainLogicChunkListener")
 @StepScope
-public class B0004DoMainLogicChunkListener implements ChunkListener {
+public class B0005DoMainLogicChunkListener implements ChunkListener {
 
     @Override
     public void beforeChunk(ChunkContext context) {

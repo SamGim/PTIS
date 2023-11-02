@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.job.b0004;
+package com.thewayhome.ptis.batch.job.b0005;
 
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.BusStationService;
@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Qualifier("B0004DoMainLogicItemWriter")
+@Qualifier("B0005DoMainLogicItemWriter")
 @StepScope
-public class B0004DoMainLogicItemWriter implements ItemWriter<B0004DoMainLogicItemOutput> {
+public class B0005DoMainLogicItemWriter implements ItemWriter<B0005DoMainLogicItemOutput> {
     private final String jobName;
     private final String jobDate;
     private StepExecution stepExecution;
@@ -27,7 +27,7 @@ public class B0004DoMainLogicItemWriter implements ItemWriter<B0004DoMainLogicIt
     private final BusRouteService busRouteService;
     private final BusStationService busStationService;
 
-    public B0004DoMainLogicItemWriter(
+    public B0005DoMainLogicItemWriter(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             MessageService messageService,
@@ -47,12 +47,12 @@ public class B0004DoMainLogicItemWriter implements ItemWriter<B0004DoMainLogicIt
     }
 
     @Override
-    public void write(Chunk<? extends B0004DoMainLogicItemOutput> chunk) throws Exception {
+    public void write(Chunk<? extends B0005DoMainLogicItemOutput> chunk) throws Exception {
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
             throw new JobInterruptedException("Job is stopping");
         }
 
-        for (B0004DoMainLogicItemOutput item : chunk.getItems()) {
+        for (B0005DoMainLogicItemOutput item : chunk.getItems()) {
             busRouteService.changeBusRouteGatheringStatusCode(item.getBusRouteProcessRegisterReqVo());
 
             for (BusStationRegisterReqVo req : item.getBusStationRegisterReqVoList()) {

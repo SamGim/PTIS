@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.job.b0004;
+package com.thewayhome.ptis.batch.job.b0005;
 
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.vo.BusRoute;
@@ -18,16 +18,16 @@ import java.util.List;
 
 @Slf4j
 @Component
-@Qualifier("B0004DoMainLogicItemReader")
+@Qualifier("B0005DoMainLogicItemReader")
 @StepScope
-public class B0004DoMainLogicItemReader implements ItemReader<B0004DoMainLogicItemInput> {
+public class B0005DoMainLogicItemReader implements ItemReader<B0005DoMainLogicItemInput> {
     private final String jobName;
     private final String jobDate;
     private StepExecution stepExecution;
-    private final List<B0004DoMainLogicItemInput> items;
+    private final List<B0005DoMainLogicItemInput> items;
     private final BusRouteService busRouteService;
 
-    public B0004DoMainLogicItemReader(
+    public B0005DoMainLogicItemReader(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             BusRouteService busRouteService
@@ -53,7 +53,7 @@ public class B0004DoMainLogicItemReader implements ItemReader<B0004DoMainLogicIt
         List<BusRoute> busRouteList = busRouteService.findBusRouteByGatheringStatusCode("02", true);
 
         for (BusRoute busRoute : busRouteList) {
-            this.items.add(B0004DoMainLogicItemInput
+            this.items.add(B0005DoMainLogicItemInput
                     .builder()
                     .id(busRoute.getId())
                     .busRouteId(busRoute.getBusRouteId())
@@ -63,7 +63,7 @@ public class B0004DoMainLogicItemReader implements ItemReader<B0004DoMainLogicIt
     }
 
     @Override
-    public B0004DoMainLogicItemInput read() {
+    public B0005DoMainLogicItemInput read() {
         if (stepExecution.isTerminateOnly()) {
             return null;
         }
