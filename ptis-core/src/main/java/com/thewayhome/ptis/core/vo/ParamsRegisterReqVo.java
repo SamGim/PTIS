@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.vo;
+package com.thewayhome.ptis.core.vo;
 
 import com.thewayhome.ptis.core.vo.BaseRequestVo;
 import lombok.*;

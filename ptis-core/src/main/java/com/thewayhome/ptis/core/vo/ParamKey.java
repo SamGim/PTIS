@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.batch.vo;
+package com.thewayhome.ptis.core.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

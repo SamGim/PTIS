@@ -1,6 +1,5 @@
-package com.thewayhome.ptis.batch.vo;
+package com.thewayhome.ptis.core.vo;
 
-import com.thewayhome.ptis.core.vo.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

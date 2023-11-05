@@ -1,7 +1,7 @@
-package com.thewayhome.ptis.batch.repository;
+package com.thewayhome.ptis.core.repository;
 
-import com.thewayhome.ptis.batch.vo.Param;
-import com.thewayhome.ptis.batch.vo.ParamKey;
+import com.thewayhome.ptis.core.vo.Param;
+import com.thewayhome.ptis.core.vo.ParamKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

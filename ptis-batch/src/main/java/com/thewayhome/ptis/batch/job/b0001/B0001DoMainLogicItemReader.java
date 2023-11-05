@@ -1,8 +1,8 @@
 package com.thewayhome.ptis.batch.job.b0001;
 
 import com.mysql.cj.util.StringUtils;
-import com.thewayhome.ptis.batch.service.ParamService;
-import com.thewayhome.ptis.batch.vo.Param;
+import com.thewayhome.ptis.core.service.ParamService;
+import com.thewayhome.ptis.core.vo.Param;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.NoSuchJobException;

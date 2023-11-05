@@ -2,9 +2,9 @@ package com.thewayhome.ptis.batch.job.b0005;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.batch.service.ParamService;
+import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.batch.util.APIConnector;
-import com.thewayhome.ptis.batch.vo.Param;
+import com.thewayhome.ptis.core.vo.Param;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.vo.BusRouteProcessRegisterReqVo;
 import com.thewayhome.ptis.core.vo.BusStationRegisterReqVo;
