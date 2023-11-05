@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.core.entity;
+package com.thewayhome.ptis.core.entity.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;

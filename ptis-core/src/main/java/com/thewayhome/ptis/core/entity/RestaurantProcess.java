@@ -1,5 +1,6 @@
 package com.thewayhome.ptis.core.entity;
 
+import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-public class RestaurantProcess extends BaseEntity{
+public class RestaurantProcess extends BaseEntity {
 
     @Id
     @Column(name="id", length = 12, nullable = false)

@@ -1,6 +1,7 @@
 package com.thewayhome.ptis.core.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

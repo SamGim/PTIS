@@ -1,5 +1,6 @@
 package com.thewayhome.ptis.core.entity;
 
+import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

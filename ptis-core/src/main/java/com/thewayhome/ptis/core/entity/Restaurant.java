@@ -1,5 +1,6 @@
 package com.thewayhome.ptis.core.entity;
 
+import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-public class Restaurant extends BaseEntity{
+public class Restaurant extends BaseEntity {
     @Id
     @Column(name="id", length = 12, nullable = false)
     @Size(min = 12, max = 12)
