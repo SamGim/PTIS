@@ -1,8 +1,8 @@
 package com.thewayhome.ptis.core.service;
 
 import com.thewayhome.ptis.core.repository.ParamRepository;
-import com.thewayhome.ptis.core.vo.Param;
-import com.thewayhome.ptis.core.vo.ParamKey;
+import com.thewayhome.ptis.core.entity.Param;
+import com.thewayhome.ptis.core.entity.ParamKey;
 import com.thewayhome.ptis.core.vo.ParamsRegisterReqVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

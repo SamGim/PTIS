@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0002;
 
 import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.vo.BusStation;
+import com.thewayhome.ptis.core.entity.BusStation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;

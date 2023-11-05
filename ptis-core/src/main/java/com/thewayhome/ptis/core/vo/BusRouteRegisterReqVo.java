@@ -1,5 +1,6 @@
 package com.thewayhome.ptis.core.vo;
 
+import com.thewayhome.ptis.core.entity.BusStation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

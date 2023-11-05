@@ -1,5 +1,8 @@
 package com.thewayhome.ptis.core.service;
 
+import com.thewayhome.ptis.core.entity.BusStation;
+import com.thewayhome.ptis.core.entity.BusStationProcess;
+import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.repository.BusStationProcessRepository;
 import com.thewayhome.ptis.core.repository.BusStationRepository;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;

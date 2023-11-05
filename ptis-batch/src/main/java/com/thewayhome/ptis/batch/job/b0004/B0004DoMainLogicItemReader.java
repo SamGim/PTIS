@@ -1,21 +1,13 @@
 package com.thewayhome.ptis.batch.job.b0004;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mysql.cj.util.StringUtils;
-import com.thewayhome.ptis.batch.job.b0001.B0001DoMainLogicItemInput;
 import com.thewayhome.ptis.batch.service.ParamService;
 import com.thewayhome.ptis.batch.util.CommonUtils;
 import com.thewayhome.ptis.batch.vo.Param;
-import com.thewayhome.ptis.core.service.BusRouteService;
-import com.thewayhome.ptis.core.vo.BusRoute;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.JobInterruptedException;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.NoSuchJobException;
 import org.springframework.batch.item.ExecutionContext;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,12 +16,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Slf4j

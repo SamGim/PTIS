@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.batch.util.APIConnector;
-import com.thewayhome.ptis.core.vo.Param;
+import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.vo.BusRouteRegisterReqVo;
 import com.thewayhome.ptis.core.vo.BusStationProcessRegisterReqVo;

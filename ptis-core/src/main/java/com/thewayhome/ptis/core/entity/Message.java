@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.core.vo;
+package com.thewayhome.ptis.core.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.Column;

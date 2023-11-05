@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.core.controller;
 
 import com.thewayhome.ptis.core.service.RouteService;
-import com.thewayhome.ptis.core.vo.Route;
+import com.thewayhome.ptis.core.entity.Route;
 import com.thewayhome.ptis.core.vo.RouteRegisterReqVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

@@ -1,10 +1,9 @@
-package com.thewayhome.ptis.core.vo;
+package com.thewayhome.ptis.core.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.GenericGenerator;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
