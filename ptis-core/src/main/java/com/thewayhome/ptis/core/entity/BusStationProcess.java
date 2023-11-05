@@ -37,6 +37,29 @@ public class BusStationProcess extends BaseEntity {
     private String gatheringStatusCode;
 
     /*
+     * slf_gat_stcd
+     * 버스정류장 정보의 수집 상태를 구분하는 상태코드
+     *
+     * 00: 미수집
+     * 01: 버스정류장 기본정보 수집 (API)
+     * 02: 버스정류장 상세정보 수집 (API)
+     * 99: 수집오류
+     */
+    @Column(name="slf_gat_stcd", nullable = false)
+    private String selfGatheringStatusCode;
+
+    /*
+     * route_gat_stcd
+     * 버스정류장 ID를 통한 버스노선 정보의 수집 상태를 구분하는 상태코드
+     *
+     * 00: 미수집
+     * 01: 버스노선 정보 수집 (API)
+     * 99: 수집오류
+     */
+    @Column(name="route_gat_stcd", nullable = false)
+    private String routeGatheringStatusCode;
+
+    /*
      * fst_gat_dt
      * 버스정류장 정보의 최초 수집 일자
      */
