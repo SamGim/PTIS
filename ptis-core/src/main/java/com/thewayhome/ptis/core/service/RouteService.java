@@ -6,7 +6,7 @@ import com.thewayhome.ptis.core.entity.Station;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
 import com.thewayhome.ptis.core.repository.RouteRepository;
 import com.thewayhome.ptis.core.repository.StationRepository;
-import com.thewayhome.ptis.core.vo.*;
+import com.thewayhome.ptis.core.dto.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class RouteService {
     private IdSequenceRepository idSequenceRepository;
 
     @Transactional
-    public Route saveRoute(RouteRegisterReqVo req) {
+    public Route saveRoute(RouteRegisterReqDto req) {
         Route route = new Route();
 
         // COM

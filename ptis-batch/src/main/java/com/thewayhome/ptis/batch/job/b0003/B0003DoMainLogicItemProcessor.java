@@ -6,8 +6,8 @@ import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.vo.BusRouteProcessRegisterReqVo;
-import com.thewayhome.ptis.core.vo.BusStationRegisterReqVo;
+import com.thewayhome.ptis.core.dto.BusRouteProcessRegisterReqDto;
+import com.thewayhome.ptis.core.dto.BusStationRegisterReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -84,12 +84,12 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
             throw new IllegalArgumentException();
         }
 
-        BusRouteProcessRegisterReqVo routeProcessReq = new BusRouteProcessRegisterReqVo();
+        BusRouteProcessRegisterReqDto routeProcessReq = new BusRouteProcessRegisterReqDto();
         routeProcessReq.setId(id);
         routeProcessReq.setGatheringStatusCode("02");
         routeProcessReq.setOperatorId(jobName);
 
-        List<BusStationRegisterReqVo> stationReqList = new ArrayList<>();
+        List<BusStationRegisterReqDto> stationReqList = new ArrayList<>();
         try {
             JsonNode rootNode = objectMapper.readTree(dataFromAPI);
 
@@ -100,7 +100,7 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
                 String busStationPosX = item.get("gpsX").asText();
                 String busStationPosY = item.get("gpsY").asText();
 
-                BusStationRegisterReqVo req = new BusStationRegisterReqVo();
+                BusStationRegisterReqDto req = new BusStationRegisterReqDto();
                 req.setBusStationId(busStationId);
                 req.setBusStationNo(busStationNo);
                 req.setBusStationName(busStationName);

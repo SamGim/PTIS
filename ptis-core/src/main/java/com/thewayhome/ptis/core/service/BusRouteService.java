@@ -6,7 +6,7 @@ import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.repository.BusRouteProcessRepository;
 import com.thewayhome.ptis.core.repository.BusRouteRepository;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
-import com.thewayhome.ptis.core.vo.*;
+import com.thewayhome.ptis.core.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +40,7 @@ public class BusRouteService {
         return busRouteProcess != null ? busRouteProcess.stream().map(BusRouteProcess::getBusRoute).toList() : null;
     }
 
-    public BusRoute saveBusRoute(BusRouteRegisterReqVo req) {
+    public BusRoute saveBusRoute(BusRouteRegisterReqDto req) {
         BusRoute busRoute = busRouteRepository.findByBusRouteId(req.getBusRouteId()).orElse(new BusRoute());
 
         // TYPE
@@ -94,7 +94,7 @@ public class BusRouteService {
         return busRouteRepository.save(busRoute);
     }
 
-    public void changeBusRouteGatheringStatusCode(BusRouteProcessRegisterReqVo req) {
+    public void changeBusRouteGatheringStatusCode(BusRouteProcessRegisterReqDto req) {
         // ID
         BusRouteProcess busRouteProcess = busRouteProcessRepository.findById(req.getId()).orElseThrow(IllegalStateException::new);
 

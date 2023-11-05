@@ -1,6 +1,5 @@
-package com.thewayhome.ptis.core.vo;
+package com.thewayhome.ptis.core.dto;
 
-import com.thewayhome.ptis.core.vo.BaseRequestVo;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -8,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParamsRegisterReqVo extends BaseRequestVo {
+public class ParamsRegisterReqDto extends BaseRequestDto {
     private String groupName;
     private String paramName;
     private String value;

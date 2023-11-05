@@ -1,6 +1,5 @@
-package com.thewayhome.ptis.core.vo;
+package com.thewayhome.ptis.core.dto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class RouteRegisterReqVo extends BaseRequestVo {
+public class RouteRegisterReqDto extends BaseRequestDto {
     private String stationStId;
     private String stationEdId;
     private long costBase;

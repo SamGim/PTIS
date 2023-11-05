@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.core.vo;
+package com.thewayhome.ptis.core.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantRegisterReqVo extends BaseRequestVo{
+public class RestaurantRegisterReqDto extends BaseRequestDto {
     private String restaurantName;
     private String restaurantId;
     private String restaurantPosX;

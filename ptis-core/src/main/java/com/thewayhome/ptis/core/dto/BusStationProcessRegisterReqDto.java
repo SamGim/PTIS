@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.core.vo;
+package com.thewayhome.ptis.core.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BusRouteProcessRegisterReqVo extends BaseRequestVo {
+public class BusStationProcessRegisterReqDto extends BaseRequestDto {
     private String id;
     private String gatheringStatusCode;
 }

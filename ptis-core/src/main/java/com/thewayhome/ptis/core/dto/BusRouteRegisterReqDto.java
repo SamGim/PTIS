@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.core.vo;
+package com.thewayhome.ptis.core.dto;
 
 import com.thewayhome.ptis.core.entity.BusStation;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BusRouteRegisterReqVo extends BaseRequestVo {
+public class BusRouteRegisterReqDto extends BaseRequestDto {
     private String busRouteId;
     private String busRouteName;
     private String busRouteNo;

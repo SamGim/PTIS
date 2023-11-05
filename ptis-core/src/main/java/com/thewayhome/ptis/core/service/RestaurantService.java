@@ -6,7 +6,7 @@ import com.thewayhome.ptis.core.repository.RestaurantRepository;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Restaurant;
 import com.thewayhome.ptis.core.entity.RestaurantProcess;
-import com.thewayhome.ptis.core.vo.RestaurantRegisterReqVo;
+import com.thewayhome.ptis.core.dto.RestaurantRegisterReqDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class RestaurantService {
     @Autowired
     private RestaurantProcessRepository restaurantProcessRepository;
 
-    public Restaurant saveRestaurant(RestaurantRegisterReqVo req) {
+    public Restaurant saveRestaurant(RestaurantRegisterReqDto req) {
         Restaurant restaurant = restaurantRepository.findByRestaurantId(req.getRestaurantId()).orElse(new Restaurant());
 
 

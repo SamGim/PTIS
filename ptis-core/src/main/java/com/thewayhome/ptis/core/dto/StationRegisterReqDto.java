@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.core.vo;
+package com.thewayhome.ptis.core.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class StationRegisterReqVo extends BaseRequestVo {
+public class StationRegisterReqDto extends BaseRequestDto {
     private String stationId;
     private String stationPosX;
     private String stationPosY;

@@ -3,7 +3,7 @@ package com.thewayhome.ptis.core.service;
 import com.thewayhome.ptis.core.repository.ParamRepository;
 import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.entity.ParamKey;
-import com.thewayhome.ptis.core.vo.ParamsRegisterReqVo;
+import com.thewayhome.ptis.core.dto.ParamsRegisterReqDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class ParamService {
         return paramRepository.findById(id);
     }
 
-    public Param saveParam(ParamsRegisterReqVo req) {
+    public Param saveParam(ParamsRegisterReqDto req) {
         // ID
         ParamKey id = ParamKey.builder()
                 .groupName(req.getGroupName())

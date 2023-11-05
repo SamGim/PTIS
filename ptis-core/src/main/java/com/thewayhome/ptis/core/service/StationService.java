@@ -4,7 +4,7 @@ import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Station;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
 import com.thewayhome.ptis.core.repository.StationRepository;
-import com.thewayhome.ptis.core.vo.*;
+import com.thewayhome.ptis.core.dto.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class StationService {
     private IdSequenceRepository idSequenceRepository;
 
     @Transactional
-    public Station saveStation(StationRegisterReqVo req) {
+    public Station saveStation(StationRegisterReqDto req) {
         Station station = new Station();
 
         // COM

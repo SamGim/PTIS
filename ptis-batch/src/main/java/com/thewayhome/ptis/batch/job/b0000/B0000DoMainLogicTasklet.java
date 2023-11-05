@@ -2,7 +2,7 @@ package com.thewayhome.ptis.batch.job.b0000;
 
 import com.thewayhome.ptis.batch.job.base.AbstractDoMainLogicTasklet;
 import com.thewayhome.ptis.core.service.ParamService;
-import com.thewayhome.ptis.core.vo.ParamsRegisterReqVo;
+import com.thewayhome.ptis.core.dto.ParamsRegisterReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -43,7 +43,7 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         log.info("[" + taskletName + "] jobName = " + jobName);
         log.info("[" + taskletName + "] jobDate = " + jobDate);
 
-        ParamsRegisterReqVo B0001InputParams = new ParamsRegisterReqVo();
+        ParamsRegisterReqDto B0001InputParams = new ParamsRegisterReqDto();
         B0001InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
         B0001InputParams.setParamName("B0001");
         B0001InputParams.setValue("R|ws_bus_st_20230914.csv|,");
@@ -51,7 +51,7 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         B0001InputParams.setOperatorId(jobName);
         paramService.saveParam(B0001InputParams);
 
-        ParamsRegisterReqVo B0002InputParams = new ParamsRegisterReqVo();
+        ParamsRegisterReqDto B0002InputParams = new ParamsRegisterReqDto();
         B0002InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
         B0002InputParams.setParamName("B0002");
         B0002InputParams.setValue(this.apiEndpoint+"|/ws-pure/getRouteByStationList");
@@ -59,7 +59,7 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         B0002InputParams.setOperatorId(jobName);
         paramService.saveParam(B0002InputParams);
 
-        ParamsRegisterReqVo B0003InputParams = new ParamsRegisterReqVo();
+        ParamsRegisterReqDto B0003InputParams = new ParamsRegisterReqDto();
         B0003InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
         B0003InputParams.setParamName("B0003");
         B0003InputParams.setValue(this.apiEndpoint+"|/ws-pure/getStationsByRouteList");
@@ -67,7 +67,7 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         B0003InputParams.setOperatorId(jobName);
         paramService.saveParam(B0003InputParams);
 
-        ParamsRegisterReqVo B0004InputParams = new ParamsRegisterReqVo();
+        ParamsRegisterReqDto B0004InputParams = new ParamsRegisterReqDto();
         B0004InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
         B0004InputParams.setParamName("B0004");
         B0004InputParams.setValue("J|seoul_cafe_and_restaurant_20231101.json");

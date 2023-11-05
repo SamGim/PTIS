@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0003;
 
-import com.thewayhome.ptis.core.vo.BusRouteProcessRegisterReqVo;
-import com.thewayhome.ptis.core.vo.BusStationRegisterReqVo;
+import com.thewayhome.ptis.core.dto.BusRouteProcessRegisterReqDto;
+import com.thewayhome.ptis.core.dto.BusStationRegisterReqDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,6 +12,6 @@ import java.util.List;
 public class B0003DoMainLogicItemOutput {
     private String id;
     private String arsId;
-    private BusRouteProcessRegisterReqVo busRouteProcessRegisterReqVo;
-    private List<BusStationRegisterReqVo> busStationRegisterReqVoList;
+    private BusRouteProcessRegisterReqDto busRouteProcessRegisterReqVo;
+    private List<BusStationRegisterReqDto> busStationRegisterReqVoList;
 }

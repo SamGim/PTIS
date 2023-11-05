@@ -1,16 +1,8 @@
 package com.thewayhome.ptis.batch.job.b0004;
 
-import com.thewayhome.ptis.batch.job.b0001.B0001DoMainLogicItemOutput;
-import com.thewayhome.ptis.core.service.BusRouteService;
-import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.service.MessageService;
 import com.thewayhome.ptis.core.service.RestaurantService;
-import com.thewayhome.ptis.core.vo.BusStationRegisterReqVo;
-import com.thewayhome.ptis.core.vo.RestaurantRegisterReqVo;
+import com.thewayhome.ptis.core.dto.RestaurantRegisterReqDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.JobInterruptedException;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
@@ -42,7 +34,7 @@ public class B0004DoMainLogicItemWriter implements ItemWriter<B0004DoMainLogicIt
     @Override
     public void write(Chunk<? extends B0004DoMainLogicItemOutput> chunk) throws Exception {
         for (B0004DoMainLogicItemOutput item : chunk.getItems()) {
-            RestaurantRegisterReqVo newEntity = RestaurantRegisterReqVo.builder()
+            RestaurantRegisterReqDto newEntity = RestaurantRegisterReqDto.builder()
                     .restaurantId(item.getNodeId())
                     .restaurantAddress(item.getNodeAddress())
                     .restaurantPosX(item.getNodePosX())
