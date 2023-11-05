@@ -67,6 +67,14 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         B0003InputParams.setOperatorId(jobName);
         paramService.saveParam(B0003InputParams);
 
+        ParamsRegisterReqVo B0004InputParams = new ParamsRegisterReqVo();
+        B0004InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
+        B0004InputParams.setParamName("B0004");
+        B0004InputParams.setValue("J|seoul_cafe_and_restaurant_20231101.json");
+        B0004InputParams.setUseYn("Y");
+        B0004InputParams.setOperatorId(jobName);
+        paramService.saveParam(B0004InputParams);
+
         return RepeatStatus.FINISHED;
     }
 }
