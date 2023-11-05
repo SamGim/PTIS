@@ -37,6 +37,51 @@ public class BusRouteProcess extends BaseEntity {
     private String gatheringStatusCode;
 
     /*
+     * slf_gat_stcd
+     * 버스노선 정보의 수집 상태를 구분하는 상태코드
+     *
+     * 00: 미수집
+     * 01: 버스노선 기본정보 수집 (API)
+     * 02: 버스노선 상세정보 수집 (API)
+     * 99: 수집오류
+     */
+    @Column(name="slf_gat_stcd", nullable = false)
+    private String selfGatheringStatusCode;
+
+    /*
+     * stat_gat_stcd
+     * 버스노선 ID를 통한 버스정류장 정보의 수집 상태를 구분하는 상태코드
+     *
+     * 00: 미수집
+     * 01: 버스정류장 정보 수집 (API)
+     * 99: 수집오류
+     */
+    @Column(name="stat_gat_stcd", nullable = false)
+    private String stationGatheringStatusCode;
+
+//    /*
+//     * bus_cost_prc_stcd
+//     * 버스를 통한 소요시간 처리(계산) 상태를 구분하는 상태코드
+//     *
+//     * 00: 미수집
+//     * 01: 처리완료
+//     * 99: 수집오류
+//     */
+//    @Column(name="bus_cost_prc_stcd", nullable = false)
+//    private String busCostGatheringStatusCode;
+//
+//    /*
+//     * walk_cost_prc_stcd
+//     * 도보를 통한 소요시간 처리(계산) 상태를 구분하는 상태코드
+//     *
+//     * 00: 미수집
+//     * 01: 처리완료
+//     * 99: 수집오류
+//     */
+//    @Column(name="walk_cost_prc_stcd", nullable = false)
+//    private String walkCostGatheringStatusCode;
+
+    /*
      * fst_gat_dt
      * 버스노선 정보의 최초 수집 일자
      */
