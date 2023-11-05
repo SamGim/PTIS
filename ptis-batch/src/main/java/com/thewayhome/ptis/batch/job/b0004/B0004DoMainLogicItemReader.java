@@ -1,9 +1,9 @@
 package com.thewayhome.ptis.batch.job.b0004;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.thewayhome.ptis.batch.service.ParamService;
+import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.batch.util.CommonUtils;
-import com.thewayhome.ptis.batch.vo.Param;
+import com.thewayhome.ptis.core.entity.Param;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.NoSuchJobException;
