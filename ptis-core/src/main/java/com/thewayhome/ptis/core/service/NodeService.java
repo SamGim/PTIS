@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class NodeService {
@@ -19,6 +21,23 @@ public class NodeService {
     private BusStationProcessRepository busStationProcessRepository;
     @Autowired
     private IdSequenceRepository idSequenceRepository;
+
+    public List<Node[]> findByIdsBetween(String srcNodeIdSt, String srcNodeIdEd, String destNodeIdSt, String destNodeIdEd) {
+        List<Node> srcNodes = nodeRepository.findByIdsBetween(srcNodeIdSt, srcNodeIdEd);
+        List<Node> destNodes = nodeRepository.findByIdsBetween(destNodeIdSt, destNodeIdEd);
+
+        List<Node[]> nodePairs = new ArrayList<>();
+
+        for (Node srcNode : srcNodes) {
+            for (Node destNode : destNodes) {
+                if (!srcNode.getId().equals(destNode.getId())) {
+                    nodePairs.add(new Node[]{srcNode, destNode});
+                }
+            }
+        }
+
+        return nodePairs;
+    }
 
     public Node createNodeFromBusStation(NodeRegisterReqDto req, String busStationId) {
         Node node = new Node();
