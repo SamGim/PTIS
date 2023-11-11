@@ -38,6 +38,12 @@ public class BusStationService {
                 busStationProcessRepository.findByGatheringStatusCodeOrderById(gatheringStatusCode);
         return busStationProcess != null ? busStationProcess.stream().map(BusStationProcess::getBusStation).toList() : null;
     }
+    public List<BusStation> findBusStationByNodeCreationStatusCode(String nodeCreationStatusCode, boolean notCondition) {
+        List<BusStationProcess> busStationProcess = notCondition ?
+                busStationProcessRepository.findByNodeCreationStatusCodeNotOrderById(nodeCreationStatusCode) :
+                busStationProcessRepository.findByNodeCreationStatusCodeOrderById(nodeCreationStatusCode);
+        return busStationProcess != null ? busStationProcess.stream().map(BusStationProcess::getBusStation).toList() : null;
+    }
 
     public List<BusStation> findBusStationByFirstGatheringDate(String startDate, String endDate) {
         List<BusStationProcess> busStationProcess = busStationProcessRepository.findByFirstGatheringDateInDateRange(startDate, endDate);
