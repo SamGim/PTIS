@@ -81,12 +81,14 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
         String dataFromAPI = APIConnector.getDataFromAPI(endpoint, path, queryParams).block();
 
         if (dataFromAPI == null) {
-            throw new IllegalArgumentException();
+            return null;
         }
 
         BusRouteProcessRegisterReqDto routeProcessReq = new BusRouteProcessRegisterReqDto();
         routeProcessReq.setId(id);
         routeProcessReq.setGatheringStatusCode("02");
+        routeProcessReq.setSelfGatheringStatusCode("02");
+        routeProcessReq.setStationGatheringStatusCode("00");
         routeProcessReq.setOperatorId(jobName);
 
         List<BusStationRegisterReqDto> stationReqList = new ArrayList<>();

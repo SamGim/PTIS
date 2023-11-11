@@ -33,7 +33,7 @@ public class BusRouteProcess extends BaseEntity {
      * 02: 버스노선 상세정보 수집 (API)
      * 99: 수집오류
      */
-    @Column(name="gat_stcd", nullable = false)
+    @Column(name="gat_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
     private String gatheringStatusCode;
 
     /*
@@ -45,7 +45,7 @@ public class BusRouteProcess extends BaseEntity {
      * 02: 버스노선 상세정보 수집 (API)
      * 99: 수집오류
      */
-    @Column(name="slf_gat_stcd", nullable = false)
+    @Column(name="slf_gat_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
     private String selfGatheringStatusCode;
 
     /*
@@ -56,7 +56,7 @@ public class BusRouteProcess extends BaseEntity {
      * 01: 버스정류장 정보 수집 (API)
      * 99: 수집오류
      */
-    @Column(name="stat_gat_stcd", nullable = false)
+    @Column(name="stat_gat_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
     private String stationGatheringStatusCode;
 
 //    /*
