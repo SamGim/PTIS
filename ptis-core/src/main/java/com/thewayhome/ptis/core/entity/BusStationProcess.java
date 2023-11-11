@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
@@ -60,6 +62,17 @@ public class BusStationProcess extends BaseEntity {
     private String routeGatheringStatusCode;
 
     /*
+     * node_cre_stcd
+     * 버스정류장 ID를 통한 노드 정보의 생성 상태를 구분하는 상태코드
+     *
+     * 00: 미생성
+     * 01: 노드 정보 생성
+     * 99: 생성오류
+     */
+    @Column(name="node_cre_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
+    private String nodeCreationStatusCode;
+
+    /*
      * fst_gat_dt
      * 버스정류장 정보의 최초 수집 일자
      */
@@ -76,4 +89,7 @@ public class BusStationProcess extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", referencedColumnName = "id")
     private BusStation busStation;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Node> nodes;
 }
