@@ -81,7 +81,7 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
         String dataFromAPI = APIConnector.getDataFromAPI(endpoint, path, queryParams).block();
 
         if (dataFromAPI == null) {
-            throw new IllegalArgumentException();
+            return null;
         }
 
         BusRouteProcessRegisterReqDto routeProcessReq = new BusRouteProcessRegisterReqDto();
