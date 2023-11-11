@@ -15,5 +15,5 @@ public class LinkRegisterReqDto extends BaseRequestDto {
     private String linkName;
     private Node stNode;
     private Node edNode;
-    private int cost;
+    private long cost;
 }
