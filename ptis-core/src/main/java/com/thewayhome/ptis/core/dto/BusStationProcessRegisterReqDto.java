@@ -12,4 +12,5 @@ public class BusStationProcessRegisterReqDto extends BaseRequestDto {
     private String gatheringStatusCode;
     private String selfGatheringStatusCode;
     private String routeGatheringStatusCode;
+    private String nodeCreationStatusCode;
 }
