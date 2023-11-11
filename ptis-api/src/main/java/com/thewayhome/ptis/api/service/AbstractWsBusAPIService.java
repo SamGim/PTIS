@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
@@ -103,16 +102,20 @@ public abstract class AbstractWsBusAPIService {
 
                                 return Mono.just(result);
                             } catch (JAXBException e) {
-                                throw new ResponseStatusException(
+                                return Mono.error(new ResponseStatusException(
                                         HttpStatus.INTERNAL_SERVER_ERROR,
                                         "XML 언마셜링 실패 " + e.getErrorCode() + e.getMessage()
-                                );
+                                ));
                             }
                         });
             } else if (response.statusCode().is4xxClientError()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, response.bodyToMono(String.class).block());
+                return response
+                        .bodyToMono(String.class)
+                        .flatMap(body -> Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, body)));
             } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, response.bodyToMono(String.class).block());
+                return response
+                        .bodyToMono(String.class)
+                        .flatMap(body -> Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, body)));
             }
         });
     }
