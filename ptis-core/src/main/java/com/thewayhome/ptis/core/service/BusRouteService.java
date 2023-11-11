@@ -81,6 +81,8 @@ public class BusRouteService {
             busRouteProcess.setCreatedBy(req.getOperatorId());
             busRouteProcess.setFirstGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
             busRouteProcess.setGatheringStatusCode("01");
+            busRouteProcess.setSelfGatheringStatusCode("01");
+            busRouteProcess.setStationGatheringStatusCode("00");
         }
         busRouteProcess.setUpdatedAt(LocalDateTime.now());
         busRouteProcess.setUpdatedBy(req.getOperatorId());
