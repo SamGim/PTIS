@@ -10,4 +10,6 @@ import lombok.*;
 public class BusStationProcessRegisterReqDto extends BaseRequestDto {
     private String id;
     private String gatheringStatusCode;
+    private String selfGatheringStatusCode;
+    private String routeGatheringStatusCode;
 }

@@ -110,6 +110,8 @@ public class BusStationService {
 
         // DATA
         busStationProcess.setGatheringStatusCode(req.getGatheringStatusCode());
+        busStationProcess.setSelfGatheringStatusCode(req.getSelfGatheringStatusCode());
+        busStationProcess.setRouteGatheringStatusCode(req.getRouteGatheringStatusCode());
 
         // DB
         busStationProcess.setUpdatedAt(LocalDateTime.now());
