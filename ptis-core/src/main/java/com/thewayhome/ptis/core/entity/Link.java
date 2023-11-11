@@ -41,6 +41,6 @@ public class Link extends BaseEntity {
     private Node edNode;
 
     @Column(name="cost", nullable = false)
-    private int cost;
+    private long cost;
 
 }
