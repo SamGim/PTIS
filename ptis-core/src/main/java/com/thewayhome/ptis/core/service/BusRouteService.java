@@ -100,6 +100,8 @@ public class BusRouteService {
 
         // DATA
         busRouteProcess.setGatheringStatusCode(req.getGatheringStatusCode());
+        busRouteProcess.setSelfGatheringStatusCode(req.getSelfGatheringStatusCode());
+        busRouteProcess.setStationGatheringStatusCode(req.getStationGatheringStatusCode());
 
         // DB
         busRouteProcess.setUpdatedAt(LocalDateTime.now());
