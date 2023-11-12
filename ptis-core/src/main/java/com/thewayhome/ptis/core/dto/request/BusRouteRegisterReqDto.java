@@ -1,5 +1,6 @@
 package com.thewayhome.ptis.core.dto.request;
 
+import com.thewayhome.ptis.core.dto.base.BaseDto;
 import com.thewayhome.ptis.core.entity.BusStation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BusRouteRegisterReqDto extends BaseRequestDto {
+public class BusRouteRegisterReqDto extends BaseDto {
     private String busRouteId;
     private String busRouteName;
     private String busRouteNo;

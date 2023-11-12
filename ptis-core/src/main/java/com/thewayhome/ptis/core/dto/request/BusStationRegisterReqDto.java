@@ -1,5 +1,6 @@
 package com.thewayhome.ptis.core.dto.request;
 
+import com.thewayhome.ptis.core.dto.base.BaseDto;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -7,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BusStationRegisterReqDto extends BaseRequestDto {
+public class BusStationRegisterReqDto extends BaseDto {
     private String busStationId;
     private String busStationName;
     private String busStationNo;
