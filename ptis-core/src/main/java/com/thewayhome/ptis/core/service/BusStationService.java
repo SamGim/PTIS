@@ -1,14 +1,19 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterReqDto;
-import com.thewayhome.ptis.core.dto.request.BusStationRegisterReqDto;
+import com.thewayhome.ptis.core.vo.BusStationVo;
+import com.thewayhome.ptis.core.vo.BusStationProcessVo;
+import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterRequestDto;
+import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.BusStationProcess;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.repository.BusStationProcessRepository;
 import com.thewayhome.ptis.core.repository.BusStationRepository;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.thewayhome.ptis.core.util.BusStationEntityVoConverter;
+import com.thewayhome.ptis.core.util.BusStationProcessEntityVoConverter;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,26 +22,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BusStationService {
-    @Autowired
-    private BusStationRepository busStationRepository;
-    @Autowired
-    private BusStationProcessRepository busStationProcessRepository;
-    @Autowired
-    private IdSequenceRepository idSequenceRepository;
+    private final BusStationRepository busStationRepository;
+    private final BusStationProcessRepository busStationProcessRepository;
+    private final IdSequenceRepository idSequenceRepository;
+    private final BusStationEntityVoConverter busStationEntityDtoConverter;
+    private final BusStationProcessEntityVoConverter busStationProcessEntityDtoConverter;
+
 
     public List<BusStation> getAllBusStation() {
         return busStationRepository.findAll();
     }
 
+    public Optional<BusStation> findById(String id) {
+        return busStationRepository.findById(id);
+    }
+    public Optional<BusStationProcess> findProcessById(String id) {
+        return busStationProcessRepository.findById(id);
+    }
 
     public Optional<BusStation> findByArsId(String arsId) {
         return busStationRepository.findByBusStationId(arsId);
     }
-    public List<BusStation> findBusStationByGatheringStatusCode(String gatheringStatusCode, boolean notCondition) {
+    public List<BusStation> findBusStationByBusRouteGatheringStatusCode(String gatheringStatusCode, boolean notCondition) {
         List<BusStationProcess> busStationProcess = notCondition ?
-                busStationProcessRepository.findByGatheringStatusCodeNotOrderById(gatheringStatusCode) :
-                busStationProcessRepository.findByGatheringStatusCodeOrderById(gatheringStatusCode);
+                busStationProcessRepository.findByBusRouteGatheringStatusCodeNotOrderById(gatheringStatusCode) :
+                busStationProcessRepository.findByBusRouteGatheringStatusCodeOrderById(gatheringStatusCode);
         return busStationProcess != null ? busStationProcess.stream().map(BusStationProcess::getBusStation).toList() : null;
     }
     public List<BusStation> findBusStationByNodeCreationStatusCode(String nodeCreationStatusCode, boolean notCondition) {
@@ -46,86 +58,104 @@ public class BusStationService {
         return busStationProcess != null ? busStationProcess.stream().map(BusStationProcess::getBusStation).toList() : null;
     }
 
-    public List<BusStation> findBusStationByFirstGatheringDate(String startDate, String endDate) {
-        List<BusStationProcess> busStationProcess = busStationProcessRepository.findByFirstGatheringDateInDateRange(startDate, endDate);
-        return busStationProcess != null ? busStationProcess.stream().map(BusStationProcess::getBusStation).toList() : null;
+    public BusStation saveBusStation(BusStationVo req) {
+        BusStation entity = busStationEntityDtoConverter.toEntity(req, req.getOperatorId());
+        return busStationRepository.save(entity);
     }
 
-    public List<BusStation> findBusStationByLastGatheringDate(String startDate, String endDate) {
-        List<BusStationProcess> busStationProcess = busStationProcessRepository.findByLastGatheringDateInDateRange(startDate, endDate);
-        return busStationProcess != null ? busStationProcess.stream().map(BusStationProcess::getBusStation).toList() : null;
+    public BusStationProcess saveBusStationProcess(BusStationProcessVo req) {
+        BusStationProcess entity = busStationProcessEntityDtoConverter.toEntity(req, req.getOperatorId());
+        return busStationProcessRepository.save(entity);
     }
 
-    public BusStation saveBusStation(BusStationRegisterReqDto req) {
-        BusStation busStation = busStationRepository.findByBusStationId(req.getBusStationId()).orElse(new BusStation());
-
-        // TYPE
-        busStation.setTpDscd("B");
-        busStation.setSrDscd("S");
-        busStation.setGsDscd("W");
-
+    @Transactional
+    public BusStation registerBusStation(BusStationRegisterRequestDto req) {
         // ID
-        if (busStation.getId() == null) {
-            IdSequence idSequence = idSequenceRepository.findById("BUS_STATION")
-                    .orElse(new IdSequence("BUS_STATION", 0L));
-            Long nextId = idSequence.getNextId();
+        IdSequence idSequence = idSequenceRepository.findById("BUS_STATION")
+                .orElse(new IdSequence("BUS_STATION", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(nextId + 1);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            busStation.setId(String.format("%012d", nextId + 1));
+        req.setId(String.format("%012d", id));
 
-            busStation.setCreatedAt(LocalDateTime.now());
-            busStation.setCreatedBy(req.getOperatorId());
-        }
+        // BusStation
+        BusStationVo busStationVo = BusStationVo.builder()
+                .id(req.getId())
+                .busStationId(req.getBusStationId())
+                .busStationName(req.getBusStationName())
+                .busStationNo(req.getBusStationNo())
+                .busStationPosX(Double.valueOf(req.getBusStationPosX()))
+                .busStationPosY(Double.valueOf(req.getBusStationPosY()))
+                .operatorId(req.getOperatorId())
+                .build();
 
-        // DATA
-        busStation.setBusStationId(req.getBusStationId());
-        busStation.setBusStationNo(req.getBusStationNo());
-        busStation.setBusStationName(req.getBusStationName());
-        busStation.setBusStationPosX(Double.parseDouble(req.getBusStationPosX()));
-        busStation.setBusStationPosY(Double.parseDouble(req.getBusStationPosY()));
+        BusStation busStation = this.saveBusStation(busStationVo);
 
-        // DB
-        busStation.setUpdatedAt(LocalDateTime.now());
-        busStation.setUpdatedBy(req.getOperatorId());
+        // BusStationProcess
+        BusStationProcessVo busStationProcessVo = BusStationProcessVo.builder()
+                .id(req.getId())
+                .busStation(busStationVo)
+                .busStationFirstGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .busStationLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .busStationGatheringStatusCode("01")
+                .busRouteFirstGatheringDate(" ")
+                .busRouteLastGatheringDate(" ")
+                .busRouteGatheringStatusCode("00")
+                .nodeFirstCreationDate(" ")
+                .nodeLastCreationDate(" ")
+                .nodeCreationStatusCode("00")
+                .operatorId(req.getOperatorId())
+                .build();
 
-        BusStationProcess busStationProcess = busStationProcessRepository.findById(busStation.getId()).orElse(new BusStationProcess());
+        this.saveBusStationProcess(busStationProcessVo);
 
-        // DB
-        if (busStationProcess.getId() == null) {
-            busStationProcess.setCreatedAt(LocalDateTime.now());
-            busStationProcess.setCreatedBy(req.getOperatorId());
-            busStationProcess.setFirstGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-            busStationProcess.setGatheringStatusCode("01");
-            busStationProcess.setSelfGatheringStatusCode("01");
-            busStationProcess.setRouteGatheringStatusCode("00");
-        }
-        busStationProcess.setUpdatedAt(LocalDateTime.now());
-        busStationProcess.setUpdatedBy(req.getOperatorId());
-        busStationProcess.setLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-
-        // ID
-        busStationProcess.setId(busStation.getId());
-
-        busStationProcessRepository.save(busStationProcess);
-
-        return busStationRepository.save(busStation);
+        return busStation;
     }
 
-    public void changeBusStationGatheringStatusCode(BusStationProcessRegisterReqDto req) {
-        // ID
-        BusStationProcess busStationProcess = busStationProcessRepository.findById(req.getId()).orElseThrow(IllegalStateException::new);
+    @Transactional
+    public BusStation updateBusStationDetail(BusStationRegisterRequestDto req) {
+//        BusStationDto busStationDto = BusStationDto.builder()
+//                .id(req.getId())
+//                .busStationId(req.getBusStationId())
+//                .busStationName(req.getBusStationName())
+//                .busStationNo(req.getBusStationNo())
+//                .busStationSubNo(req.getBusStationSubNo())
+//                .busStationStId(req.getBusStationStId())
+//                .busStationEdId(req.getBusStationEdId())
+//                .operatorId(req.getOperatorId())
+//                .build();
+//
+//        BusStation busStation = this.saveBusStation(busStationDto);
 
-        // DATA
-        busStationProcess.setGatheringStatusCode(req.getGatheringStatusCode());
-        busStationProcess.setSelfGatheringStatusCode(req.getSelfGatheringStatusCode());
-        busStationProcess.setRouteGatheringStatusCode(req.getRouteGatheringStatusCode());
+        BusStation busStation = this.findById(req.getId()).orElseThrow(IllegalArgumentException::new);
 
-        // DB
-        busStationProcess.setUpdatedAt(LocalDateTime.now());
-        busStationProcess.setUpdatedBy(req.getOperatorId());
+        BusStationProcessVo busStationProcessVo = BusStationProcessVo.builder()
+                .id(req.getId())
+                .busStationLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .busStationGatheringStatusCode("02")
+                .operatorId(req.getOperatorId())
+                .build();
 
-        busStationProcessRepository.save(busStationProcess);
+        this.saveBusStationProcess(busStationProcessVo);
+
+        return busStation;
+    }
+
+    @Transactional
+    public BusStation updateBusRoutesGatheringStatusCode(BusStationProcessRegisterRequestDto req) {
+        BusStation busStation = this.findById(req.getId()).orElseThrow(IllegalArgumentException::new);
+
+        BusStationProcessVo busStationProcessVo = BusStationProcessVo.builder()
+                .id(req.getId())
+                .busRouteLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .busRouteGatheringStatusCode("01")
+                .operatorId(req.getOperatorId())
+                .build();
+
+        this.saveBusStationProcess(busStationProcessVo);
+
+        return busStation;
     }
 }

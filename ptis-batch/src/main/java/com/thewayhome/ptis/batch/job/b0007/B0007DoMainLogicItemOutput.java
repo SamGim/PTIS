@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.batch.job.b0007;
 
-import com.thewayhome.ptis.core.dto.request.NodeRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.NodeRegisterRequestDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,5 +8,5 @@ import lombok.Data;
 @Builder
 public class B0007DoMainLogicItemOutput {
     private String busStationId;
-    private NodeRegisterReqDto nodeRegisterReqDto;
+    private NodeRegisterRequestDto nodeRegisterReqDto;
 }

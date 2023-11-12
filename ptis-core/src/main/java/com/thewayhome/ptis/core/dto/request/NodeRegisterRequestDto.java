@@ -1,17 +1,16 @@
 package com.thewayhome.ptis.core.dto.request;
 
 import com.thewayhome.ptis.core.dto.base.BaseDto;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class NodeRegisterReqDto extends BaseDto {
+@SuperBuilder
+public class NodeRegisterRequestDto extends BaseDto {
+    private String id;
     private String nodeName;
-    private double nodePosX;
-    private double nodePosY;
+    private Double nodePosX;
+    private Double nodePosY;
 }

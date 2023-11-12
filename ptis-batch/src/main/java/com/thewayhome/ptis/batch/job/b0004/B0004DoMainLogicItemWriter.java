@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0004;
 
 import com.thewayhome.ptis.core.service.RestaurantService;
-import com.thewayhome.ptis.core.dto.request.RestaurantRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.RestaurantRegisterRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
@@ -34,7 +34,7 @@ public class B0004DoMainLogicItemWriter implements ItemWriter<B0004DoMainLogicIt
     @Override
     public void write(Chunk<? extends B0004DoMainLogicItemOutput> chunk) throws Exception {
         for (B0004DoMainLogicItemOutput item : chunk.getItems()) {
-            RestaurantRegisterReqDto newEntity = RestaurantRegisterReqDto.builder()
+            RestaurantRegisterRequestDto newEntity = RestaurantRegisterRequestDto.builder()
                     .restaurantId(item.getNodeId())
                     .restaurantAddress(item.getNodeAddress())
                     .restaurantPosX(item.getNodePosX())
@@ -45,7 +45,7 @@ public class B0004DoMainLogicItemWriter implements ItemWriter<B0004DoMainLogicIt
 
             // DB
             newEntity.setOperatorId(this.jobName);
-            restaurantService.saveRestaurant(newEntity);
+            restaurantService.registerRestaurant(newEntity);
         }
 
     }

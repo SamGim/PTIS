@@ -1,22 +1,20 @@
 package com.thewayhome.ptis.core.dto.request;
 
+import com.thewayhome.ptis.core.vo.BusStationVo;
 import com.thewayhome.ptis.core.dto.base.BaseDto;
-import com.thewayhome.ptis.core.entity.BusStation;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BusRouteRegisterReqDto extends BaseDto {
+@SuperBuilder
+public class BusRouteRegisterRequestDto extends BaseDto {
+    private String id;
     private String busRouteId;
     private String busRouteName;
     private String busRouteNo;
     private String busRouteSubNo;
-    private List<BusStation> stations;
+    private BusStationVo busStationSt;
+    private BusStationVo busStationEd;
 }

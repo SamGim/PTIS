@@ -6,8 +6,8 @@ import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.dto.request.BusRouteProcessRegisterReqDto;
-import com.thewayhome.ptis.core.dto.request.BusStationRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusRouteProcessRegisterRequestDto;
+import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -84,12 +84,13 @@ public class B0005DoMainLogicItemProcessor implements ItemProcessor<B0005DoMainL
             throw new IllegalArgumentException();
         }
 
-        BusRouteProcessRegisterReqDto routeProcessReq = new BusRouteProcessRegisterReqDto();
-        routeProcessReq.setId(id);
-        routeProcessReq.setGatheringStatusCode("02");
-        routeProcessReq.setOperatorId(jobName);
+        BusRouteProcessRegisterRequestDto routeProcessReq = BusRouteProcessRegisterRequestDto.builder()
+                .id(id)
+                .selfGatheringStatusCode("02")
+                .operatorId(jobName)
+                .build();
 
-        List<BusStationRegisterReqDto> stationReqList = new ArrayList<>();
+        List<BusStationRegisterRequestDto> stationReqList = new ArrayList<>();
         try {
             JsonNode rootNode = objectMapper.readTree(dataFromAPI);
 
@@ -100,13 +101,14 @@ public class B0005DoMainLogicItemProcessor implements ItemProcessor<B0005DoMainL
                 String busStationPosX = item.get("gpsX").asText();
                 String busStationPosY = item.get("gpsY").asText();
 
-                BusStationRegisterReqDto req = new BusStationRegisterReqDto();
-                req.setBusStationId(busStationId);
-                req.setBusStationNo(busStationNo);
-                req.setBusStationName(busStationName);
-                req.setBusStationPosX(busStationPosX);
-                req.setBusStationPosY(busStationPosY);
-                req.setOperatorId(jobName);
+                BusStationRegisterRequestDto req = BusStationRegisterRequestDto.builder()
+                        .busStationId(busStationId)
+                        .busStationNo(busStationNo)
+                        .busStationName(busStationName)
+                        .busStationPosX(busStationPosX)
+                        .busStationPosY(busStationPosY)
+                        .operatorId(jobName)
+                        .build();
 
                 stationReqList.add(req);
             }
@@ -117,8 +119,8 @@ public class B0005DoMainLogicItemProcessor implements ItemProcessor<B0005DoMainL
         return B0005DoMainLogicItemOutput.builder()
                 .id(id)
                 .arsId(busRouteId)
-                .busRouteProcessRegisterReqVo(routeProcessReq)
-                .busStationRegisterReqVoList(stationReqList)
+                .busRouteProcessRegisterRequestDto(routeProcessReq)
+                .busStationRegisterRequestDtoList(stationReqList)
                 .build();
     }
 }

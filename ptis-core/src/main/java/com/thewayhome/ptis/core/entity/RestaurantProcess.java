@@ -2,12 +2,18 @@ package com.thewayhome.ptis.core.entity;
 
 import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class RestaurantProcess extends BaseEntity {
 
     @Id

@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.batch.job.b0007;
 
-import com.thewayhome.ptis.core.dto.request.NodeRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.NodeRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.MessageService;
 import com.thewayhome.ptis.core.service.NodeService;
@@ -53,7 +53,7 @@ public class B0007DoMainLogicItemWriter implements ItemWriter<B0007DoMainLogicIt
         }
 
         for (B0007DoMainLogicItemOutput item : chunk.getItems()) {
-            NodeRegisterReqDto nodeRegisterReqDto = item.getNodeRegisterReqDto();
+            NodeRegisterRequestDto nodeRegisterReqDto = item.getNodeRegisterReqDto();
             String busStationId = item.getBusStationId();
 
             nodeService.createNodeFromBusStation(nodeRegisterReqDto, busStationId);

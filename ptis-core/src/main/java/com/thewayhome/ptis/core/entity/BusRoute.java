@@ -1,26 +1,28 @@
 package com.thewayhome.ptis.core.entity;
 
-import com.thewayhome.ptis.core.entity.base.AbstractDataEntity;
+import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
 @Entity
 @Table(
         name = "BusRoute",
         indexes = {
                 @Index(name = "BusRoute_U1", columnList = "id"),
-                @Index(name = "BusRoute_X1", columnList = "bus_route_id"),
-                @Index(name = "BusRoute_X2", columnList = "bus_route_name")
+                @Index(name = "BusRoute_X1", columnList = "bus_route_id")
         }
 )
-public class BusRoute extends AbstractDataEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+public class BusRoute extends BaseEntity {
     @Id
     @Column(name="id", length = 12, nullable = false)
     @Size(min = 12, max = 12)
@@ -49,14 +51,5 @@ public class BusRoute extends AbstractDataEntity {
     @ManyToOne
     @JoinColumn(name = "bus_station_ed", nullable = true)
     private BusStation busStationEd;
-
-    @ManyToMany
-    @JoinTable(
-            name = "bus_station_route",
-            joinColumns = @JoinColumn(name = "bus_route_id"),
-            inverseJoinColumns = @JoinColumn(name = "bus_station_id")
-    )
-    @OrderColumn(name = "route_order")
-    private List<BusStation> stations = new ArrayList<>();
 
 }

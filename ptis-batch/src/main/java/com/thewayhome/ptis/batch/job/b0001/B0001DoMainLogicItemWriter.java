@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0001;
 
 import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.dto.request.BusStationRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.*;
@@ -31,7 +31,7 @@ public class B0001DoMainLogicItemWriter implements ItemWriter<B0001DoMainLogicIt
     @Override
     public void write(Chunk<? extends B0001DoMainLogicItemOutput> chunk) throws Exception {
         for (B0001DoMainLogicItemOutput item : chunk.getItems()) {
-            BusStationRegisterReqDto newEntity = BusStationRegisterReqDto.builder()
+            BusStationRegisterRequestDto newEntity = BusStationRegisterRequestDto.builder()
                     .busStationId(item.getNodeId())
                     .busStationNo(item.getArsId())
                     .busStationName(item.getNodeName())
@@ -42,7 +42,7 @@ public class B0001DoMainLogicItemWriter implements ItemWriter<B0001DoMainLogicIt
             // DB
             newEntity.setOperatorId(this.jobName);
 
-            busStationService.saveBusStation(newEntity);
+            busStationService.registerBusStation(newEntity);
         }
     }
 }

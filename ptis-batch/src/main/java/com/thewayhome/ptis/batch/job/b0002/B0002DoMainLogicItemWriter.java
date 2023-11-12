@@ -3,7 +3,7 @@ package com.thewayhome.ptis.batch.job.b0002;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.MessageService;
-import com.thewayhome.ptis.core.dto.request.BusRouteRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusRouteRegisterRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -53,10 +53,10 @@ public class B0002DoMainLogicItemWriter implements ItemWriter<B0002DoMainLogicIt
         }
 
         for (B0002DoMainLogicItemOutput item : chunk.getItems()) {
-            busStationService.changeBusStationGatheringStatusCode(item.getBusStationProcessRegisterReqVo());
+            busStationService.updateBusRoutesGatheringStatusCode(item.getBusStationProcessRegisterRequestDto());
 
-            for (BusRouteRegisterReqDto req : item.getBusRouteRegisterReqVoList()) {
-                busRouteService.saveBusRoute(req);
+            for (BusRouteRegisterRequestDto req : item.getBusRouteRegisterRequestDtoList()) {
+                busRouteService.registerBusRoute(req);
             }
         }
     }

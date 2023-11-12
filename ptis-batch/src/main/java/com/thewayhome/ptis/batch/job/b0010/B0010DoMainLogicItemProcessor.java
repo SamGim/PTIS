@@ -2,10 +2,10 @@ package com.thewayhome.ptis.batch.job.b0010;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thewayhome.ptis.batch.util.GeoUtils;
-import com.thewayhome.ptis.core.dto.LinkRegisterReqDto;
-import com.thewayhome.ptis.core.entity.Node;
+import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.ParamService;
+import com.thewayhome.ptis.core.vo.NodeVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -51,8 +51,8 @@ public class B0010DoMainLogicItemProcessor implements ItemProcessor<B0010DoMainL
             throw new JobInterruptedException("Job is stopping");
         }
 
-        Node srcNode = input.getSrcNode();
-        Node destNode = input.getDestNode();
+        NodeVo srcNode = input.getSrcNode();
+        NodeVo destNode = input.getDestNode();
 
         String srcNodeName = srcNode.getNodeName();
         String destNodeName = destNode.getNodeName();
@@ -60,16 +60,17 @@ public class B0010DoMainLogicItemProcessor implements ItemProcessor<B0010DoMainL
         long distance = GeoUtils.calculateDistance(srcNode.getNodePosX(), srcNode.getNodePosY(), destNode.getNodePosX(), destNode.getNodePosY(), true);
         long cost = GeoUtils.calculateTime(distance, 3);
 
-        LinkRegisterReqDto linkRegisterReqDto = new LinkRegisterReqDto();
-        linkRegisterReqDto.setLinkName(String.format("%s-%s", srcNodeName, destNodeName));
-        linkRegisterReqDto.setLinkType("W");
-        linkRegisterReqDto.setStNode(input.getSrcNode());
-        linkRegisterReqDto.setEdNode(input.getDestNode());
-        linkRegisterReqDto.setCost(cost);
-        linkRegisterReqDto.setOperatorId(jobName);
+        LinkRegisterRequestDto linkRegisterRequestDto = LinkRegisterRequestDto.builder()
+                .linkName(String.format("%s-%s", srcNodeName, destNodeName))
+                .linkType("W")
+                .stNode(input.getSrcNode())
+                .edNode(input.getDestNode())
+                .cost(cost)
+                .operatorId(jobName)
+                .build();
 
         return B0010DoMainLogicItemOutput.builder()
-                .linkRegisterReqDto(linkRegisterReqDto)
+                .linkRegisterRequestDto(linkRegisterRequestDto)
                 .build();
     }
 }

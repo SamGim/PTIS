@@ -1,16 +1,26 @@
 package com.thewayhome.ptis.core.entity;
 
 import com.thewayhome.ptis.core.entity.base.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
 @Entity
+@Table(
+        name = "Gym",
+        indexes = {
+                @Index(name = "Gym_U1", columnList = "id")
+        }
+)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Gym extends BaseEntity {
     @Id
     @Column(name="id", length = 12, nullable = false)

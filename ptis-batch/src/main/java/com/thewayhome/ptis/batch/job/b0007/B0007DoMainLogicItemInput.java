@@ -8,6 +8,6 @@ import lombok.Data;
 public class B0007DoMainLogicItemInput {
     private String busStationId;
     private String busStationName;
-    private double busStationPosX;
-    private double busStationPosY;
+    private Double busStationPosX;
+    private Double busStationPosY;
 }
