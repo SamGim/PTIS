@@ -1,12 +1,13 @@
 package com.thewayhome.ptis.core.service;
 
+import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusStationRegisterReqDto;
 import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.BusStationProcess;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.repository.BusStationProcessRepository;
 import com.thewayhome.ptis.core.repository.BusStationRepository;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
-import com.thewayhome.ptis.core.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

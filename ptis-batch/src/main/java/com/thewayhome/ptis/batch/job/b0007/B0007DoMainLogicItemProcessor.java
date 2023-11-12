@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0007;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.core.dto.NodeRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.NodeRegisterReqDto;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.ParamService;
 import lombok.extern.slf4j.Slf4j;

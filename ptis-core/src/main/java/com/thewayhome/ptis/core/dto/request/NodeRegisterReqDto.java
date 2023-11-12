@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.core.dto;
+package com.thewayhome.ptis.core.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

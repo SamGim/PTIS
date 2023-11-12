@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0005;
 
-import com.thewayhome.ptis.core.dto.BusRouteProcessRegisterReqDto;
-import com.thewayhome.ptis.core.dto.BusStationRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusRouteProcessRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusStationRegisterReqDto;
 import lombok.Builder;
 import lombok.Data;
 

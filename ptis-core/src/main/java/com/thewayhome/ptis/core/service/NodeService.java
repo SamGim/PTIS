@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.dto.NodeRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.NodeRegisterReqDto;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Node;
 import com.thewayhome.ptis.core.repository.BusStationProcessRepository;

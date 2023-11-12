@@ -3,7 +3,7 @@ package com.thewayhome.ptis.batch.job.b0002;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.MessageService;
-import com.thewayhome.ptis.core.dto.BusRouteRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusRouteRegisterReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;

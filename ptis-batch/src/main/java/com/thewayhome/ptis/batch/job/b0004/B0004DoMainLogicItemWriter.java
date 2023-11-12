@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0004;
 
 import com.thewayhome.ptis.core.service.RestaurantService;
-import com.thewayhome.ptis.core.dto.RestaurantRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.RestaurantRegisterReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;

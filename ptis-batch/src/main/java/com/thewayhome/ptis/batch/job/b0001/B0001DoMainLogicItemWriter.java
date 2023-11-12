@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0001;
 
 import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.dto.BusStationRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusStationRegisterReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.*;

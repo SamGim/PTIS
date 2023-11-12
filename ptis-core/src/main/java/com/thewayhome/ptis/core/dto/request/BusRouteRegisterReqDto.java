@@ -1,4 +1,4 @@
-package com.thewayhome.ptis.core.dto;
+package com.thewayhome.ptis.core.dto.request;
 
 import com.thewayhome.ptis.core.entity.BusStation;
 import lombok.AllArgsConstructor;

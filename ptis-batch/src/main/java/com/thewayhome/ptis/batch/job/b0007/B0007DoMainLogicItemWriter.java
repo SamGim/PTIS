@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.batch.job.b0007;
 
-import com.thewayhome.ptis.core.dto.NodeRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.NodeRegisterReqDto;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.MessageService;
 import com.thewayhome.ptis.core.service.NodeService;

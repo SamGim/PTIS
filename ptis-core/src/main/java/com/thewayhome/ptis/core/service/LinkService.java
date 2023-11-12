@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.dto.LinkRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.LinkRegisterReqDto;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Link;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;

@@ -2,7 +2,7 @@ package com.thewayhome.ptis.batch.job.b0000;
 
 import com.thewayhome.ptis.batch.job.base.AbstractDoMainLogicTasklet;
 import com.thewayhome.ptis.core.service.ParamService;
-import com.thewayhome.ptis.core.dto.ParamsRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.ParamsRegisterReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
