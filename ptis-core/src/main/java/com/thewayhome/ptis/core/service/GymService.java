@@ -1,81 +1,82 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.dto.GymRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.GymRegisterProcessRequestDto;
+import com.thewayhome.ptis.core.dto.request.GymRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.Gym;
 import com.thewayhome.ptis.core.entity.GymProcess;
+import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.repository.GymProcessRepository;
 import com.thewayhome.ptis.core.repository.GymRepository;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
-import com.thewayhome.ptis.core.entity.IdSequence;
-import com.thewayhome.ptis.core.entity.RestaurantProcess;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.thewayhome.ptis.core.util.GymEntityVoConverter;
+import com.thewayhome.ptis.core.util.GymProcessEntityVoConverter;
+import com.thewayhome.ptis.core.vo.GymProcessVo;
+import com.thewayhome.ptis.core.vo.GymVo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
+@RequiredArgsConstructor
 public class GymService {
-    @Autowired
-    private GymRepository gymRepository;
-    @Autowired
-    private IdSequenceRepository idSequenceRepository;
-    @Autowired
-    private GymProcessRepository gymProcessRepository;
+    private final GymRepository gymRepository;
+    private final IdSequenceRepository idSequenceRepository;
+    private final GymProcessRepository gymProcessRepository;
+    private final GymEntityVoConverter gymEntityDtoConverter;
+    private final GymProcessEntityVoConverter gymProcessEntityDtoConverter;
 
-    public Gym saveGym(GymRegisterReqDto req) {
-        Gym gym = gymRepository.findByGymId(req.getGymId()).orElse(new Gym());
+    public Gym saveGym(GymVo req) {
+        Gym entity = gymEntityDtoConverter.toEntity(req, req.getOperatorId());
+        return gymRepository.save(entity);
+    }
 
+    public GymProcess saveGymProcess(GymProcessVo req) {
+        GymProcess entity = gymProcessEntityDtoConverter.toEntity(req, req.getOperatorId());
+        return gymProcessRepository.save(entity);
+    }
 
+    public GymVo registerGym(GymRegisterRequestDto req) {
         // ID
-        if (gym.getId() == null) {
-            IdSequence idSequence = idSequenceRepository.findById("GYM")
-                    .orElse(new IdSequence("GYM", 0L));
-            Long nextId = idSequence.getNextId();
+        IdSequence idSequence = idSequenceRepository.findById("BUS_STATION")
+                .orElse(new IdSequence("BUS_STATION", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(nextId + 1);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            gym.setId(String.format("%012d", nextId + 1));
+        req.setId(String.format("%012d", id));
 
-            gym.setCreatedAt(LocalDateTime.now());
-            gym.setCreatedBy(req.getOperatorId());
-        }
+        // Gym
+        GymVo gymVo = GymVo.builder()
+                .id(req.getId())
+                .gymId(req.getGymId())
+                .gymName(req.getGymName())
+                .gymAddress(req.getGymAddress())
+                .gymPosX(req.getGymPosX())
+                .gymPosY(req.getGymPosY())
+                .operatorId(req.getOperatorId())
+                .build();
 
-        // DATA
-        gym.setGymId(req.getGymId());
-        gym.setGymName(req.getGymName());
-        gym.setGymAddress(req.getGymAddress());
-        gym.setGymPosX(req.getGymPosX());
-        gym.setGymPosY(req.getGymPosY());
+        Gym gym = this.saveGym(gymVo);
+        return gymEntityDtoConverter.toVo(gym, req.getOperatorId());
+    }
+    public GymProcessVo registerGymProcess(GymRegisterProcessRequestDto req) {
+        // Gym
+        GymVo gymVo = GymVo.builder()
+                .id(req.getId())
+                .build();
 
+        // GymProcess
+        GymProcessVo gymProcessVo = GymProcessVo.builder()
+                .id(req.getId())
+                .gym(gymVo)
+                .gymLastGatheringDate(req.getGymLastGatheringDate())
+                .gymGatheringStatusCode(req.getGymGatheringStatusCode())
+                .nodeLastCreationDate(req.getNodeLastCreationDate())
+                .nodeCreationStatusCode(req.getNodeCreationStatusCode())
+                .operatorId(req.getOperatorId())
+                .build();
 
-        // DB
-        gym.setUpdatedAt(LocalDateTime.now());
-        gym.setUpdatedBy(req.getOperatorId());
-
-
-        // processDB
-        GymProcess gymProcess = gymProcessRepository.findById(gym.getId())
-                .orElse(new GymProcess());
-
-        if (gymProcess.getId() == null) {
-            gymProcess.setId(gym.getId());
-            gymProcess.setCreatedAt(LocalDateTime.now());
-            gymProcess.setCreatedBy(req.getOperatorId());
-            gymProcess.setFirstGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-            gymProcess.setGatheringStatusCode("01");
-        }
-        if (gym.getGymPosX() == null || gym.getGymPosY() == null) {
-            gymProcess.setGatheringStatusCode("02");
-        }
-
-        gymProcess.setUpdatedAt(LocalDateTime.now());
-        gymProcess.setUpdatedBy(req.getOperatorId());
-        gymProcess.setLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-
-        // ID
-        gymProcessRepository.save(gymProcess);
-
-        return gymRepository.save(gym);
+        GymProcess gymProcess = this.saveGymProcess(gymProcessVo);
+        return gymProcessEntityDtoConverter.toVo(gymProcess, req.getOperatorId());
     }
 }

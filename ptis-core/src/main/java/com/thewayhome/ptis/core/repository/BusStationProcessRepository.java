@@ -2,20 +2,16 @@ package com.thewayhome.ptis.core.repository;
 
 import com.thewayhome.ptis.core.entity.BusStationProcess;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public interface BusStationProcessRepository extends JpaRepository<BusStationProcess, String> {
-    List<BusStationProcess> findByGatheringStatusCodeOrderById(String gatheringStatusCode);
-    List<BusStationProcess> findByGatheringStatusCodeNotOrderById(String gatheringStatusCode);
+    List<BusStationProcess> findByBusRouteGatheringStatusCodeOrderById(String busRouteGatheringStatusCode);
+    List<BusStationProcess> findByBusRouteGatheringStatusCodeNotOrderById(String busRouteGatheringStatusCode);
+    List<BusStationProcess> findByBusStationGatheringStatusCodeOrderById(String busStationGatheringStatusCode);
+    List<BusStationProcess> findByBusStationGatheringStatusCodeNotOrderById(String busStationGatheringStatusCode);
     List<BusStationProcess> findByNodeCreationStatusCodeOrderById(String nodeCreationStatusCode);
     List<BusStationProcess> findByNodeCreationStatusCodeNotOrderById(String nodeCreationStatusCode);
-    @Query("SELECT o FROM BusStationProcess o WHERE o.firstGatheringDate >= :startDate AND o.firstGatheringDate <= :endDate")
-    List<BusStationProcess> findByFirstGatheringDateInDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
-    @Query("SELECT o FROM BusStationProcess o WHERE o.lastGatheringDate >= :startDate AND o.lastGatheringDate <= :endDate")
-    List<BusStationProcess> findByLastGatheringDateInDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

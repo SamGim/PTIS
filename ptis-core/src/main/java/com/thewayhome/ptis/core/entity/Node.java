@@ -5,12 +5,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
 @Entity
 @Table(
         name = "Node",
@@ -18,6 +22,8 @@ import lombok.EqualsAndHashCode;
                 @Index(name = "Node_U1", columnList = "id")
         }
 )
+@NoArgsConstructor
+@AllArgsConstructor
 public class Node extends BaseEntity {
     @Id
     @Column(name="id", length = 12, nullable = false)

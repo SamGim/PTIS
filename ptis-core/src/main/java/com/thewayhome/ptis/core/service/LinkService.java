@@ -1,51 +1,58 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.dto.request.LinkRegisterReqDto;
+import com.thewayhome.ptis.core.vo.LinkVo;
+import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Link;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
 import com.thewayhome.ptis.core.repository.LinkRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.thewayhome.ptis.core.util.LinkEntityVoConverter;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class LinkService {
-    @Autowired
-    private LinkRepository linkRepository;
-    @Autowired
-    private IdSequenceRepository idSequenceRepository;
+    private final LinkRepository linkRepository;
+    private final IdSequenceRepository idSequenceRepository;
+    private final LinkEntityVoConverter linkEntityDtoConverter;
+    
+    public Optional<Link> findById(String id) {
+        return linkRepository.findById(id);
+    }
+    private Link saveLink(LinkVo req) {
+        Link entity = linkEntityDtoConverter.toEntity(req, req.getOperatorId());
+        return linkRepository.save(entity);
+    }
 
-    public Link saveLink(LinkRegisterReqDto req) {
-        Link link = new Link();
-
+    @Transactional
+    public Link registerLink(LinkRegisterRequestDto req) {
         // ID
-        if (link.getId() == null) {
-            IdSequence idSequence = idSequenceRepository.findById("LINK")
-                    .orElse(new IdSequence("LINK", 0L));
-            Long nextId = idSequence.getNextId();
+        IdSequence idSequence = idSequenceRepository.findById("LINK")
+                .orElse(new IdSequence("LINK", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(nextId + 1);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            link.setId(String.format("%012d", nextId + 1));
+        req.setId(String.format("%012d", id));
 
-            link.setCreatedAt(LocalDateTime.now());
-            link.setCreatedBy(req.getOperatorId());
-        }
+        // Link
+        LinkVo linkVo = LinkVo.builder()
+                .id(req.getId())
+                .linkName(req.getLinkName())
+                .linkType(req.getLinkType())
+                .stNode(req.getStNode())
+                .edNode(req.getEdNode())
+                .cost(req.getCost())
+                .operatorId(req.getOperatorId())
+                .build();
 
-        // DATA
-        link.setLinkName(req.getLinkName());
-        link.setLinkType(req.getLinkType());
-        link.setStNode(req.getStNode());
-        link.setEdNode(req.getEdNode());
-        link.setCost(req.getCost());
+        Link link = this.saveLink(linkVo);
 
-        // DB
-        link.setUpdatedAt(LocalDateTime.now());
-        link.setUpdatedBy(req.getOperatorId());
-
-        return linkRepository.save(link);
+        return link;
     }
 }

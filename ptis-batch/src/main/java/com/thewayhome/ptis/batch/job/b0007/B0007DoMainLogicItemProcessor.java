@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0007;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.core.dto.request.NodeRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.NodeRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.ParamService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,11 +49,12 @@ public class B0007DoMainLogicItemProcessor implements ItemProcessor<B0007DoMainL
             throw new JobInterruptedException("Job is stopping");
         }
 
-        NodeRegisterReqDto nodeRegisterReqDto = new NodeRegisterReqDto();
-        nodeRegisterReqDto.setNodeName(input.getBusStationName());
-        nodeRegisterReqDto.setNodePosX(input.getBusStationPosX());
-        nodeRegisterReqDto.setNodePosY(input.getBusStationPosY());
-        nodeRegisterReqDto.setOperatorId(jobName);
+        NodeRegisterRequestDto nodeRegisterReqDto = NodeRegisterRequestDto.builder()
+                .nodeName(input.getBusStationName())
+                .nodePosX(input.getBusStationPosX())
+                .nodePosY(input.getBusStationPosY())
+                .operatorId(jobName)
+                .build();
 
         return B0007DoMainLogicItemOutput.builder()
                 .busStationId(input.getBusStationId())

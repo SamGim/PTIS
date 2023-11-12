@@ -1,9 +1,11 @@
 package com.thewayhome.ptis.batch.job.b0002;
 
+import com.thewayhome.ptis.core.dto.request.BusRouteProcessRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.MessageService;
-import com.thewayhome.ptis.core.dto.request.BusRouteRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusRouteRegisterRequestDto;
+import com.thewayhome.ptis.core.vo.BusRouteVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -14,6 +16,9 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Component
@@ -53,10 +58,21 @@ public class B0002DoMainLogicItemWriter implements ItemWriter<B0002DoMainLogicIt
         }
 
         for (B0002DoMainLogicItemOutput item : chunk.getItems()) {
-            busStationService.changeBusStationGatheringStatusCode(item.getBusStationProcessRegisterReqVo());
+            busStationService.updateBusRoutesGatheringStatusCode(item.getBusStationProcessRegisterRequestDto());
 
-            for (BusRouteRegisterReqDto req : item.getBusRouteRegisterReqVoList()) {
-                busRouteService.saveBusRoute(req);
+            for (BusRouteRegisterRequestDto req : item.getBusRouteRegisterRequestDtoList()) {
+                BusRouteVo busRouteVo = busRouteService.registerBusRoute(req);
+
+                BusRouteProcessRegisterRequestDto prcReq = BusRouteProcessRegisterRequestDto.builder()
+                                        .id(busRouteVo.getId())
+                                        .busRouteLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                                        .busRouteGatheringStatusCode("01")
+                                        .busStationLastGatheringDate(" ")
+                                        .busStationGatheringStatusCode("00")
+                                        .operatorId(this.jobName)
+                                .build();
+
+                busRouteService.registerBusRouteProcess(prcReq);
             }
         }
     }

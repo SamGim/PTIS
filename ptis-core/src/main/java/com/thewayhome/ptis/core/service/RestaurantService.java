@@ -1,81 +1,93 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.repository.IdSequenceRepository;
-import com.thewayhome.ptis.core.repository.RestaurantProcessRepository;
-import com.thewayhome.ptis.core.repository.RestaurantRepository;
+import com.thewayhome.ptis.core.dto.request.RestaurantRegisterProcessRequestDto;
+import com.thewayhome.ptis.core.dto.request.RestaurantRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Restaurant;
 import com.thewayhome.ptis.core.entity.RestaurantProcess;
-import com.thewayhome.ptis.core.dto.request.RestaurantRegisterReqDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.thewayhome.ptis.core.repository.IdSequenceRepository;
+import com.thewayhome.ptis.core.repository.RestaurantProcessRepository;
+import com.thewayhome.ptis.core.repository.RestaurantRepository;
+import com.thewayhome.ptis.core.util.RestaurantEntityVoConverter;
+import com.thewayhome.ptis.core.util.RestaurantProcessEntityVoConverter;
+import com.thewayhome.ptis.core.vo.RestaurantProcessVo;
+import com.thewayhome.ptis.core.vo.RestaurantVo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RestaurantService {
-    @Autowired
-    private RestaurantRepository restaurantRepository;
-    @Autowired
-    private IdSequenceRepository idSequenceRepository;
-    @Autowired
-    private RestaurantProcessRepository restaurantProcessRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final IdSequenceRepository idSequenceRepository;
+    private final RestaurantProcessRepository restaurantProcessRepository;
+    private final RestaurantEntityVoConverter restaurantEntityDtoConverter;
+    private final RestaurantProcessEntityVoConverter restaurantProcessEntityDtoConverter;
 
-    public Restaurant saveRestaurant(RestaurantRegisterReqDto req) {
-        Restaurant restaurant = restaurantRepository.findByRestaurantId(req.getRestaurantId()).orElse(new Restaurant());
+    public Optional<Restaurant> findById(String id) {
+        return restaurantRepository.findById(id);
+    }
+    public Optional<RestaurantProcess> findProcessById(String id) {
+        return restaurantProcessRepository.findById(id);
+    }
 
+    public Restaurant saveRestaurant(RestaurantVo req) {
+        Restaurant entity = restaurantEntityDtoConverter.toEntity(req, req.getOperatorId());
+        return restaurantRepository.save(entity);
+    }
 
+    public RestaurantProcess saveRestaurantProcess(RestaurantProcessVo req) {
+        RestaurantProcess entity = restaurantProcessEntityDtoConverter.toEntity(req, req.getOperatorId());
+        return restaurantProcessRepository.save(entity);
+    }
+
+    public RestaurantVo registerRestaurant(RestaurantRegisterRequestDto req) {
         // ID
-        if (restaurant.getId() == null) {
-            IdSequence idSequence = idSequenceRepository.findById("RESTAURANT")
-                    .orElse(new IdSequence("RESTAURANT", 0L));
-            Long nextId = idSequence.getNextId();
+        IdSequence idSequence = idSequenceRepository.findById("RESTAURANT")
+                .orElse(new IdSequence("RESTAURANT", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(nextId + 1);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            restaurant.setId(String.format("%012d", nextId + 1));
+        req.setId(String.format("%012d", id));
 
-            restaurant.setCreatedAt(LocalDateTime.now());
-            restaurant.setCreatedBy(req.getOperatorId());
-        }
+        // Restaurant
+        RestaurantVo restaurantVo = RestaurantVo.builder()
+                .id(req.getId())
+                .restaurantId(req.getRestaurantId())
+                .restaurantName(req.getRestaurantName())
+                .restaurantType(req.getRestaurantType())
+                .restaurantAddress(req.getRestaurantAddress())
+                .restaurantPosX(req.getRestaurantPosX())
+                .restaurantPosY(req.getRestaurantPosY())
+                .operatorId(req.getOperatorId())
+                .build();
 
-        // DATA
-        restaurant.setRestaurantId(req.getRestaurantId());
-        restaurant.setRestaurantName(req.getRestaurantName());
-        restaurant.setRestaurantAddress(req.getRestaurantAddress());
-        restaurant.setRestaurantPosX(req.getRestaurantPosX());
-        restaurant.setRestaurantPosY(req.getRestaurantPosY());
-        restaurant.setRestaurantType(req.getRestaurantType());
+        Restaurant restaurant = this.saveRestaurant(restaurantVo);
 
-        // DB
-        restaurant.setUpdatedAt(LocalDateTime.now());
-        restaurant.setUpdatedBy(req.getOperatorId());
+        return restaurantEntityDtoConverter.toVo(restaurant, req.getOperatorId());
+    }
 
+    public RestaurantProcessVo registerRestaurantProcess(RestaurantRegisterProcessRequestDto req) {
+        // Restaurant
+        RestaurantVo restaurantVo = RestaurantVo.builder()
+                .id(req.getId())
+                .build();
 
-        // processDB
-        RestaurantProcess restaurantProcess = restaurantProcessRepository.findById(restaurant.getId())
-                .orElse(new RestaurantProcess());
+        // RestaurantProcess
+        RestaurantProcessVo restaurantProcessVo = RestaurantProcessVo.builder()
+                .id(req.getId())
+                .restaurant(restaurantVo)
+                .restaurantLastGatheringDate(req.getRestaurantLastGatheringDate())
+                .restaurantGatheringStatusCode(req.getRestaurantGatheringStatusCode())
+                .operatorId(req.getOperatorId())
+                .build();
 
-        if (restaurantProcess.getId() == null) {
-            restaurantProcess.setId(restaurant.getId());
-            restaurantProcess.setCreatedAt(LocalDateTime.now());
-            restaurantProcess.setCreatedBy(req.getOperatorId());
-            restaurantProcess.setFirstGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-            restaurantProcess.setGatheringStatusCode("01");
-        }
-        if (restaurant.getRestaurantPosX() == null || restaurant.getRestaurantPosY() == null) {
-            restaurantProcess.setGatheringStatusCode("02");
-        }
+        RestaurantProcess restaurantProcess = this.saveRestaurantProcess(restaurantProcessVo);
 
-        restaurantProcess.setUpdatedAt(LocalDateTime.now());
-        restaurantProcess.setUpdatedBy(req.getOperatorId());
-        restaurantProcess.setLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-
-        // ID
-        restaurantProcessRepository.save(restaurantProcess);
-
-        return restaurantRepository.save(restaurant);
+        return restaurantProcessEntityDtoConverter.toVo(restaurantProcess, req.getOperatorId());
     }
 }

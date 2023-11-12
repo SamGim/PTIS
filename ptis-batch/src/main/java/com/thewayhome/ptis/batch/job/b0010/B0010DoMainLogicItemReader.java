@@ -1,7 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0010;
 
-import com.thewayhome.ptis.core.entity.Node;
 import com.thewayhome.ptis.core.service.NodeService;
+import com.thewayhome.ptis.core.vo.NodeVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -62,11 +62,11 @@ public class B0010DoMainLogicItemReader implements ItemReader<B0010DoMainLogicIt
             throw new JobInterruptedException("Job is stopping");
         }
 
-        List<Node[]> nodePairs = nodeService.findByIdsBetween(srcNodeIdSt, srcNodeIdEd, destNodeIdSt, destNodeIdEd);
+        List<NodeVo[]> nodePairs = nodeService.findByIdsBetween(srcNodeIdSt, srcNodeIdEd, destNodeIdSt, destNodeIdEd, jobName);
 
-        for (Node[] nodePair : nodePairs) {
-            Node srcNode = nodePair[0];
-            Node destNode = nodePair[1];
+        for (NodeVo[] nodePair : nodePairs) {
+            NodeVo srcNode = nodePair[0];
+            NodeVo destNode = nodePair[1];
 
             this.items.add(B0010DoMainLogicItemInput
                     .builder()

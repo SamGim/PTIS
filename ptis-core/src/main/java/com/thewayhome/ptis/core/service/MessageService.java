@@ -1,66 +1,52 @@
 package com.thewayhome.ptis.core.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.core.repository.IdSequenceRepository;
-import com.thewayhome.ptis.core.repository.MessageRepository;
+import com.thewayhome.ptis.core.vo.MessageVo;
+import com.thewayhome.ptis.core.dto.request.MessageRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Message;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.thewayhome.ptis.core.repository.IdSequenceRepository;
+import com.thewayhome.ptis.core.repository.MessageRepository;
+import com.thewayhome.ptis.core.util.MessageEntityVoConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class MessageService {
-    @Autowired
-    private MessageRepository messageRepository;
-
-    @Autowired
-    private IdSequenceRepository idSequenceRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    public Message saveMessage(
-            String rawMessage,
-            String operatorId
-    ) {
-        Message message = new Message();
-
-        try {
-            JsonNode rootNode = objectMapper.readTree(rawMessage);
-            JsonNode msgHeader = rootNode.get("msgHeader");
-            JsonNode msgBody = rootNode.get("msgBody");
-
-            if (msgHeader.isNull()) throw new IllegalArgumentException();
-            if (msgBody.isNull()) throw new IllegalArgumentException();
-
-            message.setMsgHeader(msgHeader);
-            message.setMsgBody(msgBody);
-
-        } catch (Exception e) {
-            message.setRawMessage(rawMessage);
-        }
-
+    private final MessageRepository messageRepository;
+    private final IdSequenceRepository idSequenceRepository;
+    private final MessageEntityVoConverter messageEntityDtoConverter;
+    public Optional<Message> findById(String id) {
+        return messageRepository.findById(id);
+    }
+    public Message saveMessage(MessageVo req) {
+        Message entity = messageEntityDtoConverter.toEntity(req, req.getOperatorId());
+        return messageRepository.save(entity);
+    }
+    public Message registerMessage(MessageRegisterRequestDto req) {
         // ID
         IdSequence idSequence = idSequenceRepository.findById("MESSAGE")
                 .orElse(new IdSequence("MESSAGE", 0L));
-        Long nextId = idSequence.getNextId();
+        Long id = idSequence.getNextId() + 1;
 
-        idSequence.setNextId(nextId + 1);
+        idSequence.setNextId(id);
         idSequenceRepository.save(idSequence);
 
-        message.setId(String.format("%012d", nextId + 1));
+        req.setId(String.format("%012d", id));
 
-        // DB
-        message.setCreatedAt(LocalDateTime.now());
-        message.setCreatedBy(operatorId);
-        message.setUpdatedAt(LocalDateTime.now());
-        message.setUpdatedBy(operatorId);
+        // Message
+        MessageVo messageVo = MessageVo.builder()
+                .id(req.getId())
+                .msgHeader(req.getMsgHeader())
+                .msgBody(req.getMsgBody())
+                .rawMessage(req.getRawMessage())
+                .operatorId(req.getOperatorId())
+                .build();
 
-        return messageRepository.saveAndFlush(message);
+        Message message = this.saveMessage(messageVo);
+
+        return message;
     }
 }
