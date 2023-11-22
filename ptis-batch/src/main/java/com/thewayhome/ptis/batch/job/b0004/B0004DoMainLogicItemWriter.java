@@ -1,7 +1,9 @@
 package com.thewayhome.ptis.batch.job.b0004;
 
+import com.thewayhome.ptis.core.dto.request.RestaurantRegisterProcessRequestDto;
+import com.thewayhome.ptis.core.dto.request.RestaurantRegisterRequestDto;
 import com.thewayhome.ptis.core.service.RestaurantService;
-import com.thewayhome.ptis.core.dto.RestaurantRegisterReqDto;
+import com.thewayhome.ptis.core.vo.RestaurantVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
@@ -9,6 +11,9 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Component
@@ -34,18 +39,26 @@ public class B0004DoMainLogicItemWriter implements ItemWriter<B0004DoMainLogicIt
     @Override
     public void write(Chunk<? extends B0004DoMainLogicItemOutput> chunk) throws Exception {
         for (B0004DoMainLogicItemOutput item : chunk.getItems()) {
-            RestaurantRegisterReqDto newEntity = RestaurantRegisterReqDto.builder()
+            RestaurantRegisterRequestDto req = RestaurantRegisterRequestDto.builder()
                     .restaurantId(item.getNodeId())
                     .restaurantAddress(item.getNodeAddress())
                     .restaurantPosX(item.getNodePosX())
                     .restaurantPosY(item.getNodePosY())
                     .restaurantType(item.getNodeType())
                     .restaurantName(item.getNodeName())
+                    .operatorId(this.jobName)
                     .build();
 
-            // DB
-            newEntity.setOperatorId(this.jobName);
-            restaurantService.saveRestaurant(newEntity);
+            RestaurantVo restaurantVo = restaurantService.registerRestaurant(req);
+
+            RestaurantRegisterProcessRequestDto prcReq = RestaurantRegisterProcessRequestDto.builder()
+                    .id(restaurantVo.getId())
+                    .restaurantLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                    .restaurantGatheringStatusCode("01")
+                    .operatorId(this.jobName)
+                    .build();
+
+            restaurantService.registerRestaurantProcess(prcReq);
         }
 
     }

@@ -1,15 +1,19 @@
 package com.thewayhome.ptis.core.entity.base;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Data
+@SuperBuilder
 @MappedSuperclass
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class BaseEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

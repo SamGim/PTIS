@@ -3,29 +3,37 @@ package com.thewayhome.ptis.core.entity;
 import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
 @Entity
 @Table(
         name = "BusRouteProcess",
         indexes = {
-                @Index(name = "BusRouteProcess_U1", columnList = "id"),
-                @Index(name = "BusRouteProcess_X1", columnList = "gat_stcd"),
-                @Index(name = "BusRouteProcess_X2", columnList = "fst_gat_dt"),
-                @Index(name = "BusRouteProcess_X3", columnList = "lst_gat_dt")
+                @Index(name = "BusRouteProcess_U1", columnList = "id")
         }
 )
+@NoArgsConstructor
+@AllArgsConstructor
 public class BusRouteProcess extends BaseEntity {
     @Id
     @Column(name="id", length = 12, nullable = false)
     @Size(min = 12, max = 12)
     private String id;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapsId
+    @JoinColumn(name = "id")
+    private BusRoute busRoute;
+
     /*
-     * gat_stcd
+     * bus_route_gat_stcd
      * 버스노선 정보의 수집 상태를 구분하는 상태코드
      *
      * 00: 미수집
@@ -33,69 +41,45 @@ public class BusRouteProcess extends BaseEntity {
      * 02: 버스노선 상세정보 수집 (API)
      * 99: 수집오류
      */
-    @Column(name="gat_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
-    private String gatheringStatusCode;
+    @Column(name="bus_route_gat_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
+    private String busRouteGatheringStatusCode;
 
     /*
-     * slf_gat_stcd
-     * 버스노선 정보의 수집 상태를 구분하는 상태코드
-     *
-     * 00: 미수집
-     * 01: 버스노선 기본정보 수집 (API)
-     * 02: 버스노선 상세정보 수집 (API)
-     * 99: 수집오류
+     * bus_route_fst_gat_dt
+     * 버스노선 정보의 최초 수집 일자
      */
-    @Column(name="slf_gat_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
-    private String selfGatheringStatusCode;
+    @Column(name="bus_route_fst_gat_dt", nullable = false, columnDefinition = "VARCHAR(8) DEFAULT ' '")
+    private String busRouteFirstGatheringDate;
 
     /*
-     * stat_gat_stcd
+     * bus_route_lst_gat_dt
+     * 버스노선 정보의 마지막 수집 일자
+     */
+    @Column(name="bus_route_lst_gat_dt", nullable = false, columnDefinition = "VARCHAR(8) DEFAULT ' '")
+    private String busRouteLastGatheringDate;
+
+    /*
+     * bus_station_gat_stcd
      * 버스노선 ID를 통한 버스정류장 정보의 수집 상태를 구분하는 상태코드
      *
      * 00: 미수집
      * 01: 버스정류장 정보 수집 (API)
      * 99: 수집오류
      */
-    @Column(name="stat_gat_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
-    private String stationGatheringStatusCode;
-
-//    /*
-//     * bus_cost_prc_stcd
-//     * 버스를 통한 소요시간 처리(계산) 상태를 구분하는 상태코드
-//     *
-//     * 00: 미수집
-//     * 01: 처리완료
-//     * 99: 수집오류
-//     */
-//    @Column(name="bus_cost_prc_stcd", nullable = false)
-//    private String busCostGatheringStatusCode;
-//
-//    /*
-//     * walk_cost_prc_stcd
-//     * 도보를 통한 소요시간 처리(계산) 상태를 구분하는 상태코드
-//     *
-//     * 00: 미수집
-//     * 01: 처리완료
-//     * 99: 수집오류
-//     */
-//    @Column(name="walk_cost_prc_stcd", nullable = false)
-//    private String walkCostGatheringStatusCode;
+    @Column(name="bus_station_gat_stcd", nullable = false, columnDefinition = "VARCHAR(2) DEFAULT '00'")
+    private String busStationGatheringStatusCode;
 
     /*
-     * fst_gat_dt
-     * 버스노선 정보의 최초 수집 일자
+     * bus_station_fst_gat_dt
+     * 버스정류장 정보의 최초 수집 일자
      */
-    @Column(name="fst_gat_dt", nullable = false)
-    private String firstGatheringDate;
+    @Column(name="bus_station_fst_gat_dt", nullable = false, columnDefinition = "VARCHAR(8) DEFAULT ' '")
+    private String busStationFirstGatheringDate;
 
     /*
-     * lst_gat_dt
-     * 버스노선 정보의 마지막 수집 일자
+     * bus_station_lst_gat_dt
+     * 버스정류장 정보의 마지막 수집 일자
      */
-    @Column(name="lst_gat_dt", nullable = false)
-    private String lastGatheringDate;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", referencedColumnName = "id")
-    private BusRoute busRoute;
+    @Column(name="bus_station_lst_gat_dt", nullable = false, columnDefinition = "VARCHAR(8) DEFAULT ' '")
+    private String busStationLastGatheringDate;
 }

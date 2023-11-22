@@ -1,13 +1,14 @@
-package com.thewayhome.ptis.core.dto;
+package com.thewayhome.ptis.core.dto.request;
 
+import com.thewayhome.ptis.core.dto.base.BaseDto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class BusStationRegisterReqDto extends BaseRequestDto {
+@SuperBuilder
+public class BusStationRegisterRequestDto extends BaseDto {
+    private String id;
     private String busStationId;
     private String busStationName;
     private String busStationNo;

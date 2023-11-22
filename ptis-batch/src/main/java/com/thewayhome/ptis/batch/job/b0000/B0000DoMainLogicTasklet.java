@@ -2,7 +2,7 @@ package com.thewayhome.ptis.batch.job.b0000;
 
 import com.thewayhome.ptis.batch.job.base.AbstractDoMainLogicTasklet;
 import com.thewayhome.ptis.core.service.ParamService;
-import com.thewayhome.ptis.core.dto.ParamsRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.ParamsRegisterRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -43,45 +43,50 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         log.info("[" + taskletName + "] jobName = " + jobName);
         log.info("[" + taskletName + "] jobDate = " + jobDate);
 
-        ParamsRegisterReqDto B0001InputParams = new ParamsRegisterReqDto();
-        B0001InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
-        B0001InputParams.setParamName("B0001");
-        B0001InputParams.setValue("R|ws_bus_st_20230914.csv|,");
-        B0001InputParams.setUseYn("Y");
-        B0001InputParams.setOperatorId(jobName);
-        paramService.saveParam(B0001InputParams);
+        ParamsRegisterRequestDto B0001InputParams = ParamsRegisterRequestDto.builder()
+                .groupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME)
+                .paramName("B0001")
+                .value("R|ws_bus_st_20230914.csv|,")
+                .useYn("Y")
+                .operatorId(jobName)
+                .build();
+        paramService.registerParam(B0001InputParams);
 
-        ParamsRegisterReqDto B0002InputParams = new ParamsRegisterReqDto();
-        B0002InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
-        B0002InputParams.setParamName("B0002");
-        B0002InputParams.setValue(this.apiEndpoint+"|/ws-pure/getRouteByStationList");
-        B0002InputParams.setUseYn("Y");
-        B0002InputParams.setOperatorId(jobName);
-        paramService.saveParam(B0002InputParams);
+        ParamsRegisterRequestDto B0002InputParams = ParamsRegisterRequestDto.builder()
+                .groupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME)
+                .paramName("B0002")
+                .value(this.apiEndpoint+"|/ws-pure/getRouteByStationList")
+                .useYn("Y")
+                .operatorId(jobName)
+                .build();
+        paramService.registerParam(B0002InputParams);
 
-        ParamsRegisterReqDto B0003InputParams = new ParamsRegisterReqDto();
-        B0003InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
-        B0003InputParams.setParamName("B0003");
-        B0003InputParams.setValue(this.apiEndpoint+"|/ws-pure/getStationsByRouteList");
-        B0003InputParams.setUseYn("Y");
-        B0003InputParams.setOperatorId(jobName);
-        paramService.saveParam(B0003InputParams);
+        ParamsRegisterRequestDto B0003InputParams = ParamsRegisterRequestDto.builder()
+                .groupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME)
+                .paramName("B0003")
+                .value(this.apiEndpoint+"|/ws-pure/getStationsByRouteList")
+                .useYn("Y")
+                .operatorId(jobName)
+                .build();
+        paramService.registerParam(B0003InputParams);
 
-        ParamsRegisterReqDto B0004InputParams = new ParamsRegisterReqDto();
-        B0004InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
-        B0004InputParams.setParamName("B0004");
-        B0004InputParams.setValue("J|seoul_cafe_and_restaurant_20231101.json");
-        B0004InputParams.setUseYn("Y");
-        B0004InputParams.setOperatorId(jobName);
-        paramService.saveParam(B0004InputParams);
+        ParamsRegisterRequestDto B0004InputParams = ParamsRegisterRequestDto.builder()
+                .groupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME)
+                .paramName("B0004")
+                .value("J|seoul_cafe_and_restaurant_20231101.json")
+                .useYn("Y")
+                .operatorId(jobName)
+                .build();
+        paramService.registerParam(B0004InputParams);
 
-        ParamsRegisterReqDto B0006InputParams = new ParamsRegisterReqDto();
-        B0006InputParams.setGroupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME);
-        B0006InputParams.setParamName("B0006");
-        B0006InputParams.setValue("J|seoul_gym_20231106.json");
-        B0006InputParams.setUseYn("Y");
-        B0006InputParams.setOperatorId(jobName);
-        paramService.saveParam(B0006InputParams);
+        ParamsRegisterRequestDto B0006InputParams = ParamsRegisterRequestDto.builder()
+                .groupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME)
+                .paramName("B0006")
+                .value("J|seoul_gym_20231106.json")
+                .useYn("Y")
+                .operatorId(jobName)
+                .build();
+        paramService.registerParam(B0006InputParams);
 
         return RepeatStatus.FINISHED;
     }

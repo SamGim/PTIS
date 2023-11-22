@@ -1,26 +1,28 @@
 package com.thewayhome.ptis.core.entity;
 
-import com.thewayhome.ptis.core.entity.base.AbstractDataEntity;
+import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
 @Entity
 @Table(
         name = "BusStation",
         indexes = {
                 @Index(name = "BusStation_U1", columnList = "id"),
-                @Index(name = "BusStation_X1", columnList = "bus_station_id"),
-                @Index(name = "BusStation_X2", columnList = "bus_station_name")
+                @Index(name = "BusStation_X1", columnList = "bus_station_id")
         }
 )
-public class BusStation extends AbstractDataEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+public class BusStation extends BaseEntity {
     @Id
     @Column(name="id", length = 12, nullable = false)
     @Size(min = 12, max = 12)
@@ -39,11 +41,8 @@ public class BusStation extends AbstractDataEntity {
     private String busStationNo;
 
     @Column(name="bus_station_pos_x", nullable = false)
-    private double busStationPosX;
+    private Double busStationPosX;
 
     @Column(name="bus_station_pos_y", nullable = false)
-    private double busStationPosY;
-
-    @ManyToMany(mappedBy = "stations")
-    private List<BusRoute> routes = new ArrayList<>();
+    private Double busStationPosY;
 }

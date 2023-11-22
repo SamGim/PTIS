@@ -6,8 +6,8 @@ import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.dto.BusRouteRegisterReqDto;
-import com.thewayhome.ptis.core.dto.BusStationProcessRegisterReqDto;
+import com.thewayhome.ptis.core.dto.request.BusRouteRegisterRequestDto;
+import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -84,14 +84,14 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
             return null;
         }
 
-        BusStationProcessRegisterReqDto stationProcessReq = new BusStationProcessRegisterReqDto();
-        stationProcessReq.setId(id);
-        stationProcessReq.setGatheringStatusCode("02");
-        stationProcessReq.setSelfGatheringStatusCode("00");
-        stationProcessReq.setRouteGatheringStatusCode("02");
-        stationProcessReq.setOperatorId(jobName);
+        BusStationProcessRegisterRequestDto stationProcessReq = BusStationProcessRegisterRequestDto.builder()
+                .id(id)
+                .busRouteLastGatheringDate(this.jobDate)
+                .busRouteGatheringStatusCode("02")
+                .operatorId(jobName)
+                .build();
 
-        List<BusRouteRegisterReqDto> routeReqList = new ArrayList<>();
+        List<BusRouteRegisterRequestDto> routeReqList = new ArrayList<>();
         try {
             JsonNode rootNode = objectMapper.readTree(dataFromAPI);
 
@@ -100,12 +100,13 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
                 String busRouteId = item.get("busRouteId").asText();
                 String busRouteNm = item.get("busRouteNm").asText();
 
-                BusRouteRegisterReqDto req = new BusRouteRegisterReqDto();
-                req.setBusRouteId(busRouteId);
-                req.setOperatorId(jobName);
-                req.setBusRouteName(busRouteNm);
-                req.setBusRouteNo(busRouteAbrv);
-                req.setBusRouteSubNo(busRouteNm.substring(busRouteAbrv.length()));
+                BusRouteRegisterRequestDto req = BusRouteRegisterRequestDto.builder()
+                        .busRouteId(busRouteId)
+                        .busRouteName(busRouteNm)
+                        .busRouteNo(busRouteAbrv)
+                        .busRouteSubNo(busRouteNm.substring(busRouteAbrv.length()))
+                        .operatorId(jobName)
+                        .build();
 
                 routeReqList.add(req);
             }
@@ -116,8 +117,8 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
         return B0002DoMainLogicItemOutput.builder()
                 .id(id)
                 .arsId(arsId)
-                .busStationProcessRegisterReqVo(stationProcessReq)
-                .busRouteRegisterReqVoList(routeReqList)
+                .busStationProcessRegisterRequestDto(stationProcessReq)
+                .busRouteRegisterRequestDtoList(routeReqList)
                 .build();
     }
 }

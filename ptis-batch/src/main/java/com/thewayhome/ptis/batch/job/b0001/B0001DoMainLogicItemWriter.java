@@ -1,13 +1,18 @@
 package com.thewayhome.ptis.batch.job.b0001;
 
+import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterRequestDto;
+import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.dto.BusStationRegisterReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.*;
+import org.springframework.batch.item.Chunk;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Component
@@ -31,18 +36,29 @@ public class B0001DoMainLogicItemWriter implements ItemWriter<B0001DoMainLogicIt
     @Override
     public void write(Chunk<? extends B0001DoMainLogicItemOutput> chunk) throws Exception {
         for (B0001DoMainLogicItemOutput item : chunk.getItems()) {
-            BusStationRegisterReqDto newEntity = BusStationRegisterReqDto.builder()
+            BusStationRegisterRequestDto req = BusStationRegisterRequestDto.builder()
                     .busStationId(item.getNodeId())
                     .busStationNo(item.getArsId())
                     .busStationName(item.getNodeName())
                     .busStationPosX(item.getNodePosX())
                     .busStationPosY(item.getNodePosY())
+                    .operatorId(this.jobName)
                     .build();
 
-            // DB
-            newEntity.setOperatorId(this.jobName);
+            busStationService.registerBusStation(req);
 
-            busStationService.saveBusStation(newEntity);
+            BusStationProcessRegisterRequestDto prcReq = BusStationProcessRegisterRequestDto.builder()
+                    .id(req.getId())
+                    .busStationLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                    .busStationGatheringStatusCode("01")
+                    .busRouteLastGatheringDate(" ")
+                    .busRouteGatheringStatusCode("00")
+                    .nodeLastCreationDate(" ")
+                    .nodeCreationStatusCode("00")
+                    .operatorId(this.jobName)
+                    .build();
+
+            busStationService.registerBusStationProcess(prcReq);
         }
     }
 }
