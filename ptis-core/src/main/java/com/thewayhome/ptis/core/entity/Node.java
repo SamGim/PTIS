@@ -34,6 +34,20 @@ public class Node extends BaseEntity {
     @Size(max=10)
     private String nodeName;
 
+    /*
+    * node_src_type
+    * 1. bus station = bs
+    * 2. complex = cx
+    * 3. company = cp
+     */
+    @Column(name="node_src_type", nullable = false)
+    @Size(min = 2, max = 10)
+    private String nodeSrcType;
+
+    @Column(name="node_src_id", nullable = false)
+    @Size(max = 12)
+    private String nodeSrcId;
+
     @Column(name="node_pos_x", nullable = false)
     @Min(value=0)
     @Max(value=360)
