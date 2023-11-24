@@ -108,4 +108,31 @@ public class NodeService {
 
         return node;
     }
+
+    public Node createNodeFromComplex(NodeRegisterRequestDto nodeRegisterReqDto, String complexId) {
+        // ID
+        IdSequence idSequence = idSequenceRepository.findById("NODE")
+                .orElse(new IdSequence("NODE", 0L));
+        Long id = idSequence.getNextId() + 1;
+
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
+
+        nodeRegisterReqDto.setId(String.format("%012d", id));
+
+        // Node
+        NodeVo nodeVo = NodeVo.builder()
+                .id(nodeRegisterReqDto.getId())
+                .nodeName(nodeRegisterReqDto.getNodeName())
+                .nodeSrcType("cx")
+                .nodeSrcId(complexId)
+                .nodePosX(nodeRegisterReqDto.getNodePosX())
+                .nodePosY(nodeRegisterReqDto.getNodePosY())
+                .operatorId(nodeRegisterReqDto.getOperatorId())
+                .build();
+
+        Node node = this.saveNode(nodeVo);
+
+        return node;
+    }
 }
