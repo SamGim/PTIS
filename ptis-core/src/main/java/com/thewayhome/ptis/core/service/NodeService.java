@@ -60,6 +60,8 @@ public class NodeService {
         NodeVo nodeVo = NodeVo.builder()
                 .id(req.getId())
                 .nodeName(req.getNodeName())
+                .nodeSrcType("bs")
+                .nodeSrcId(busStationId)
                 .nodePosX(req.getNodePosX())
                 .nodePosY(req.getNodePosY())
                 .operatorId(req.getOperatorId())
