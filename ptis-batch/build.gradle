@@ -1,19 +1,19 @@
-//plugins {
-//    id 'java'
-//}
-//
-//group = 'com.thewayhome'
-//version = '0.0.1-SNAPSHOT'
-//
-//repositories {
-//    mavenCentral()
-//}
-//
-//dependencies {
-//    testImplementation platform('org.junit:junit-bom:5.9.1')
-//    testImplementation 'org.junit.jupiter:junit-jupiter'
-//}
-//
-//test {
-//    useJUnitPlatform()
-//}
+plugins {
+    id 'java'
+    id 'war'
+    id 'com.bmuschko.docker-spring-boot-application' version '9.3.4'
+}
+
+dependencies {
+    implementation 'com.jcraft:jsch:0.1.55'
+}
+
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:17-jdk-slim'
+        images = ['ptis/ptis-batch:latest']
+        ports = [8080]
+        mainClassName = 'com.thewayhome.ptis.batch.PtisBatchApplication'
+        jvmArgs = ['-Dspring.profiles.active=prod', '-Xmx2048m']
+    }
+}
