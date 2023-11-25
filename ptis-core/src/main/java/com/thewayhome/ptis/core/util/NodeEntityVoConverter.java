@@ -29,6 +29,8 @@ public class NodeEntityVoConverter implements IEntityVoConverter<Node, NodeVo> {
         if (vo.getNodeName() != null) entity.setNodeName(vo.getNodeName());
         if (vo.getNodePosX() != null) entity.setNodePosX(vo.getNodePosX());
         if (vo.getNodePosY() != null) entity.setNodePosY(vo.getNodePosY());
+        if (vo.getNodeSrcType() != null) entity.setNodeSrcType(vo.getNodeSrcType());
+        if (vo.getNodeSrcId() != null) entity.setNodeSrcId(vo.getNodeSrcId());
 
         entity.setUpdatedAt(LocalDateTime.now());
         entity.setUpdatedBy(operatorId);
@@ -42,6 +44,8 @@ public class NodeEntityVoConverter implements IEntityVoConverter<Node, NodeVo> {
         return NodeVo.builder()
                 .id(entity.getId())
                 .nodeName(entity.getNodeName())
+                .nodeSrcType(entity.getNodeSrcType())
+                .nodeSrcId(entity.getNodeSrcId())
                 .nodePosX(entity.getNodePosX())
                 .nodePosY(entity.getNodePosY())
                 .createdAt(entity.getCreatedAt())

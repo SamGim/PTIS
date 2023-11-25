@@ -60,6 +60,8 @@ public class NodeService {
         NodeVo nodeVo = NodeVo.builder()
                 .id(req.getId())
                 .nodeName(req.getNodeName())
+                .nodeSrcType("bs")
+                .nodeSrcId(busStationId)
                 .nodePosX(req.getNodePosX())
                 .nodePosY(req.getNodePosY())
                 .operatorId(req.getOperatorId())
@@ -76,6 +78,60 @@ public class NodeService {
                 .build();
 
         busStationService.saveBusStationProcess(busStationProcessVo);
+
+        return node;
+    }
+
+    public Node createNodeFromCompany(NodeRegisterRequestDto nodeRegisterReqDto, String companyID) {
+        // ID
+        IdSequence idSequence = idSequenceRepository.findById("NODE")
+                .orElse(new IdSequence("NODE", 0L));
+        Long id = idSequence.getNextId() + 1;
+
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
+
+        nodeRegisterReqDto.setId(String.format("%012d", id));
+
+        // Node
+        NodeVo nodeVo = NodeVo.builder()
+                .id(nodeRegisterReqDto.getId())
+                .nodeName(nodeRegisterReqDto.getNodeName())
+                .nodeSrcType("cp")
+                .nodeSrcId(companyID)
+                .nodePosX(nodeRegisterReqDto.getNodePosX())
+                .nodePosY(nodeRegisterReqDto.getNodePosY())
+                .operatorId(nodeRegisterReqDto.getOperatorId())
+                .build();
+
+        Node node = this.saveNode(nodeVo);
+
+        return node;
+    }
+
+    public Node createNodeFromComplex(NodeRegisterRequestDto nodeRegisterReqDto, String complexId) {
+        // ID
+        IdSequence idSequence = idSequenceRepository.findById("NODE")
+                .orElse(new IdSequence("NODE", 0L));
+        Long id = idSequence.getNextId() + 1;
+
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
+
+        nodeRegisterReqDto.setId(String.format("%012d", id));
+
+        // Node
+        NodeVo nodeVo = NodeVo.builder()
+                .id(nodeRegisterReqDto.getId())
+                .nodeName(nodeRegisterReqDto.getNodeName())
+                .nodeSrcType("cx")
+                .nodeSrcId(complexId)
+                .nodePosX(nodeRegisterReqDto.getNodePosX())
+                .nodePosY(nodeRegisterReqDto.getNodePosY())
+                .operatorId(nodeRegisterReqDto.getOperatorId())
+                .build();
+
+        Node node = this.saveNode(nodeVo);
 
         return node;
     }

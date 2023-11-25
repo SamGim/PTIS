@@ -13,4 +13,6 @@ public class NodeVo extends BaseDto {
     private String nodeName;
     private Double nodePosX;
     private Double nodePosY;
+    private String nodeSrcType;
+    private String nodeSrcId;
 }
