@@ -43,13 +43,4 @@ public class BusRoute extends BaseEntity {
     @Column(name="bus_route_sub_no", nullable = true)
     @Size(max=10)
     private String busRouteSubNo;
-
-    @ManyToOne
-    @JoinColumn(name = "bus_station_st", nullable = true)
-    private BusStation busStationSt;
-
-    @ManyToOne
-    @JoinColumn(name = "bus_station_ed", nullable = true)
-    private BusStation busStationEd;
-
 }

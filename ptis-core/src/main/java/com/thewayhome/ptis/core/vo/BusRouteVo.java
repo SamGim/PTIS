@@ -14,6 +14,4 @@ public class BusRouteVo extends BaseDto {
     private String busRouteName;
     private String busRouteNo;
     private String busRouteSubNo;
-    private BusStationVo busStationSt;
-    private BusStationVo busStationEd;
 }

@@ -74,8 +74,6 @@ public class BusRouteService {
                 .busRouteName(req.getBusRouteName())
                 .busRouteNo(req.getBusRouteNo())
                 .busRouteSubNo(req.getBusRouteSubNo())
-                .busStationSt(req.getBusStationSt())
-                .busStationEd(req.getBusStationEd())
                 .operatorId(req.getOperatorId())
                 .build();
 
@@ -114,8 +112,6 @@ public class BusRouteService {
                 .busRouteName(req.getBusRouteName())
                 .busRouteNo(req.getBusRouteNo())
                 .busRouteSubNo(req.getBusRouteSubNo())
-                .busStationSt(req.getBusStationSt())
-                .busStationEd(req.getBusStationEd())
                 .operatorId(req.getOperatorId())
                 .build();
 
