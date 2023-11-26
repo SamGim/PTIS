@@ -16,8 +16,8 @@ import lombok.experimental.SuperBuilder;
 @Table(
         name = "BusStation",
         indexes = {
-                @Index(name = "BusStation_U1", columnList = "id"),
-                @Index(name = "BusStation_X1", columnList = "bus_station_id")
+                @Index(name = "BusStation_U1", columnList = "id", unique = true),
+                @Index(name = "BusStation_X1", columnList = "bus_station_id", unique = true)
         }
 )
 @NoArgsConstructor

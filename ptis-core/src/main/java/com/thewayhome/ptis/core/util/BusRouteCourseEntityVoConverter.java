@@ -30,8 +30,8 @@ public class BusRouteCourseEntityVoConverter implements IEntityVoConverter<BusRo
         BusRoute route = null;
         BusStation station = null;
 
-        if (vo.getBusRoute() != null) route = busRouteRepository.findById(vo.getBusRoute().getId()).orElseThrow(IllegalArgumentException::new);
-        if (vo.getBusStation() != null) station = busStationRepository.findById(vo.getBusStation().getId()).orElseThrow(IllegalArgumentException::new);
+        if (vo.getBusRoute() != null) route = busRouteRepository.findByBusRouteId(vo.getBusRoute().getId()).orElseThrow(IllegalArgumentException::new);
+        if (vo.getBusStation() != null) station = busStationRepository.findByBusStationId(vo.getBusStation().getId()).orElseThrow(IllegalArgumentException::new);
 
         BusRouteCourse entity = busRouteCourseRepository.findById(vo.getId())
                 .orElse(
