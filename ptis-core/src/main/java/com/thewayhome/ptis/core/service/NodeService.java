@@ -22,7 +22,7 @@ public class NodeService {
     private final BusStationService busStationService;
     private final NodeRepository nodeRepository;
     private final IdSequenceRepository idSequenceRepository;
-    private final NodeEntityVoConverter nodeEntityDtoConverter;
+    private final NodeEntityVoConverter nodeEntityVoConverter;
 
     public Optional<Node> findById(String id) {
         return nodeRepository.findById(id);
@@ -34,15 +34,15 @@ public class NodeService {
         return srcNodes.stream()
                 .flatMap(srcNode -> destNodes.stream()
                         .map(destNode -> new NodeVo[]{
-                                nodeEntityDtoConverter.toVo(srcNode, operatorId),
-                                nodeEntityDtoConverter.toVo(destNode, operatorId),
+                                nodeEntityVoConverter.toVo(srcNode, operatorId),
+                                nodeEntityVoConverter.toVo(destNode, operatorId),
                         })
                 )
                 .toList();
     }
 
     public Node saveNode(NodeVo req) {
-        Node entity = nodeEntityDtoConverter.toEntity(req, req.getOperatorId());
+        Node entity = nodeEntityVoConverter.toEntity(req, req.getOperatorId());
         return nodeRepository.save(entity);
     }
     public Node createNodeFromBusStation(NodeRegisterRequestDto req, String busStationId) {
@@ -134,5 +134,11 @@ public class NodeService {
         Node node = this.saveNode(nodeVo);
 
         return node;
+    }
+
+    public List<NodeVo> findAll(String jobName) {
+        return nodeRepository.findAll().stream()
+                .map(node -> nodeEntityVoConverter.toVo(node, jobName))
+                .toList();
     }
 }
