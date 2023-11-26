@@ -2,12 +2,15 @@ package com.thewayhome.ptis.batch.job.b0003;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.batch.util.APIConnector;
-import com.thewayhome.ptis.core.entity.Param;
-import com.thewayhome.ptis.core.service.BusStationService;
+import com.thewayhome.ptis.core.dto.request.BusRouteAddCourseItemRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusRouteProcessRegisterRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
+import com.thewayhome.ptis.core.entity.Param;
+import com.thewayhome.ptis.core.service.BusStationService;
+import com.thewayhome.ptis.core.service.ParamService;
+import com.thewayhome.ptis.core.vo.BusRouteVo;
+import com.thewayhome.ptis.core.vo.BusStationVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -21,8 +24,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -92,15 +98,21 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
                 .build();
 
         List<BusStationRegisterRequestDto> stationReqList = new ArrayList<>();
+        List<BusRouteAddCourseItemRequestDto> routeAddItemReqList = new ArrayList<>();
         try {
             JsonNode rootNode = objectMapper.readTree(dataFromAPI);
 
-            for (JsonNode item : rootNode) {
+            for (int i = 0; i < rootNode.size(); i++) {
+                JsonNode item = rootNode.get(i);
+                JsonNode nextItem = i+1 < rootNode.size() ? rootNode.get(i+1) : null;
+
                 String busStationId = item.get("arsId").asText();
                 String busStationNo = item.get("station").asText();
                 String busStationName = item.get("stationNm").asText();
                 String busStationPosX = item.get("gpsX").asText();
                 String busStationPosY = item.get("gpsY").asText();
+                String busStationBeginTm = Objects.isNull(nextItem) ? null : nextItem.get("beginTm").asText();
+                String busStationLastTm = Objects.isNull(nextItem) ? null : nextItem.get("lastTm").asText();
 
                 BusStationRegisterRequestDto req = BusStationRegisterRequestDto.builder()
                         .busStationId(busStationId)
@@ -112,6 +124,24 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
                         .build();
 
                 stationReqList.add(req);
+
+                BusRouteAddCourseItemRequestDto courseReq = BusRouteAddCourseItemRequestDto.builder()
+                        .busRoute(BusRouteVo.builder().id(busRouteId).build())
+                        .busStation(BusStationVo.builder().id(busStationId).build())
+                        .firstBusTime(
+                                Objects.isNull(busStationBeginTm) || ":".equals(busStationLastTm) ?
+                                        null :
+                                        LocalTime.parse(busStationBeginTm, DateTimeFormatter.ofPattern("HH:mm"))
+                        )
+                        .lastBusTime(
+                                Objects.isNull(busStationLastTm) || ":".equals(busStationLastTm) ?
+                                        null :
+                                        LocalTime.parse(busStationLastTm, DateTimeFormatter.ofPattern("HH:mm"))
+                        )
+                        .operatorId(jobName)
+                        .build();
+
+                routeAddItemReqList.add(courseReq);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,6 +152,7 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
                 .arsId(busRouteId)
                 .busRouteProcessRegisterRequestDto(routeProcessReq)
                 .busStationRegisterRequestDtoList(stationReqList)
+                .busRouteAddCourseItemRequestDtoList(routeAddItemReqList)
                 .build();
     }
 }

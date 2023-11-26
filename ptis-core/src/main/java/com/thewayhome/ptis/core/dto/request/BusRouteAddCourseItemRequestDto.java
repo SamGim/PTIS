@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,6 +16,6 @@ public class BusRouteAddCourseItemRequestDto extends BaseDto {
     private String id;
     private BusRouteVo busRoute;
     private BusStationVo busStation;
-    private LocalDateTime firstBusTime;
-    private LocalDateTime lastBusTime;
+    private LocalTime firstBusTime;
+    private LocalTime lastBusTime;
 }

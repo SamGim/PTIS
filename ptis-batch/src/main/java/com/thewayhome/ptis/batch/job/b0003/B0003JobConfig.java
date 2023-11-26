@@ -90,6 +90,8 @@ public class B0003JobConfig {
                 .writer(doMainLogicItemWriter)
                 .listener(doMainLogicChunkListener)
                 .faultTolerant()
+                .skip(IllegalArgumentException.class)
+                .skipLimit(10)
                 .retryPolicy(retryTemplate.retryPolicy())
                 .backOffPolicy(retryTemplate.backOffPolicy())
                 .listener(doMainLogicChunkListener)

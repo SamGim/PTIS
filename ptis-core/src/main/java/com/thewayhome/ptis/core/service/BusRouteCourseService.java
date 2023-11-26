@@ -22,7 +22,7 @@ public class BusRouteCourseService {
         return busRouteCourseRepository.findById(id);
     }
 
-    private BusRouteCourse saveBusRoute(BusRouteCourseVo req) {
+    private BusRouteCourse saveBusRouteCourse(BusRouteCourseVo req) {
         BusRouteCourse entity = busRouteCourseEntityDtoConverter.toEntity(req, req.getOperatorId());
         return busRouteCourseRepository.save(entity);
     }
@@ -47,7 +47,7 @@ public class BusRouteCourseService {
                 .operatorId(req.getOperatorId())
                 .build();
 
-        BusRouteCourse busRouteCourse = this.saveBusRoute(busRouteCourseVo);
+        BusRouteCourse busRouteCourse = this.saveBusRouteCourse(busRouteCourseVo);
 
         return busRouteCourseEntityDtoConverter.toVo(busRouteCourse, req.getOperatorId());
     }
