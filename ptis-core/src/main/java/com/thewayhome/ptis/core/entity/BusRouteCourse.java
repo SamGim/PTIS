@@ -29,11 +29,13 @@ public class BusRouteCourse extends BaseEntity {
     @Size(min = 12, max = 12)
     private String id;
 
-    @JoinColumn(columnDefinition = "bus_route_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "bus_route_id", nullable = false)
     @Size(max=12)
     private BusRoute busRoute;
 
-    @JoinColumn(columnDefinition = "bus_station_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "bus_station_id", nullable = false)
     @Size(max=12)
     private BusStation busStation;
 
