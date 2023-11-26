@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public class BusRouteVo extends BaseDto {
+public class BusRouteCourseVo extends BaseDto {
     private String id;
-    private String busRouteId;
-    private String busRouteName;
-    private String busRouteNo;
-    private String busRouteSubNo;
+    private BusRouteVo busRoute;
+    private BusStationVo busStation;
+    private LocalDateTime firstBusTime;
+    private LocalDateTime lastBusTime;
 }
