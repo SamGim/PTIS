@@ -8,6 +8,7 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import java.util.List;
 @Component
 @Qualifier("B0010DoMainLogicItemReader")
 @StepScope
-public class B0010DoMainLogicItemReader implements ItemReader<B0010DoMainLogicItemInput> {
+public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainLogicItemInput> {
     private final String jobName;
     private final String jobDate;
     private final String srcNodeIdSt;
@@ -28,8 +29,12 @@ public class B0010DoMainLogicItemReader implements ItemReader<B0010DoMainLogicIt
     private final String destNodeIdSt;
     private final String destNodeIdEd;
     private StepExecution stepExecution;
-    private final List<B0010DoMainLogicItemInput> items;
+    private final List<NodeVo> items;
     private final NodeService nodeService;
+
+    private int srcIndex = 0;
+    private int destIndex = 0;
+    private int maxIndex = 0;
 
     public B0010DoMainLogicItemReader(
             @Value("#{jobParameters[jobName]}") String jobName,
@@ -62,19 +67,8 @@ public class B0010DoMainLogicItemReader implements ItemReader<B0010DoMainLogicIt
             throw new JobInterruptedException("Job is stopping");
         }
 
-        List<NodeVo[]> nodePairs = nodeService.findByIdsBetween(srcNodeIdSt, srcNodeIdEd, destNodeIdSt, destNodeIdEd, jobName);
-
-        for (NodeVo[] nodePair : nodePairs) {
-            NodeVo srcNode = nodePair[0];
-            NodeVo destNode = nodePair[1];
-
-            this.items.add(B0010DoMainLogicItemInput
-                    .builder()
-                    .srcNode(srcNode)
-                    .destNode(destNode)
-                    .build()
-            );
-        }
+        List<NodeVo> items = nodeService.findAll(jobName);
+        this.maxIndex = items.size();
     }
 
     @Override
@@ -82,6 +76,22 @@ public class B0010DoMainLogicItemReader implements ItemReader<B0010DoMainLogicIt
         if (stepExecution.isTerminateOnly()) {
             return null;
         }
-        return items.isEmpty() ? null : items.remove(0);
+        NodeVo curSrcNode = items.get(srcIndex);
+        NodeVo curDestNode = items.get(destIndex);
+        if (srcIndex > maxIndex) {
+            return null;
+        }
+        else
+        if (destIndex == maxIndex) {
+            destIndex = 0;
+            srcIndex++;
+        }
+        else {
+            destIndex++;
+        }
+        return B0010DoMainLogicItemInput.builder()
+                .srcNode(curSrcNode)
+                .destNode(curDestNode)
+                .build();
     }
 }
