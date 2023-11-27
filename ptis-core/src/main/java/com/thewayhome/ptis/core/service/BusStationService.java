@@ -68,30 +68,36 @@ public class BusStationService {
     }
 
     public BusStationVo registerBusStation(BusStationRegisterRequestDto req) {
-        // ID
-        IdSequence idSequence = idSequenceRepository.findById("BUS_STATION")
-                .orElse(new IdSequence("BUS_STATION", 0L));
-        Long id = idSequence.getNextId() + 1;
+        Optional<BusStation> byArsId = this.findByArsId(req.getBusStationId());
 
-        idSequence.setNextId(id);
-        idSequenceRepository.save(idSequence);
+        if (byArsId.isPresent()) {
+            return busStationEntityDtoConverter.toVo(byArsId.get(), req.getOperatorId());
+        } else {
+            // ID
+            IdSequence idSequence = idSequenceRepository.findById("BUS_STATION")
+                    .orElse(new IdSequence("BUS_STATION", 0L));
+            Long id = idSequence.getNextId() + 1;
 
-        req.setId(String.format("%012d", id));
+            idSequence.setNextId(id);
+            idSequenceRepository.save(idSequence);
 
-        // BusStation
-        BusStationVo busStationVo = BusStationVo.builder()
-                .id(req.getId())
-                .busStationId(req.getBusStationId())
-                .busStationName(req.getBusStationName())
-                .busStationNo(req.getBusStationNo())
-                .busStationPosX(Double.valueOf(req.getBusStationPosX()))
-                .busStationPosY(Double.valueOf(req.getBusStationPosY()))
-                .operatorId(req.getOperatorId())
-                .build();
+            req.setId(String.format("%012d", id));
 
-        BusStation busStation = this.saveBusStation(busStationVo);
+            // BusStation
+            BusStationVo busStationVo = BusStationVo.builder()
+                    .id(req.getId())
+                    .busStationId(req.getBusStationId())
+                    .busStationName(req.getBusStationName())
+                    .busStationNo(req.getBusStationNo())
+                    .busStationPosX(Double.valueOf(req.getBusStationPosX()))
+                    .busStationPosY(Double.valueOf(req.getBusStationPosY()))
+                    .operatorId(req.getOperatorId())
+                    .build();
 
-        return busStationEntityDtoConverter.toVo(busStation, req.getOperatorId());
+            BusStation busStation = this.saveBusStation(busStationVo);
+
+            return busStationEntityDtoConverter.toVo(busStation, req.getOperatorId());
+        }
     }
 
     public BusStationProcessVo registerBusStationProcess(BusStationProcessRegisterRequestDto req) {
@@ -141,7 +147,7 @@ public class BusStationService {
                 .id(req.getId())
                 .busStation(busStationEntityDtoConverter.toVo(busStation, req.getOperatorId()))
                 .busRouteLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-                .busRouteGatheringStatusCode("01")
+                .busRouteGatheringStatusCode(req.getBusRouteGatheringStatusCode())
                 .operatorId(req.getOperatorId())
                 .build();
 

@@ -16,7 +16,6 @@ import lombok.experimental.SuperBuilder;
 @Table(
         name = "BusRoute",
         indexes = {
-                @Index(name = "BusRoute_U1", columnList = "id", unique = true),
                 @Index(name = "BusRoute_X1", columnList = "bus_route_id", unique = true)
         }
 )

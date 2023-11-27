@@ -20,8 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.io.IOException;
-
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -90,7 +88,7 @@ public class B0001JobConfig {
                 .processor(doMainLogicItemProcessor)
                 .writer(doMainLogicItemWriter)
                 .faultTolerant()
-                .retry(IOException.class)
+                .skipPolicy(retryTemplate.skipPolicy())
                 .retryPolicy(retryTemplate.retryPolicy())
                 .backOffPolicy(retryTemplate.backOffPolicy())
                 .listener(doMainLogicChunkListener)

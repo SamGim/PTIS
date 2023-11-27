@@ -92,8 +92,8 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
 
         BusRouteProcessRegisterRequestDto routeProcessReq = BusRouteProcessRegisterRequestDto.builder()
                 .id(id)
-                .busRouteLastGatheringDate(this.jobDate)
-                .busRouteGatheringStatusCode("02")
+                .busStationLastGatheringDate(this.jobDate)
+                .busStationGatheringStatusCode("01")
                 .operatorId(jobName)
                 .build();
 
@@ -106,8 +106,8 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
                 JsonNode item = rootNode.get(i);
                 JsonNode nextItem = i+1 < rootNode.size() ? rootNode.get(i+1) : null;
 
-                String busStationId = item.get("arsId").asText();
-                String busStationNo = item.get("station").asText();
+                String busStationId = item.get("station").asText();
+                String busStationNo = item.get("arsId").asText();
                 String busStationName = item.get("stationNm").asText();
                 String busStationPosX = item.get("gpsX").asText();
                 String busStationPosY = item.get("gpsY").asText();

@@ -1,6 +1,9 @@
 package com.thewayhome.ptis.batch.job.b0002;
 
-import com.thewayhome.ptis.batch.job.base.*;
+import com.thewayhome.ptis.batch.job.base.AbstractFailureHandlingTasklet;
+import com.thewayhome.ptis.batch.job.base.AbstractFinalizeJobTasklet;
+import com.thewayhome.ptis.batch.job.base.AbstractInitValueTasklet;
+import com.thewayhome.ptis.batch.job.base.AbstractValidateInputTasklet;
 import com.thewayhome.ptis.batch.job.util.BatchJobStatusNotificationListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +90,7 @@ public class B0002JobConfig {
                 .writer(doMainLogicItemWriter)
                 .listener(doMainLogicChunkListener)
                 .faultTolerant()
+                .skipPolicy(retryTemplate.skipPolicy())
                 .retryPolicy(retryTemplate.retryPolicy())
                 .backOffPolicy(retryTemplate.backOffPolicy())
                 .listener(doMainLogicChunkListener)

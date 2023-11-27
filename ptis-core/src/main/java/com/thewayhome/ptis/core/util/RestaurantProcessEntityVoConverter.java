@@ -37,8 +37,21 @@ public class RestaurantProcessEntityVoConverter implements IEntityVoConverter<Re
         if (vo.getRestaurantFirstGatheringDate() != null) entity.setRestaurantFirstGatheringDate(vo.getRestaurantFirstGatheringDate());
         if (vo.getRestaurantLastGatheringDate() != null) entity.setRestaurantLastGatheringDate(vo.getRestaurantLastGatheringDate());
 
-        if (entity.getRestaurantFirstGatheringDate() == null && entity.getRestaurantLastGatheringDate() != null) {
-            entity.setRestaurantFirstGatheringDate(entity.getRestaurantLastGatheringDate());
+        if (entity.getRestaurantGatheringStatusCode() == null) {
+            entity.setRestaurantGatheringStatusCode("00");
+        }
+        if (entity.getRestaurantFirstGatheringDate() == null) {
+            entity.setRestaurantFirstGatheringDate(" ");
+        }
+        if (entity.getRestaurantLastGatheringDate() == null) {
+            entity.setRestaurantLastGatheringDate(" ");
+        }
+
+        if (entity.getRestaurantFirstGatheringDate() == null && vo.getRestaurantLastGatheringDate() != null) {
+            entity.setRestaurantFirstGatheringDate(vo.getRestaurantLastGatheringDate());
+        }
+        if (entity.getRestaurantFirstGatheringDate() != null && entity.getRestaurantFirstGatheringDate().isBlank() && vo.getRestaurantLastGatheringDate() != null) {
+            entity.setRestaurantFirstGatheringDate(vo.getRestaurantLastGatheringDate());
         }
 
         entity.setUpdatedAt(LocalDateTime.now());
