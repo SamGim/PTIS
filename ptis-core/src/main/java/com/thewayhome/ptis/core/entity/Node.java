@@ -30,6 +30,7 @@ public class Node extends BaseEntity {
     @Size(min = 12, max = 12)
     private String id;
 
+    // 버정 이름
     @Column(name="node_name", nullable = false)
     @Size(max=10)
     private String nodeName;
