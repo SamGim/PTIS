@@ -141,4 +141,13 @@ public class NodeService {
                 .map(node -> nodeEntityVoConverter.toVo(node, jobName))
                 .toList();
     }
+
+    public boolean isExist(String id) {
+        return nodeRepository.existsByNodeName(id);
+    }
+
+    public NodeVo findByBusStationId(String busStationId, String jobName){
+        Node node = nodeRepository.findByNodeSrcId(busStationId).orElseThrow(() -> new IllegalArgumentException("해당 버정이 존재하지 않습니다. id=" + busStationId));
+        return nodeEntityVoConverter.toVo(node, jobName);
+    }
 }
