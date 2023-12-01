@@ -1,5 +1,6 @@
-package com.thewayhome.ptis.batch.job.b0010;
+package com.thewayhome.ptis.batch.job.b0020;
 
+import com.thewayhome.ptis.batch.job.b0010.B0010DoMainLogicItemInput;
 import com.thewayhome.ptis.core.service.NodeService;
 import com.thewayhome.ptis.core.vo.NodeVo;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +8,6 @@ import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,9 +19,9 @@ import java.util.List;
 
 @Slf4j
 @Component
-@Qualifier("B0010DoMainLogicItemReader")
+@Qualifier("B0020DoMainLogicItemReader")
 @StepScope
-public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainLogicItemInput> {
+public class B0020DoMainLogicItemReader implements ItemStreamReader<B0020DoMainLogicItemInput> {
     private final String jobName;
     private final String jobDate;
     private final String srcNodeIdSt;
@@ -32,11 +32,11 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
     private final List<NodeVo> items;
     private final NodeService nodeService;
 
-    private int srcIndex = 0;
-    private int destIndex = 0;
+    private int iIndex = 0;
+    private int kIndex = 0;
     private int maxIndex = 0;
 
-    public B0010DoMainLogicItemReader(
+    public B0020DoMainLogicItemReader(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             @Value("#{jobParameters[srcNodeIdSt]}") String srcNodeIdSt,
@@ -72,26 +72,26 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
     }
 
     @Override
-    public B0010DoMainLogicItemInput read() {
+    public B0020DoMainLogicItemInput read() {
         if (stepExecution.isTerminateOnly()) {
             return null;
         }
-        NodeVo curSrcNode = items.get(srcIndex);
-        NodeVo curDestNode = items.get(destIndex);
+        NodeVo curINode = items.get(iIndex);
+        NodeVo curKNode = items.get(kIndex);
 
-        if (destIndex == maxIndex) {
-            destIndex = 0;
-            srcIndex++;
-            if (srcIndex > maxIndex) {
+        if (kIndex == maxIndex) {
+            kIndex = 0;
+            iIndex++;
+            if (iIndex > maxIndex) {
                 return null;
             }
         }
         else {
-            destIndex++;
+            kIndex++;
         }
-        return B0010DoMainLogicItemInput.builder()
-                .srcNode(curSrcNode)
-                .destNode(curDestNode)
+        return B0020DoMainLogicItemInput.builder()
+                .iNode(curINode)
+                .kNode(curKNode)
                 .build();
     }
 }

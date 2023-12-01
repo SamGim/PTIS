@@ -65,7 +65,7 @@ public class LinkService {
     public Link findBySourceNodeAndDestNode(NodeVo stNode, NodeVo edNode, String jobname) {
         Node stNodeE = nodeEntityVoConverter.toEntity(stNode, jobname);
         Node edNodeE = nodeEntityVoConverter.toEntity(edNode, jobname);
-        Optional<Link> link = linkRepository.findByStNodeAndEdNode(stNodeE, edNodeE);
+        Optional<Link> link = linkRepository.findByStNodeAndEdNodeAndLinkType(stNodeE, edNodeE, "B");
         // link가 null이면 새로 만든다.
         if (link.isEmpty()) {
             String linkName = String.format("%s-%s", stNode.getNodeName(), stNode.getNodeName());
