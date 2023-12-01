@@ -14,10 +14,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table(
-        name = "BusRouteProcess",
-        indexes = {
-                @Index(name = "BusRouteProcess_U1", columnList = "id")
-        }
+        name = "BusRouteProcess"
 )
 @NoArgsConstructor
 @AllArgsConstructor

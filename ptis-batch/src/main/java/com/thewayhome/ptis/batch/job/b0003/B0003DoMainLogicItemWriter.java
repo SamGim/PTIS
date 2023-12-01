@@ -1,10 +1,12 @@
 package com.thewayhome.ptis.batch.job.b0003;
 
+import com.thewayhome.ptis.core.dto.request.BusRouteAddCourseItemRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterRequestDto;
+import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
+import com.thewayhome.ptis.core.service.BusRouteCourseService;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.MessageService;
-import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
 import com.thewayhome.ptis.core.vo.BusStationVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
@@ -31,19 +33,22 @@ public class B0003DoMainLogicItemWriter implements ItemWriter<B0003DoMainLogicIt
     private final MessageService messageService;
     private final BusRouteService busRouteService;
     private final BusStationService busStationService;
+    private final BusRouteCourseService busRouteCourseService;
 
     public B0003DoMainLogicItemWriter(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             MessageService messageService,
             BusRouteService busRouteService,
-            BusStationService busStationService
+            BusStationService busStationService,
+            BusRouteCourseService busRouteCourseService
     ) {
         this.jobName = jobName;
         this.jobDate = jobDate;
         this.messageService = messageService;
         this.busRouteService = busRouteService;
         this.busStationService = busStationService;
+        this.busRouteCourseService = busRouteCourseService;
     }
 
     @BeforeStep
@@ -67,14 +72,14 @@ public class B0003DoMainLogicItemWriter implements ItemWriter<B0003DoMainLogicIt
                         .id(busStationVo.getId())
                         .busStationLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                         .busStationGatheringStatusCode("01")
-                        .busRouteLastGatheringDate(" ")
-                        .busRouteGatheringStatusCode("00")
-                        .nodeLastCreationDate(" ")
-                        .nodeCreationStatusCode("00")
                         .operatorId(this.jobName)
                         .build();
 
                 busStationService.registerBusStationProcess(prcReq);
+            }
+
+            for (BusRouteAddCourseItemRequestDto req : item.getBusRouteAddCourseItemRequestDtoList()) {
+                busRouteCourseService.registerBusRouteCourse(req);
             }
         }
     }

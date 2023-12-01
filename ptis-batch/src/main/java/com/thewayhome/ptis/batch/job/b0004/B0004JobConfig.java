@@ -1,7 +1,5 @@
 package com.thewayhome.ptis.batch.job.b0004;
 
-import com.thewayhome.ptis.batch.job.b0001.B0001DoMainLogicItemInput;
-import com.thewayhome.ptis.batch.job.b0001.B0001DoMainLogicItemOutput;
 import com.thewayhome.ptis.batch.job.base.AbstractFailureHandlingTasklet;
 import com.thewayhome.ptis.batch.job.base.AbstractFinalizeJobTasklet;
 import com.thewayhome.ptis.batch.job.base.AbstractInitValueTasklet;
@@ -21,8 +19,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-
-import java.io.IOException;
 
 @Slf4j
 @Configuration
@@ -94,7 +90,7 @@ public class B0004JobConfig {
                 .processor(doMainLogicItemProcessor)
                 .writer(doMainLogicItemWriter)
                 .faultTolerant()
-                .retry(IOException.class)
+                .skipPolicy(retryTemplate.skipPolicy())
                 .retryPolicy(retryTemplate.retryPolicy())
                 .backOffPolicy(retryTemplate.backOffPolicy())
                 .listener(doMainLogicChunkListener)

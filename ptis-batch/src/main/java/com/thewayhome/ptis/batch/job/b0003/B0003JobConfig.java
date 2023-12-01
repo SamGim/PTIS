@@ -84,12 +84,13 @@ public class B0003JobConfig {
             B0003DoMainLogicRetryTemplate retryTemplate
     ) {
         return new StepBuilder("B0003DoMainLogicStep", jobRepository)
-                .<B0003DoMainLogicItemInput, B0003DoMainLogicItemOutput> chunk(10, transactionManager)
+                .<B0003DoMainLogicItemInput, B0003DoMainLogicItemOutput> chunk(20, transactionManager)
                 .reader(doMainLogicItemReader)
                 .processor(doMainLogicItemProcessor)
                 .writer(doMainLogicItemWriter)
                 .listener(doMainLogicChunkListener)
                 .faultTolerant()
+                .skipPolicy(retryTemplate.skipPolicy())
                 .retryPolicy(retryTemplate.retryPolicy())
                 .backOffPolicy(retryTemplate.backOffPolicy())
                 .listener(doMainLogicChunkListener)

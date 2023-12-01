@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 @Table(
         name = "BusRouteCourse",
         indexes = {
-                @Index(name = "BusRouteCourse_U1", columnList = "id")
+                @Index(name = "BusRouteCourse_X1", columnList = "bus_route_id, bus_station_id, first_bus_time", unique = true),
+                @Index(name = "BusRouteCourse_X2", columnList = "bus_route_id, bus_station_id, last_bus_time", unique = true)
         }
 )
 @NoArgsConstructor
@@ -39,9 +40,9 @@ public class BusRouteCourse extends BaseEntity {
     @Size(max=12)
     private BusStation busStation;
 
-    @Column(columnDefinition = "first_bus_time", nullable = false)
-    private LocalDateTime firstBusTime;
+    @Column(name = "first_bus_time", nullable = true)
+    private LocalTime firstBusTime;
 
-    @Column(columnDefinition = "last_bus_time", nullable = false)
-    private LocalDateTime lastBusTime;
+    @Column(name = "last_bus_time", nullable = true)
+    private LocalTime lastBusTime;
 }
