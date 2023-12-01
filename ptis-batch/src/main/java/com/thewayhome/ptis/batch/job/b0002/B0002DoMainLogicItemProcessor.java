@@ -87,7 +87,7 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
         BusStationProcessRegisterRequestDto stationProcessReq = BusStationProcessRegisterRequestDto.builder()
                 .id(id)
                 .busRouteLastGatheringDate(this.jobDate)
-                .busRouteGatheringStatusCode("02")
+                .busRouteGatheringStatusCode("01")
                 .operatorId(jobName)
                 .build();
 

@@ -72,10 +72,6 @@ public class B0003DoMainLogicItemWriter implements ItemWriter<B0003DoMainLogicIt
                         .id(busStationVo.getId())
                         .busStationLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                         .busStationGatheringStatusCode("01")
-                        .busRouteLastGatheringDate(" ")
-                        .busRouteGatheringStatusCode("00")
-                        .nodeLastCreationDate(" ")
-                        .nodeCreationStatusCode("00")
                         .operatorId(this.jobName)
                         .build();
 
