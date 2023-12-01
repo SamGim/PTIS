@@ -59,7 +59,7 @@ public class B0020DoMainLogicItemProcessor implements ItemProcessor<B0020DoMainL
         // I노드를 가져온다.
         // 모든 노드J를 가져온다.
         // I노드부터 J노드의 SPL를 가져오고 없으면 Link중 최단 시간으로 SPL을 만든다.
-        // 기존 SPL의 소요시간값과 SPL(i, k) + SPL(k, j)의 소요시간값을 비교하여 작은 값을 선택한다. 이 경우도 SPL이 없다면 Link중 최단 시간으로 SPL을 만든다.
+        // 기존 SPL의 소요시간값과 SPL(i, k) + SPL(k, j)의 소요시간값을 비교하여 작은 값을 선택한다. 이 경우도 SPL이 없다면 기Link중 최단 시간으로 SPL을 만든다.
         // 모든 노드J에 대해 위의 과정을 반복한다.
         List<NodeVo> items = nodeService.findAll(jobName);
         NodeVo iNode = input.getINode();
