@@ -67,7 +67,7 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
             throw new JobInterruptedException("Job is stopping");
         }
 
-        List<NodeVo> items = nodeService.findAll(jobName);
+        this.items.addAll(nodeService.findAll(jobName));
         this.maxIndex = items.size();
     }
 
