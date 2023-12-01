@@ -35,14 +35,17 @@ public class LinkService {
     @Transactional
     public Link registerLink(LinkRegisterRequestDto req) {
         // ID
-        IdSequence idSequence = idSequenceRepository.findById("LINK")
-                .orElse(new IdSequence("LINK", 0L));
-        Long id = idSequence.getNextId() + 1;
+        // 이미 ID가 없을 경우 새로 아이디 등록
+        if (req.getId() == null || req.getId().isEmpty()) {
+            IdSequence idSequence = idSequenceRepository.findById("LINK")
+                    .orElse(new IdSequence("LINK", 0L));
+            Long id = idSequence.getNextId() + 1;
 
-        idSequence.setNextId(id);
-        idSequenceRepository.save(idSequence);
+            idSequence.setNextId(id);
+            idSequenceRepository.save(idSequence);
 
-        req.setId(String.format("%012d", id));
+            req.setId(String.format("%012d", id));
+        }
 
         // Link
         LinkVo linkVo = LinkVo.builder()
@@ -54,31 +57,23 @@ public class LinkService {
                 .cost(req.getCost())
                 .build();
 
-        Link link = this.saveLink(linkVo, req.getOperatorId());
-
-        return link;
+        return this.saveLink(linkVo, req.getOperatorId());
     }
 
 
-    public Link findBySourceNodeAndDestNode(NodeVo stNode, NodeVo edNode, String jobname) {
+    public LinkVo findBySourceNodeAndDestNode(NodeVo stNode, NodeVo edNode, String linkType, String jobname) {
         Node stNodeE = nodeEntityVoConverter.toEntity(stNode, jobname);
         Node edNodeE = nodeEntityVoConverter.toEntity(edNode, jobname);
-        Optional<Link> link = linkRepository.findByStNodeAndEdNodeAndLinkType(stNodeE, edNodeE, "B");
-        // link가 null이면 새로 만든다.
-        if (link.isEmpty()) {
-            String linkName = String.format("%s-%s", stNode.getNodeName(), stNode.getNodeName());
-            LinkRegisterRequestDto req = LinkRegisterRequestDto.builder()
-                    .linkName(linkName)
-                    .linkType("B")
-                    .stNode(stNode)
-                    .edNode(edNode)
-                    .cost(Long.MAX_VALUE)
-                    .operatorId(jobname)
-                    .build();
-            return this.registerLink(req);
-        }
-        else {
-            return link.get();
-        }
+        return linkRepository.findByStNodeAndEdNodeAndLinkType(stNodeE, edNodeE, linkType)
+                .map(linkEntityDtoConverter::toVo)
+                .orElse(
+                        LinkVo.builder()
+                                .stNode(stNode)
+                                .linkName(String.format("%s-%s", stNode.getNodeName(), edNode.getNodeName()))
+                                .edNode(edNode)
+                                .linkType(linkType)
+                                .cost(Long.MAX_VALUE)
+                                .build()
+                );
     }
 }
