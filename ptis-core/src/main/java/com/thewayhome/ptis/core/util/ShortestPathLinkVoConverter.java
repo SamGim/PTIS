@@ -30,8 +30,6 @@ public class ShortestPathLinkVoConverter implements IEntityVoConverter<ShortestP
                                 .stNode(stNode)
                                 .edNode(edNode)
                                 .prevNode(prevNodeId)
-                                .createdAt(LocalDateTime.now())
-                                .createdBy(vo.getCreatedBy())
                                 .build()
                 );
 
@@ -60,10 +58,6 @@ public class ShortestPathLinkVoConverter implements IEntityVoConverter<ShortestP
                 .edNode(edNode)
                 .prevNode(prevNode)
                 .cost(entity.getCost())
-                .createdAt(entity.getCreatedAt())
-                .createdBy(entity.getCreatedBy())
-                .updatedAt(entity.getUpdatedAt())
-                .updatedBy(entity.getUpdatedBy())
                 .build();
     }
 
