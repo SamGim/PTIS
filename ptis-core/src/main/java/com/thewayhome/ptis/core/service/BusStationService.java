@@ -155,4 +155,8 @@ public class BusStationService {
 
         return busStationProcessEntityDtoConverter.toVo(busStationProcess, req.getOperatorId());
     }
+
+    public List<BusStation> findAll() {
+        return busStationRepository.findAll();
+    }
 }
