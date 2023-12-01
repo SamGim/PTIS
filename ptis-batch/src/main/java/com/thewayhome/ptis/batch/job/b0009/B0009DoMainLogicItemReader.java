@@ -61,7 +61,7 @@ public class B0009DoMainLogicItemReader implements ItemStreamReader<B0009DoMainL
         for (Company company : companyList) {
             this.items.add(B0009DoMainLogicItemInput
                     .builder()
-                    .companyId(String.format("%012d", company.getCompanyId()))
+                    .companyId(company.getCompanyId())
                     .companyName(company.getCompanyName())
                     .companyPosX(company.getLongitude())
                     .companyPosY(company.getLatitude())

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class B0008DoMainLogicItemInput {
-    private String complexId;
+    private Long complexId;
     private String complexName;
     private Double complexPosX;
     private Double complexPosY;
