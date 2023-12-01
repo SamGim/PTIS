@@ -79,15 +79,15 @@ public class B0020DoMainLogicItemReader implements ItemStreamReader<B0020DoMainL
         NodeVo curINode = items.get(iIndex);
         NodeVo curKNode = items.get(kIndex);
 
-        if (kIndex == maxIndex) {
-            kIndex = 0;
-            iIndex++;
-            if (iIndex > maxIndex) {
+        if (iIndex == maxIndex) {
+            iIndex = 0;
+            kIndex++;
+            if (kIndex > maxIndex) {
                 return null;
             }
         }
         else {
-            kIndex++;
+            iIndex++;
         }
         return B0020DoMainLogicItemInput.builder()
                 .iNode(curINode)
