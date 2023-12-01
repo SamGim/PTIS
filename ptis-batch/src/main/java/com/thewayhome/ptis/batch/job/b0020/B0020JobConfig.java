@@ -24,19 +24,19 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class B0010JobConfig {
+public class B0020JobConfig {
     @Bean
-    @Qualifier("B0010Job")
-    public Job B0010Job(
+    @Qualifier("B0020Job")
+    public Job B0020Job(
             JobRepository jobRepository,
-            @Qualifier("B0010ValidateInputStep") Step validateInput,
-            @Qualifier("B0010InitValueStep") Step initValue,
-            @Qualifier("B0010DoMainLogicStep") Step doMainLogic,
-            @Qualifier("B0010FinalizeJobStep") Step finalizeJob,
-            @Qualifier("B0010FailureHandlingStep") Step failureHandling,
+            @Qualifier("B0020ValidateInputStep") Step validateInput,
+            @Qualifier("B0020InitValueStep") Step initValue,
+            @Qualifier("B0020DoMainLogicStep") Step doMainLogic,
+            @Qualifier("B0020FinalizeJobStep") Step finalizeJob,
+            @Qualifier("B0020FailureHandlingStep") Step failureHandling,
             BatchJobStatusNotificationListener batchJobStatusNotificationListener
     ) {
-        return new JobBuilder("B0010", jobRepository)
+        return new JobBuilder("B0020", jobRepository)
                 .start(validateInput).on("FAILED").to(failureHandling)
                 .from(validateInput).on("*").to(initValue)
                 .from(initValue).on("FAILED").to(failureHandling)
@@ -49,42 +49,42 @@ public class B0010JobConfig {
     }
 
     @Bean
-    @Qualifier("B0010ValidateInputStep")
-    public Step B0010ValidateInputStep(
+    @Qualifier("B0020ValidateInputStep")
+    public Step B0020ValidateInputStep(
             JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
             @Qualifier("B0020ValidateInputTasklet") AbstractValidateInputTasklet validateInputTasklet
     ) {
-        return new StepBuilder("B0010ValidateInputStep", jobRepository)
+        return new StepBuilder("B0020ValidateInputStep", jobRepository)
                 .tasklet(validateInputTasklet, transactionManager)
                 .build();
     }
 
     @Bean
-    @Qualifier("B0010InitValueStep")
-    public Step B0010InitValueStep(
+    @Qualifier("B0020InitValueStep")
+    public Step B0020InitValueStep(
             JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
             @Qualifier("B0020InitValueTasklet") AbstractInitValueTasklet initValueTasklet
     ) {
-        return new StepBuilder("B0010InitValueStep", jobRepository)
+        return new StepBuilder("B0020InitValueStep", jobRepository)
                 .tasklet(initValueTasklet, transactionManager)
                 .build();
     }
 
     @Bean
-    @Qualifier("B0010DoMainLogicStep")
-    public Step B0010DoMainLogicStep(
+    @Qualifier("B0020DoMainLogicStep")
+    public Step B0020DoMainLogicStep(
             JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
             @Qualifier("B0020DoMainLogicItemReader") ItemReader<B0020DoMainLogicItemInput> doMainLogicItemReader,
             @Qualifier("B0020DoMainLogicItemProcessor") ItemProcessor<B0020DoMainLogicItemInput, B0020DoMainLogicItemOutput> doMainLogicItemProcessor,
-            @Qualifier("B0010DoMainLogicItemWriter") ItemWriter<B0020DoMainLogicItemOutput> doMainLogicItemWriter,
+            @Qualifier("B0020DoMainLogicItemWriter") ItemWriter<B0020DoMainLogicItemOutput> doMainLogicItemWriter,
             @Qualifier("B0020DoMainLogicChunkListener") ChunkListener doMainLogicChunkListener,
             B0020DoMainLogicRetryTemplate retryTemplate
     ) {
-        return new StepBuilder("B0010DoMainLogicStep", jobRepository)
-                .<B0020DoMainLogicItemInput, B0020DoMainLogicItemOutput> chunk(100, transactionManager)
+        return new StepBuilder("B0020DoMainLogicStep", jobRepository)
+                .<B0020DoMainLogicItemInput, B0020DoMainLogicItemOutput> chunk(1, transactionManager)
                 .reader(doMainLogicItemReader)
                 .processor(doMainLogicItemProcessor)
                 .writer(doMainLogicItemWriter)
@@ -97,25 +97,25 @@ public class B0010JobConfig {
     }
 
     @Bean
-    @Qualifier("B0010FinalizeJobStep")
-    public Step B0010FinalizeJobStep(
+    @Qualifier("B0020FinalizeJobStep")
+    public Step B0020FinalizeJobStep(
             JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
             @Qualifier("B0020FinalizeJobTasklet") AbstractFinalizeJobTasklet finalizeJobTasklet
     ) {
-        return new StepBuilder("B0010FinalizeJobStep", jobRepository)
+        return new StepBuilder("B0020FinalizeJobStep", jobRepository)
                 .tasklet(finalizeJobTasklet, transactionManager)
                 .build();
     }
 
     @Bean
-    @Qualifier("B0010FailureHandlingStep")
-    public Step B0010FailureHandlingStep(
+    @Qualifier("B0020FailureHandlingStep")
+    public Step B0020FailureHandlingStep(
             JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
             @Qualifier("B0020FailureHandlingTasklet") AbstractFailureHandlingTasklet failureHandlingTasklet
     ) {
-        return new StepBuilder("B0010FailureHandlingStep", jobRepository)
+        return new StepBuilder("B0020FailureHandlingStep", jobRepository)
                 .tasklet(failureHandlingTasklet, transactionManager)
                 .build();
     }
