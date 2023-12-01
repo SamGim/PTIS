@@ -63,7 +63,7 @@ public class B0014DoMainLogicItemReader implements ItemStreamReader<B0014DoMainL
         }
         busStationService.findAll().forEach(busStation -> {
             if (nodeService.isExist(busStation.getId())) {
-                items.add(busStationEntityVoConverter.toVo(busStation, "SYSTEM"));
+                items.add(busStationEntityVoConverter.toVo(busStation));
             }
         });
 
