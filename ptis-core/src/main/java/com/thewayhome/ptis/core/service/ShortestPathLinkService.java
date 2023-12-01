@@ -1,5 +1,6 @@
 package com.thewayhome.ptis.core.service;
 
+import com.thewayhome.ptis.core.dto.request.ShortestPathLinkRegisterDto;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Link;
 import com.thewayhome.ptis.core.entity.Node;
@@ -16,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ public class ShortestPathLinkService {
     private final LinkRepository linkRepository;
     private final IdSequenceRepository idSequenceRepository;
 
-    public ShortestPathLinkVo findBySrcNodeIdAndDestNodeId(NodeVo stNodeVo, NodeVo edNodeVo, String jobName) {
+    public ShortestPathLinkVo getSPLBySrcNodeIdAndDestNodeId(NodeVo stNodeVo, NodeVo edNodeVo, String jobName) {
         Node stNode = nodeEntityVoConverter.toEntity(stNodeVo, jobName);
         Node edNode = nodeEntityVoConverter.toEntity(edNodeVo, jobName);
         Optional<ShortestPathLink> resSpl = shortestPathLinkRepository.findByStNodeAndEdNode(stNode, edNode);
@@ -44,16 +46,21 @@ public class ShortestPathLinkService {
                         .stNode(stNodeVo)
                         .edNode(edNodeVo)
                         .prevNode(stNodeVo)
+                        .cost(Long.MAX_VALUE)
                         .build();
-                Long cost = Long.MAX_VALUE;
-                for (Link link : links) {
-                    // link의 cost가 가장 작은 것을 선택
-                    if (link.getCost() < cost) {
-                        cost = link.getCost();
-                    }
-                }
-                shortestPathLinkVo.setCost(cost);
-                registerShortestPathLink(shortestPathLinkVo);
+
+                Optional<Link> minLink = links.stream().min(Comparator.comparing(Link::getCost));
+                minLink.ifPresent(link -> shortestPathLinkVo.setCost(link.getCost()));
+
+                this.registerShortestPathLink(
+                        ShortestPathLinkRegisterDto.builder()
+                                .id(null)
+                                .stNode(shortestPathLinkVo.getStNode())
+                                .edNode(shortestPathLinkVo.getEdNode())
+                                .prevNode(shortestPathLinkVo.getPrevNode())
+                                .cost(shortestPathLinkVo.getCost())
+                                .build()
+                );
                 return shortestPathLinkVo;
             }
         }
@@ -61,7 +68,7 @@ public class ShortestPathLinkService {
 
     // id가 이미 있는 SPL이면 업데이트, 없으면 새로 등록
     @Transactional
-    public ShortestPathLink registerShortestPathLink(ShortestPathLinkVo req) {
+    public ShortestPathLink registerShortestPathLink(ShortestPathLinkRegisterDto req) {
         if (req.getId() != null) {
             Optional<ShortestPathLink> resSpl = shortestPathLinkRepository.findById(req.getId());
             if (resSpl.isPresent()) {
@@ -70,12 +77,12 @@ public class ShortestPathLinkService {
                 shortestPathLinkVo.setEdNode(req.getEdNode());
                 shortestPathLinkVo.setPrevNode(req.getPrevNode());
                 shortestPathLinkVo.setStNode(req.getStNode());
-                return this.saveShortestPathLink(shortestPathLinkVo);
+                return this.saveShortestPathLink(shortestPathLinkVo, req.getOperatorId());
             }
         }
         // req에 id가 없거나, id가 있어도 SPL에 없으면 새로 등록
-        IdSequence idSequence = idSequenceRepository.findById("LINK")
-                .orElse(new IdSequence("LINK", 0L));
+        IdSequence idSequence = idSequenceRepository.findById("SPL")
+                .orElse(new IdSequence("SPL", 0L));
         Long id = idSequence.getNextId() + 1;
 
         idSequence.setNextId(id);
@@ -92,11 +99,11 @@ public class ShortestPathLinkService {
                 .cost(req.getCost())
                 .build();
 
-        return this.saveShortestPathLink(shortestPathLinkVo);
+        return this.saveShortestPathLink(shortestPathLinkVo, req.getOperatorId());
     }
 
-    private ShortestPathLink saveShortestPathLink(ShortestPathLinkVo req) {
-        ShortestPathLink entity = shortestPathLinkVoConverter.toEntity(req, req.getOperatorId());
+    private ShortestPathLink saveShortestPathLink(ShortestPathLinkVo req, String operatorId) {
+        ShortestPathLink entity = shortestPathLinkVoConverter.toEntity(req, operatorId);
         return shortestPathLinkRepository.save(entity);
     }
 }
