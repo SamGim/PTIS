@@ -107,7 +107,7 @@ public class B0004DoMainLogicItemReader implements ItemStreamReader<B0004DoMainL
 
         Map<String, Object> item = this.jArray.get(this.idx++);
 
-        while (Objects.equals((String) item.get("dtlstatenm"), "폐업")){
+        while ("폐업".equals(item.get("dtlstatenm"))){
             if (this.idx >= this.jArray.size()) {
                 return null;
             }
