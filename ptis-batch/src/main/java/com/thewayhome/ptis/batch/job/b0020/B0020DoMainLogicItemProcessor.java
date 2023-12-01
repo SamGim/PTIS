@@ -1,14 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0020;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.batch.job.b0010.B0010DoMainLogicItemInput;
-import com.thewayhome.ptis.batch.job.b0010.B0010DoMainLogicItemOutput;
-import com.thewayhome.ptis.batch.util.GeoUtils;
-import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
-import com.thewayhome.ptis.core.entity.ShortestPathLink;
-import com.thewayhome.ptis.core.service.BusStationService;
+import com.thewayhome.ptis.core.dto.request.ShortestPathLinkRegisterDto;
 import com.thewayhome.ptis.core.service.NodeService;
-import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.core.service.ShortestPathLinkService;
 import com.thewayhome.ptis.core.vo.NodeVo;
 import com.thewayhome.ptis.core.vo.ShortestPathLinkVo;
@@ -22,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -55,6 +49,7 @@ public class B0020DoMainLogicItemProcessor implements ItemProcessor<B0020DoMainL
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
             throw new JobInterruptedException("Job is stopping");
         }
+        List<ShortestPathLinkRegisterDto> res = new ArrayList<>();
         // I노드부터 모든 노드까지 K노드를 거칠경우를 가정해 최단 소요시간을 계산한다.
         // I노드를 가져온다.
         // 모든 노드J를 가져온다.
@@ -65,18 +60,27 @@ public class B0020DoMainLogicItemProcessor implements ItemProcessor<B0020DoMainL
         NodeVo iNode = input.getINode();
         NodeVo kNode = input.getKNode();
         for (NodeVo jNode : items){
-            ShortestPathLinkVo curSpl = shortestPathLinkService.findBySrcNodeIdAndDestNodeId(iNode, jNode, jobName);
-            ShortestPathLinkVo ikSpl = shortestPathLinkService.findBySrcNodeIdAndDestNodeId(iNode, kNode, jobName);
-            ShortestPathLinkVo kjSpl = shortestPathLinkService.findBySrcNodeIdAndDestNodeId(kNode, jNode, jobName);
+            ShortestPathLinkVo curSpl = shortestPathLinkService.getSPLBySrcNodeIdAndDestNodeId(iNode, jNode, jobName);
+            ShortestPathLinkVo ikSpl = shortestPathLinkService.getSPLBySrcNodeIdAndDestNodeId(iNode, kNode, jobName);
+            ShortestPathLinkVo kjSpl = shortestPathLinkService.getSPLBySrcNodeIdAndDestNodeId(kNode, jNode, jobName);
 
             if (curSpl.getCost() > ikSpl.getCost() + kjSpl.getCost()){
                 curSpl.setCost(ikSpl.getCost() + kjSpl.getCost());
                 curSpl.setPrevNode(kNode);
-                // 여기서 이렇게 저장하면 새로운게 생긴다. write에서 저장해야함 글고
-                shortestPathLinkService.registerShortestPathLink(curSpl, jobName);
+                // 업데이트 되는 경우만 output으로 넘긴다.
+                res.add(ShortestPathLinkRegisterDto.builder()
+                        .id(curSpl.getId())
+                        .cost(curSpl.getCost())
+                        .edNode(curSpl.getEdNode())
+                        .prevNode(curSpl.getPrevNode())
+                        .stNode(curSpl.getStNode())
+                        .build());
+
             }
 
         }
-
+        return B0020DoMainLogicItemOutput.builder()
+                .shortestPathLinkRegisterDtoList(res)
+                .build();
     }
 }
