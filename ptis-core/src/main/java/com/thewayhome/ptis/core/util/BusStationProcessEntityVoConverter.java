@@ -43,14 +43,51 @@ public class BusStationProcessEntityVoConverter implements IEntityVoConverter<Bu
         if (vo.getNodeFirstCreationDate() != null) entity.setNodeFirstCreationDate(vo.getNodeFirstCreationDate());
         if (vo.getNodeLastCreationDate() != null) entity.setNodeLastCreationDate(vo.getNodeLastCreationDate());
 
-        if (entity.getBusRouteFirstGatheringDate() == null && entity.getBusRouteLastGatheringDate() != null) {
-            entity.setBusRouteFirstGatheringDate(entity.getBusRouteLastGatheringDate());
+        if (entity.getBusRouteGatheringStatusCode() == null) {
+            entity.setBusRouteFirstGatheringDate("00");
         }
-        if (entity.getBusStationFirstGatheringDate() == null && entity.getBusStationLastGatheringDate() != null) {
-            entity.setBusStationFirstGatheringDate(entity.getBusStationLastGatheringDate());
+        if (entity.getBusRouteFirstGatheringDate() == null) {
+            entity.setBusRouteFirstGatheringDate(" ");
         }
-        if (entity.getNodeFirstCreationDate() == null && entity.getNodeLastCreationDate() != null) {
-            entity.setNodeFirstCreationDate(entity.getNodeLastCreationDate());
+        if (entity.getBusRouteLastGatheringDate() == null) {
+            entity.setBusRouteLastGatheringDate(" ");
+        }
+        if (entity.getBusStationGatheringStatusCode() == null) {
+            entity.setBusStationGatheringStatusCode("00");
+        }
+        if (entity.getBusStationFirstGatheringDate() == null) {
+            entity.setBusStationFirstGatheringDate(" ");
+        }
+        if (entity.getBusStationLastGatheringDate() == null) {
+            entity.setBusStationLastGatheringDate(" ");
+        }
+        if (entity.getNodeCreationStatusCode() == null) {
+            entity.setNodeCreationStatusCode("00");
+        }
+        if (entity.getNodeFirstCreationDate() == null) {
+            entity.setNodeFirstCreationDate(" ");
+        }
+        if (entity.getNodeLastCreationDate() == null) {
+            entity.setNodeLastCreationDate(" ");
+        }
+
+        if (entity.getBusRouteFirstGatheringDate() == null && vo.getBusRouteLastGatheringDate() != null) {
+            entity.setBusRouteFirstGatheringDate(vo.getBusRouteLastGatheringDate());
+        }
+        if (entity.getBusStationFirstGatheringDate() == null && vo.getBusStationLastGatheringDate() != null) {
+            entity.setBusStationFirstGatheringDate(vo.getBusStationLastGatheringDate());
+        }
+        if (entity.getNodeFirstCreationDate() == null && vo.getNodeLastCreationDate() != null) {
+            entity.setNodeFirstCreationDate(vo.getNodeLastCreationDate());
+        }
+        if (entity.getBusRouteFirstGatheringDate() != null && entity.getBusRouteFirstGatheringDate().isBlank() && vo.getBusRouteLastGatheringDate() != null) {
+            entity.setBusRouteFirstGatheringDate(vo.getBusRouteLastGatheringDate());
+        }
+        if (entity.getBusStationFirstGatheringDate() != null && entity.getBusStationFirstGatheringDate().isBlank() && vo.getBusStationLastGatheringDate() != null) {
+            entity.setBusStationFirstGatheringDate(vo.getBusStationLastGatheringDate());
+        }
+        if (entity.getNodeFirstCreationDate() != null && entity.getNodeFirstCreationDate().isBlank() && vo.getNodeLastCreationDate() != null) {
+            entity.setNodeFirstCreationDate(vo.getNodeLastCreationDate());
         }
 
         entity.setUpdatedAt(LocalDateTime.now());

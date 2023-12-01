@@ -40,11 +40,30 @@ public class GymProcessEntityVoConverter implements IEntityVoConverter<GymProces
         if (vo.getNodeFirstCreationDate() != null) entity.setNodeFirstCreationDate(vo.getNodeFirstCreationDate());
         if (vo.getNodeLastCreationDate() != null) entity.setNodeLastCreationDate(vo.getNodeLastCreationDate());
 
-        if (entity.getGymFirstGatheringDate() == null && entity.getGymLastGatheringDate() != null) {
-            entity.setGymFirstGatheringDate(entity.getGymLastGatheringDate());
+        if (entity.getGymGatheringStatusCode() == null) {
+            entity.setGymGatheringStatusCode("00");
         }
-        if (entity.getNodeFirstCreationDate() == null && entity.getNodeLastCreationDate() != null) {
-            entity.setNodeFirstCreationDate(entity.getNodeLastCreationDate());
+        if (entity.getGymFirstGatheringDate() == null) {
+            entity.setGymFirstGatheringDate(" ");
+        }
+        if (entity.getGymLastGatheringDate() == null) {
+            entity.setGymLastGatheringDate(" ");
+        }
+        if (entity.getNodeCreationStatusCode() == null) {
+            entity.setNodeCreationStatusCode("00");
+        }
+        if (entity.getNodeFirstCreationDate() == null) {
+            entity.setNodeFirstCreationDate(" ");
+        }
+        if (entity.getNodeLastCreationDate() == null) {
+            entity.setNodeLastCreationDate(" ");
+        }
+
+        if (entity.getGymFirstGatheringDate() == null && vo.getGymLastGatheringDate() != null) {
+            entity.setGymFirstGatheringDate(vo.getGymLastGatheringDate());
+        }
+        if (entity.getNodeFirstCreationDate() == null && vo.getNodeLastCreationDate() != null) {
+            entity.setNodeFirstCreationDate(vo.getNodeLastCreationDate());
         }
 
         entity.setUpdatedAt(LocalDateTime.now());

@@ -40,11 +40,36 @@ public class BusRouteProcessEntityVoConverter implements IEntityVoConverter<BusR
         if (vo.getBusStationFirstGatheringDate() != null) entity.setBusStationFirstGatheringDate(vo.getBusStationFirstGatheringDate());
         if (vo.getBusStationLastGatheringDate() != null) entity.setBusStationLastGatheringDate(vo.getBusStationLastGatheringDate());
 
-        if (entity.getBusRouteFirstGatheringDate() == null && entity.getBusRouteLastGatheringDate() != null) {
-            entity.setBusRouteFirstGatheringDate(entity.getBusRouteLastGatheringDate());
+        if (entity.getBusRouteGatheringStatusCode() == null) {
+            entity.setBusRouteFirstGatheringDate("00");
         }
-        if (entity.getBusStationFirstGatheringDate() == null && entity.getBusStationLastGatheringDate() != null) {
-            entity.setBusStationFirstGatheringDate(entity.getBusStationLastGatheringDate());
+        if (entity.getBusRouteFirstGatheringDate() == null) {
+            entity.setBusRouteFirstGatheringDate(" ");
+        }
+        if (entity.getBusRouteLastGatheringDate() == null) {
+            entity.setBusRouteLastGatheringDate(" ");
+        }
+        if (entity.getBusStationGatheringStatusCode() == null) {
+            entity.setBusStationGatheringStatusCode("00");
+        }
+        if (entity.getBusStationFirstGatheringDate() == null) {
+            entity.setBusStationFirstGatheringDate(" ");
+        }
+        if (entity.getBusStationLastGatheringDate() == null) {
+            entity.setBusStationLastGatheringDate(" ");
+        }
+
+        if (entity.getBusRouteFirstGatheringDate() == null && vo.getBusRouteLastGatheringDate() != null) {
+            entity.setBusRouteFirstGatheringDate(vo.getBusRouteLastGatheringDate());
+        }
+        if (entity.getBusStationFirstGatheringDate() == null && vo.getBusStationLastGatheringDate() != null) {
+            entity.setBusStationFirstGatheringDate(vo.getBusStationLastGatheringDate());
+        }
+        if (entity.getBusRouteFirstGatheringDate() != null && entity.getBusRouteFirstGatheringDate().isBlank() && vo.getBusRouteLastGatheringDate() != null) {
+            entity.setBusRouteFirstGatheringDate(vo.getBusRouteLastGatheringDate());
+        }
+        if (entity.getBusStationFirstGatheringDate() != null && entity.getBusStationFirstGatheringDate().isBlank() && vo.getBusStationLastGatheringDate() != null) {
+            entity.setBusStationFirstGatheringDate(vo.getBusStationLastGatheringDate());
         }
 
         entity.setUpdatedAt(LocalDateTime.now());
