@@ -40,7 +40,7 @@ public class BusStationEntityVoConverter implements IEntityVoConverter<BusStatio
 
     @Override
     @NotNull
-    public BusStationVo toVo(BusStation entity, String operatorId) {
+    public BusStationVo toVo(BusStation entity) {
         return BusStationVo.builder()
                 .id(entity.getId())
                 .busStationId(entity.getBusStationId())
@@ -52,7 +52,6 @@ public class BusStationEntityVoConverter implements IEntityVoConverter<BusStatio
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

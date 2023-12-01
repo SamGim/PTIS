@@ -22,7 +22,7 @@ public class NodeEntityVoConverter implements IEntityVoConverter<Node, NodeVo> {
                         Node.builder()
                                 .id(vo.getId())
                                 .createdAt(LocalDateTime.now())
-                                .createdBy(vo.getOperatorId())
+                                .createdBy(operatorId)
                                 .build()
                 );
 
@@ -40,7 +40,7 @@ public class NodeEntityVoConverter implements IEntityVoConverter<Node, NodeVo> {
 
     @Override
     @NotNull
-    public NodeVo toVo(Node entity, String operatorId) {
+    public NodeVo toVo(Node entity) {
         return NodeVo.builder()
                 .id(entity.getId())
                 .nodeName(entity.getNodeName())
@@ -52,7 +52,6 @@ public class NodeEntityVoConverter implements IEntityVoConverter<Node, NodeVo> {
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

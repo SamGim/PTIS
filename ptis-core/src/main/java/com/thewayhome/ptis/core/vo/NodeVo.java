@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.core.vo;
 
-import com.thewayhome.ptis.core.dto.base.BaseDto;
+import com.thewayhome.ptis.core.vo.base.BaseVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public class NodeVo extends BaseDto {
+public class NodeVo extends BaseVo {
     private String id;
     private String nodeName;
     private Double nodePosX;

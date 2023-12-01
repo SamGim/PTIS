@@ -62,10 +62,10 @@ public class RestaurantProcessEntityVoConverter implements IEntityVoConverter<Re
 
     @Override
     @NotNull
-    public RestaurantProcessVo toVo(RestaurantProcess entity, String operatorId) {
+    public RestaurantProcessVo toVo(RestaurantProcess entity) {
         RestaurantVo restaurant = null;
 
-        if (entity.getRestaurant() != null) restaurant = restaurantEntityVoConverter.toVo(entity.getRestaurant(), operatorId);
+        if (entity.getRestaurant() != null) restaurant = restaurantEntityVoConverter.toVo(entity.getRestaurant());
 
         return RestaurantProcessVo.builder()
                 .id(entity.getId())
@@ -77,7 +77,6 @@ public class RestaurantProcessEntityVoConverter implements IEntityVoConverter<Re
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

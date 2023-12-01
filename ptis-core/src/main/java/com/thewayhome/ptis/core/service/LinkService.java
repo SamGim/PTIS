@@ -1,15 +1,14 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.entity.Node;
-import com.thewayhome.ptis.core.util.NodeEntityVoConverter;
-import com.thewayhome.ptis.core.vo.BusStationVo;
-import com.thewayhome.ptis.core.vo.LinkVo;
 import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Link;
+import com.thewayhome.ptis.core.entity.Node;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
 import com.thewayhome.ptis.core.repository.LinkRepository;
 import com.thewayhome.ptis.core.util.LinkEntityVoConverter;
+import com.thewayhome.ptis.core.util.NodeEntityVoConverter;
+import com.thewayhome.ptis.core.vo.LinkVo;
 import com.thewayhome.ptis.core.vo.NodeVo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +27,8 @@ public class LinkService {
     public Optional<Link> findById(String id) {
         return linkRepository.findById(id);
     }
-    private Link saveLink(LinkVo req) {
-        Link entity = linkEntityDtoConverter.toEntity(req, req.getOperatorId());
+    private Link saveLink(LinkVo req, String operatorId) {
+        Link entity = linkEntityDtoConverter.toEntity(req, operatorId);
         return linkRepository.save(entity);
     }
 
@@ -53,10 +52,9 @@ public class LinkService {
                 .stNode(req.getStNode())
                 .edNode(req.getEdNode())
                 .cost(req.getCost())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        Link link = this.saveLink(linkVo);
+        Link link = this.saveLink(linkVo, req.getOperatorId());
 
         return link;
     }

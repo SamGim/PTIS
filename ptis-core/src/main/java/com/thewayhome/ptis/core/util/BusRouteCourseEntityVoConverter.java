@@ -57,12 +57,12 @@ public class BusRouteCourseEntityVoConverter implements IEntityVoConverter<BusRo
 
     @Override
     @NotNull
-    public BusRouteCourseVo toVo(BusRouteCourse entity, String operatorId) {
+    public BusRouteCourseVo toVo(BusRouteCourse entity) {
         BusRouteVo routeVo = null;
         BusStationVo stationVo = null;
 
-        if (entity.getBusRoute() != null) routeVo = busRouteEntityVoConverter.toVo(entity.getBusRoute(), operatorId);
-        if (entity.getBusStation() != null) stationVo = busStationEntityVoConverter.toVo(entity.getBusStation(), operatorId);
+        if (entity.getBusRoute() != null) routeVo = busRouteEntityVoConverter.toVo(entity.getBusRoute());
+        if (entity.getBusStation() != null) stationVo = busStationEntityVoConverter.toVo(entity.getBusStation());
 
         return BusRouteCourseVo.builder()
                 .id(entity.getId())
@@ -74,7 +74,6 @@ public class BusRouteCourseEntityVoConverter implements IEntityVoConverter<BusRo
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

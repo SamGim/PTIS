@@ -22,7 +22,7 @@ public class RestaurantEntityVoConverter implements IEntityVoConverter<Restauran
                         Restaurant.builder()
                                 .id(vo.getId())
                                 .createdAt(LocalDateTime.now())
-                                .createdBy(vo.getOperatorId())
+                                .createdBy(operatorId)
                                 .build()
                 );
 
@@ -41,7 +41,7 @@ public class RestaurantEntityVoConverter implements IEntityVoConverter<Restauran
 
     @Override
     @NotNull
-    public RestaurantVo toVo(Restaurant entity, String operatorId) {
+    public RestaurantVo toVo(Restaurant entity) {
         return RestaurantVo.builder()
                 .id(entity.getId())
                 .restaurantId(entity.getRestaurantId())
@@ -54,7 +54,6 @@ public class RestaurantEntityVoConverter implements IEntityVoConverter<Restauran
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

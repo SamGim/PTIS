@@ -45,7 +45,7 @@ public class GymEntityVoConverter implements IEntityVoConverter<Gym, GymVo> {
 
     @Override
     @NotNull
-    public GymVo toVo(Gym entity, String operatorId) {
+    public GymVo toVo(Gym entity) {
         return GymVo.builder()
                 .id(entity.getId())
                 .gymId(entity.getGymId())
@@ -57,7 +57,6 @@ public class GymEntityVoConverter implements IEntityVoConverter<Gym, GymVo> {
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

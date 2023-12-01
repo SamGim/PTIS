@@ -23,8 +23,8 @@ public class BusRouteCourseService {
         return busRouteCourseRepository.findById(id);
     }
 
-    private BusRouteCourse saveBusRouteCourse(BusRouteCourseVo req) {
-        BusRouteCourse entity = busRouteCourseEntityDtoConverter.toEntity(req, req.getOperatorId());
+    private BusRouteCourse saveBusRouteCourse(BusRouteCourseVo req, String operatorId) {
+        BusRouteCourse entity = busRouteCourseEntityDtoConverter.toEntity(req, operatorId);
         return busRouteCourseRepository.save(entity);
     }
 
@@ -45,12 +45,11 @@ public class BusRouteCourseService {
                 .busStation(req.getBusStation())
                 .firstBusTime(req.getFirstBusTime())
                 .lastBusTime(req.getLastBusTime())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        BusRouteCourse busRouteCourse = this.saveBusRouteCourse(busRouteCourseVo);
+        BusRouteCourse busRouteCourse = this.saveBusRouteCourse(busRouteCourseVo, req.getOperatorId());
 
-        return busRouteCourseEntityDtoConverter.toVo(busRouteCourse, req.getOperatorId());
+        return busRouteCourseEntityDtoConverter.toVo(busRouteCourse);
     }
 
     public List<BusRouteCourse> getBusRouteCourseByBusStationId(String stationId) {

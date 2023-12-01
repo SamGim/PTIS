@@ -21,8 +21,8 @@ public class MessageService {
     public Optional<Message> findById(String id) {
         return messageRepository.findById(id);
     }
-    public Message saveMessage(MessageVo req) {
-        Message entity = messageEntityDtoConverter.toEntity(req, req.getOperatorId());
+    public Message saveMessage(MessageVo req, String operatorId) {
+        Message entity = messageEntityDtoConverter.toEntity(req, operatorId);
         return messageRepository.save(entity);
     }
     public Message registerMessage(MessageRegisterRequestDto req) {
@@ -42,10 +42,9 @@ public class MessageService {
                 .msgHeader(req.getMsgHeader())
                 .msgBody(req.getMsgBody())
                 .rawMessage(req.getRawMessage())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        Message message = this.saveMessage(messageVo);
+        Message message = this.saveMessage(messageVo, req.getOperatorId());
 
         return message;
     }

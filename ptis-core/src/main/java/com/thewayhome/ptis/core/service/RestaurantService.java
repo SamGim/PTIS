@@ -33,13 +33,13 @@ public class RestaurantService {
         return restaurantProcessRepository.findById(id);
     }
 
-    public Restaurant saveRestaurant(RestaurantVo req) {
-        Restaurant entity = restaurantEntityDtoConverter.toEntity(req, req.getOperatorId());
+    public Restaurant saveRestaurant(RestaurantVo req, String operatorId) {
+        Restaurant entity = restaurantEntityDtoConverter.toEntity(req, operatorId);
         return restaurantRepository.save(entity);
     }
 
-    public RestaurantProcess saveRestaurantProcess(RestaurantProcessVo req) {
-        RestaurantProcess entity = restaurantProcessEntityDtoConverter.toEntity(req, req.getOperatorId());
+    public RestaurantProcess saveRestaurantProcess(RestaurantProcessVo req, String operatorId) {
+        RestaurantProcess entity = restaurantProcessEntityDtoConverter.toEntity(req, operatorId);
         return restaurantProcessRepository.save(entity);
     }
 
@@ -63,12 +63,11 @@ public class RestaurantService {
                 .restaurantAddress(req.getRestaurantAddress())
                 .restaurantPosX(req.getRestaurantPosX())
                 .restaurantPosY(req.getRestaurantPosY())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        Restaurant restaurant = this.saveRestaurant(restaurantVo);
+        Restaurant restaurant = this.saveRestaurant(restaurantVo, req.getOperatorId());
 
-        return restaurantEntityDtoConverter.toVo(restaurant, req.getOperatorId());
+        return restaurantEntityDtoConverter.toVo(restaurant);
     }
 
     public RestaurantProcessVo registerRestaurantProcess(RestaurantRegisterProcessRequestDto req) {
@@ -83,11 +82,10 @@ public class RestaurantService {
                 .restaurant(restaurantVo)
                 .restaurantLastGatheringDate(req.getRestaurantLastGatheringDate())
                 .restaurantGatheringStatusCode(req.getRestaurantGatheringStatusCode())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        RestaurantProcess restaurantProcess = this.saveRestaurantProcess(restaurantProcessVo);
+        RestaurantProcess restaurantProcess = this.saveRestaurantProcess(restaurantProcessVo, req.getOperatorId());
 
-        return restaurantProcessEntityDtoConverter.toVo(restaurantProcess, req.getOperatorId());
+        return restaurantProcessEntityDtoConverter.toVo(restaurantProcess);
     }
 }

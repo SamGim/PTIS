@@ -45,14 +45,14 @@ public class ShortestPathLinkVoConverter implements IEntityVoConverter<ShortestP
     }
 
     @Override
-    public ShortestPathLinkVo toVo(ShortestPathLink entity, String operatorId) {
+    public ShortestPathLinkVo toVo(ShortestPathLink entity) {
         NodeVo stNode = null;
         NodeVo edNode = null;
         NodeVo prevNode = null;
 
-        if (entity.getStNode() != null) stNode = nodeEntityVoConverter.toVo(entity.getStNode(), operatorId);
-        if (entity.getEdNode() != null) edNode = nodeEntityVoConverter.toVo(entity.getEdNode(), operatorId);
-        if (entity.getPrevNode() != null) prevNode = nodeEntityVoConverter.toVo(entity.getPrevNode(), operatorId);
+        if (entity.getStNode() != null) stNode = nodeEntityVoConverter.toVo(entity.getStNode());
+        if (entity.getEdNode() != null) edNode = nodeEntityVoConverter.toVo(entity.getEdNode());
+        if (entity.getPrevNode() != null) prevNode = nodeEntityVoConverter.toVo(entity.getPrevNode());
 
         return ShortestPathLinkVo.builder()
                 .id(entity.getId())
@@ -64,7 +64,6 @@ public class ShortestPathLinkVoConverter implements IEntityVoConverter<ShortestP
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 

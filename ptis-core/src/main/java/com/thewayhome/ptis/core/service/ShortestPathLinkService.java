@@ -34,7 +34,7 @@ public class ShortestPathLinkService {
         Node edNode = nodeEntityVoConverter.toEntity(edNodeVo, jobName);
         Optional<ShortestPathLink> resSpl = shortestPathLinkRepository.findByStNodeAndEdNode(stNode, edNode);
         if (resSpl.isPresent()) {
-            return shortestPathLinkVoConverter.toVo(resSpl.get(), jobName);
+            return shortestPathLinkVoConverter.toVo(resSpl.get());
         } else {
             List<Link> links = linkRepository.findByStNodeAndEdNode(stNode, edNode);
             if (links.size() == 0) {
@@ -65,7 +65,7 @@ public class ShortestPathLinkService {
         if (req.getId() != null) {
             Optional<ShortestPathLink> resSpl = shortestPathLinkRepository.findById(req.getId());
             if (resSpl.isPresent()) {
-                ShortestPathLinkVo shortestPathLinkVo = shortestPathLinkVoConverter.toVo(resSpl.get(), req.getOperatorId());
+                ShortestPathLinkVo shortestPathLinkVo = shortestPathLinkVoConverter.toVo(resSpl.get());
                 shortestPathLinkVo.setCost(req.getCost());
                 shortestPathLinkVo.setEdNode(req.getEdNode());
                 shortestPathLinkVo.setPrevNode(req.getPrevNode());

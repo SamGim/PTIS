@@ -46,13 +46,13 @@ public class BusRouteService {
         return busRouteProcess != null ? busRouteProcess.stream().map(BusRouteProcess::getBusRoute).toList() : null;
     }
 
-    private BusRoute saveBusRoute(BusRouteVo req) {
-        BusRoute entity = busRouteEntityDtoConverter.toEntity(req, req.getOperatorId());
+    private BusRoute saveBusRoute(BusRouteVo req, String operatorId) {
+        BusRoute entity = busRouteEntityDtoConverter.toEntity(req, operatorId);
         return busRouteRepository.save(entity);
     }
 
-    private BusRouteProcess saveBusRouteProcess(BusRouteProcessVo req) {
-        BusRouteProcess entity = busRouteProcessEntityDtoConverter.toEntity(req, req.getOperatorId());
+    private BusRouteProcess saveBusRouteProcess(BusRouteProcessVo req, String operatorId) {
+        BusRouteProcess entity = busRouteProcessEntityDtoConverter.toEntity(req, operatorId);
         return busRouteProcessRepository.save(entity);
     }
 
@@ -60,7 +60,7 @@ public class BusRouteService {
         Optional<BusRoute> byBusRouteId = this.findByBusRouteId(req.getBusRouteId());
 
         if (byBusRouteId.isPresent()) {
-            return busRouteEntityDtoConverter.toVo(byBusRouteId.get(), req.getOperatorId());
+            return busRouteEntityDtoConverter.toVo(byBusRouteId.get());
         } else {
             // ID
             IdSequence idSequence = idSequenceRepository.findById("BUS_ROUTE")
@@ -79,12 +79,11 @@ public class BusRouteService {
                     .busRouteName(req.getBusRouteName())
                     .busRouteNo(req.getBusRouteNo())
                     .busRouteSubNo(req.getBusRouteSubNo())
-                    .operatorId(req.getOperatorId())
                     .build();
 
-            BusRoute busRoute = this.saveBusRoute(busRouteVo);
+            BusRoute busRoute = this.saveBusRoute(busRouteVo, req.getOperatorId());
 
-            return busRouteEntityDtoConverter.toVo(busRoute, req.getOperatorId());
+            return busRouteEntityDtoConverter.toVo(busRoute);
         }
     }
 
@@ -92,7 +91,6 @@ public class BusRouteService {
         // BusRoute
         BusRouteVo busRouteVo = BusRouteVo.builder()
                 .id(req.getId())
-                .operatorId(req.getOperatorId())
                 .build();
 
         // BusRouteProcess
@@ -103,12 +101,11 @@ public class BusRouteService {
                 .busRouteGatheringStatusCode(req.getBusRouteGatheringStatusCode())
                 .busStationLastGatheringDate(req.getBusStationLastGatheringDate())
                 .busStationGatheringStatusCode(req.getBusStationGatheringStatusCode())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        BusRouteProcess busRouteProcess = this.saveBusRouteProcess(busRouteProcessVo);
+        BusRouteProcess busRouteProcess = this.saveBusRouteProcess(busRouteProcessVo, req.getOperatorId());
 
-        return busRouteProcessEntityDtoConverter.toVo(busRouteProcess, req.getOperatorId());
+        return busRouteProcessEntityDtoConverter.toVo(busRouteProcess);
     }
 
     public BusRouteVo updateBusRouteDetail(BusRouteRegisterRequestDto req) {
@@ -118,22 +115,20 @@ public class BusRouteService {
                 .busRouteName(req.getBusRouteName())
                 .busRouteNo(req.getBusRouteNo())
                 .busRouteSubNo(req.getBusRouteSubNo())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        BusRoute busRoute = this.saveBusRoute(busRouteVo);
+        BusRoute busRoute = this.saveBusRoute(busRouteVo, req.getOperatorId());
 
         BusRouteProcessVo busRouteProcessVo = BusRouteProcessVo.builder()
                 .id(req.getId())
                 .busRoute(busRouteVo)
                 .busRouteLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .busRouteGatheringStatusCode("02")
-                .operatorId(req.getOperatorId())
                 .build();
 
-        this.saveBusRouteProcess(busRouteProcessVo);
+        this.saveBusRouteProcess(busRouteProcessVo, req.getOperatorId());
 
-        return busRouteEntityDtoConverter.toVo(busRoute, req.getOperatorId());
+        return busRouteEntityDtoConverter.toVo(busRoute);
     }
 
     public BusRouteProcessVo updateBusStationsGatheringStatusCode(BusRouteProcessRegisterRequestDto req) {
@@ -143,11 +138,10 @@ public class BusRouteService {
                 .id(req.getId())
                 .busStationLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .busStationGatheringStatusCode(req.getBusStationGatheringStatusCode())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        BusRouteProcess busRouteProcess = this.saveBusRouteProcess(busRouteProcessVo);
+        BusRouteProcess busRouteProcess = this.saveBusRouteProcess(busRouteProcessVo, req.getOperatorId());
 
-        return busRouteProcessEntityDtoConverter.toVo(busRouteProcess, req.getOperatorId());
+        return busRouteProcessEntityDtoConverter.toVo(busRouteProcess);
     }
 }

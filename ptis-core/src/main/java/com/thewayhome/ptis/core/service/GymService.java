@@ -24,13 +24,13 @@ public class GymService {
     private final GymEntityVoConverter gymEntityDtoConverter;
     private final GymProcessEntityVoConverter gymProcessEntityDtoConverter;
 
-    public Gym saveGym(GymVo req) {
-        Gym entity = gymEntityDtoConverter.toEntity(req, req.getOperatorId());
+    public Gym saveGym(GymVo req, String operatorId) {
+        Gym entity = gymEntityDtoConverter.toEntity(req, operatorId);
         return gymRepository.save(entity);
     }
 
-    public GymProcess saveGymProcess(GymProcessVo req) {
-        GymProcess entity = gymProcessEntityDtoConverter.toEntity(req, req.getOperatorId());
+    public GymProcess saveGymProcess(GymProcessVo req, String operatorId) {
+        GymProcess entity = gymProcessEntityDtoConverter.toEntity(req, operatorId);
         return gymProcessRepository.save(entity);
     }
 
@@ -53,11 +53,10 @@ public class GymService {
                 .gymAddress(req.getGymAddress())
                 .gymPosX(req.getGymPosX())
                 .gymPosY(req.getGymPosY())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        Gym gym = this.saveGym(gymVo);
-        return gymEntityDtoConverter.toVo(gym, req.getOperatorId());
+        Gym gym = this.saveGym(gymVo, req.getOperatorId());
+        return gymEntityDtoConverter.toVo(gym);
     }
     public GymProcessVo registerGymProcess(GymRegisterProcessRequestDto req) {
         // Gym
@@ -73,10 +72,9 @@ public class GymService {
                 .gymGatheringStatusCode(req.getGymGatheringStatusCode())
                 .nodeLastCreationDate(req.getNodeLastCreationDate())
                 .nodeCreationStatusCode(req.getNodeCreationStatusCode())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        GymProcess gymProcess = this.saveGymProcess(gymProcessVo);
-        return gymProcessEntityDtoConverter.toVo(gymProcess, req.getOperatorId());
+        GymProcess gymProcess = this.saveGymProcess(gymProcessVo, req.getOperatorId());
+        return gymProcessEntityDtoConverter.toVo(gymProcess);
     }
 }
