@@ -6,9 +6,11 @@ import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.BusRouteCourse;
 import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.Link;
+import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.service.*;
 import com.thewayhome.ptis.core.util.BusStationEntityVoConverter;
 import com.thewayhome.ptis.core.vo.BusStationVo;
+import com.thewayhome.ptis.core.vo.LinkVo;
 import com.thewayhome.ptis.core.vo.NodeVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
@@ -25,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -76,26 +79,27 @@ public class B0014DoMainLogicItemProcessor implements ItemProcessor<B0014DoMainL
             List<BusRouteCourse> busRouteCourseListIncludeEdNode = busRouteCourseService.getBusRouteCourseByBusRouteIdAndTimeAfter(stBusRouteCourse.getBusRoute().getId());
             for (BusRouteCourse edBusRouteCourse : busRouteCourseListIncludeEdNode) {
                 // edBusRouteCourse의 BusStation과 Node를 가져온다.
-                BusStationVo curDestBusStation = busStationEntityVoConverter.toVo(edBusRouteCourse.getBusStation(), jobName);
+                BusStationVo curDestBusStation = busStationEntityVoConverter.toVo(edBusRouteCourse.getBusStation());
                 NodeVo edNode = nodeService.findByBusStationId(curDestBusStation.getBusStationId(), jobName);
                 LocalTime curDestBusTime = edBusRouteCourse.getFirstBusTime();
                 // targetBusRouteCourse
                 long diff = Duration.between(stBusRouteCourse.getFirstBusTime(), curDestBusTime).toNanos();
                 // targetNode와 DestNode로 이루어진 Link를 찾아온다.
-                Link link = linkService.findBySourceNodeAndDestNode(stNode, edNode, jobName);
+
+                LinkVo link = linkService.findBySourceNodeAndDestNode(stNode, edNode, "B", jobName);
+                LinkRegisterRequestDto req = LinkRegisterRequestDto.builder()
+                        .id(link.getId())
+                        .stNode(link.getStNode())
+                        .linkName(link.getLinkName())
+                        .edNode(link.getEdNode())
+                        .linkType(link.getLinkType())
+                        .cost(link.getCost())
+                        .operatorId(jobName)
+                        .build();
                 // diff값이 기존 Link의 cost보다 작으면 Link의 cost를 diff값으로 변경한다. 그리고 Link를 저장한다.
                 if (link.getCost() > diff) {
-                    link.setCost(diff);
-                    link.setUpdatedAt(LocalDateTime.now());
-                    link.setUpdatedBy(jobName);
-                    linkRegisterReqDtoList.add(LinkRegisterRequestDto.builder()
-                            .id(link.getId())
-                            .stNode(stNode)
-                            .edNode(edNode)
-                            .linkType("B")
-                            .cost(diff)
-                            .operatorId(jobName)
-                            .build());
+                    req.setCost(diff);
+                    linkRegisterReqDtoList.add(req);
                 }
 
             }
