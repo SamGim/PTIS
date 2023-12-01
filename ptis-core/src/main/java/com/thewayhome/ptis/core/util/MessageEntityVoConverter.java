@@ -45,7 +45,7 @@ public class MessageEntityVoConverter implements IEntityVoConverter<Message, Mes
                                 .msgBody(msgBody)
                                 .rawMessage(rawMessage)
                                 .createdAt(LocalDateTime.now())
-                                .createdBy(vo.getOperatorId())
+                                .createdBy(operatorId)
                                 .build()
                 );
 
@@ -54,16 +54,16 @@ public class MessageEntityVoConverter implements IEntityVoConverter<Message, Mes
         entity.setRawMessage(rawMessage.isEmpty() ? entity.getRawMessage() : rawMessage);
 
         entity.setCreatedAt(entity.getCreatedAt() == null ? LocalDateTime.now() : entity.getCreatedAt());
-        entity.setCreatedBy(entity.getCreatedBy() == null ? vo.getOperatorId() : entity.getCreatedBy());
+        entity.setCreatedBy(entity.getCreatedBy() == null ? operatorId : entity.getCreatedBy());
         entity.setUpdatedAt(entity.getUpdatedAt() == null ? LocalDateTime.now() : entity.getUpdatedAt());
-        entity.setUpdatedBy(entity.getUpdatedBy() == null ? vo.getOperatorId() : entity.getUpdatedBy());
+        entity.setUpdatedBy(entity.getUpdatedBy() == null ? operatorId : entity.getUpdatedBy());
 
         return entity;
     }
 
     @Override
     @NotNull
-    public MessageVo toVo(Message entity, String operatorId) {
+    public MessageVo toVo(Message entity) {
         return MessageVo.builder()
                 .id(entity.getId())
                 .msgHeader(entity.getMsgHeader().toPrettyString())
@@ -73,7 +73,6 @@ public class MessageEntityVoConverter implements IEntityVoConverter<Message, Mes
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

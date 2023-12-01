@@ -1,15 +1,14 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.entity.Node;
-import com.thewayhome.ptis.core.util.NodeEntityVoConverter;
-import com.thewayhome.ptis.core.vo.BusStationVo;
-import com.thewayhome.ptis.core.vo.LinkVo;
 import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Link;
+import com.thewayhome.ptis.core.entity.Node;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
 import com.thewayhome.ptis.core.repository.LinkRepository;
 import com.thewayhome.ptis.core.util.LinkEntityVoConverter;
+import com.thewayhome.ptis.core.util.NodeEntityVoConverter;
+import com.thewayhome.ptis.core.vo.LinkVo;
 import com.thewayhome.ptis.core.vo.NodeVo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +27,25 @@ public class LinkService {
     public Optional<Link> findById(String id) {
         return linkRepository.findById(id);
     }
-    private Link saveLink(LinkVo req) {
-        Link entity = linkEntityDtoConverter.toEntity(req, req.getOperatorId());
+    private Link saveLink(LinkVo req, String operatorId) {
+        Link entity = linkEntityDtoConverter.toEntity(req, operatorId);
         return linkRepository.save(entity);
     }
 
     @Transactional
     public Link registerLink(LinkRegisterRequestDto req) {
         // ID
-        IdSequence idSequence = idSequenceRepository.findById("LINK")
-                .orElse(new IdSequence("LINK", 0L));
-        Long id = idSequence.getNextId() + 1;
+        // 이미 ID가 없을 경우 새로 아이디 등록
+        if (req.getId() == null || req.getId().isEmpty()) {
+            IdSequence idSequence = idSequenceRepository.findById("LINK")
+                    .orElse(new IdSequence("LINK", 0L));
+            Long id = idSequence.getNextId() + 1;
 
-        idSequence.setNextId(id);
-        idSequenceRepository.save(idSequence);
+            idSequence.setNextId(id);
+            idSequenceRepository.save(idSequence);
 
-        req.setId(String.format("%012d", id));
+            req.setId(String.format("%012d", id));
+        }
 
         // Link
         LinkVo linkVo = LinkVo.builder()
@@ -53,34 +55,25 @@ public class LinkService {
                 .stNode(req.getStNode())
                 .edNode(req.getEdNode())
                 .cost(req.getCost())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        Link link = this.saveLink(linkVo);
-
-        return link;
+        return this.saveLink(linkVo, req.getOperatorId());
     }
 
 
-    public Link findBySourceNodeAndDestNode(NodeVo stNode, NodeVo edNode, String jobname) {
+    public LinkVo findBySourceNodeAndDestNode(NodeVo stNode, NodeVo edNode, String linkType, String jobname) {
         Node stNodeE = nodeEntityVoConverter.toEntity(stNode, jobname);
         Node edNodeE = nodeEntityVoConverter.toEntity(edNode, jobname);
-        Optional<Link> link = linkRepository.findByStNodeAndEdNode(stNodeE, edNodeE);
-        // link가 null이면 새로 만든다.
-        if (link.isEmpty()) {
-            String linkName = String.format("%s-%s", stNode.getNodeName(), stNode.getNodeName());
-            LinkRegisterRequestDto req = LinkRegisterRequestDto.builder()
-                    .linkName(linkName)
-                    .linkType("B")
-                    .stNode(stNode)
-                    .edNode(edNode)
-                    .cost(Long.MAX_VALUE)
-                    .operatorId(jobname)
-                    .build();
-            return this.registerLink(req);
-        }
-        else {
-            return link.get();
-        }
+        return linkRepository.findByStNodeAndEdNodeAndLinkType(stNodeE, edNodeE, linkType)
+                .map(linkEntityDtoConverter::toVo)
+                .orElse(
+                        LinkVo.builder()
+                                .stNode(stNode)
+                                .linkName(String.format("%s-%s", stNode.getNodeName(), edNode.getNodeName()))
+                                .edNode(edNode)
+                                .linkType(linkType)
+                                .cost(Long.MAX_VALUE)
+                                .build()
+                );
     }
 }

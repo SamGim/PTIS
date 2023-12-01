@@ -78,13 +78,13 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
         }
         NodeVo curSrcNode = items.get(srcIndex);
         NodeVo curDestNode = items.get(destIndex);
-        if (srcIndex > maxIndex) {
-            return null;
-        }
-        else
+
         if (destIndex == maxIndex) {
             destIndex = 0;
             srcIndex++;
+            if (srcIndex > maxIndex) {
+                return null;
+            }
         }
         else {
             destIndex++;

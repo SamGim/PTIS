@@ -34,15 +34,15 @@ public class NodeService {
         return srcNodes.stream()
                 .flatMap(srcNode -> destNodes.stream()
                         .map(destNode -> new NodeVo[]{
-                                nodeEntityVoConverter.toVo(srcNode, operatorId),
-                                nodeEntityVoConverter.toVo(destNode, operatorId),
+                                nodeEntityVoConverter.toVo(srcNode),
+                                nodeEntityVoConverter.toVo(destNode),
                         })
                 )
                 .toList();
     }
 
-    public Node saveNode(NodeVo req) {
-        Node entity = nodeEntityVoConverter.toEntity(req, req.getOperatorId());
+    public Node saveNode(NodeVo req, String operatorId) {
+        Node entity = nodeEntityVoConverter.toEntity(req, operatorId);
         return nodeRepository.save(entity);
     }
     public Node createNodeFromBusStation(NodeRegisterRequestDto req, String busStationId) {
@@ -64,20 +64,18 @@ public class NodeService {
                 .nodeSrcId(busStationId)
                 .nodePosX(req.getNodePosX())
                 .nodePosY(req.getNodePosY())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        Node node = this.saveNode(nodeVo);
+        Node node = this.saveNode(nodeVo, req.getOperatorId());
 
         // BusStationProcess
         BusStationProcessVo busStationProcessVo = BusStationProcessVo.builder()
                 .id(busStationId)
                 .nodeCreationStatusCode("01")
                 .nodeLastCreationDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-                .operatorId(req.getOperatorId())
                 .build();
 
-        busStationService.saveBusStationProcess(busStationProcessVo);
+        busStationService.saveBusStationProcess(busStationProcessVo, req.getOperatorId());
 
         return node;
     }
@@ -101,10 +99,9 @@ public class NodeService {
                 .nodeSrcId(companyID)
                 .nodePosX(nodeRegisterReqDto.getNodePosX())
                 .nodePosY(nodeRegisterReqDto.getNodePosY())
-                .operatorId(nodeRegisterReqDto.getOperatorId())
                 .build();
 
-        Node node = this.saveNode(nodeVo);
+        Node node = this.saveNode(nodeVo, nodeRegisterReqDto.getOperatorId());
 
         return node;
     }
@@ -128,17 +125,16 @@ public class NodeService {
                 .nodeSrcId(complexId)
                 .nodePosX(nodeRegisterReqDto.getNodePosX())
                 .nodePosY(nodeRegisterReqDto.getNodePosY())
-                .operatorId(nodeRegisterReqDto.getOperatorId())
                 .build();
 
-        Node node = this.saveNode(nodeVo);
+        Node node = this.saveNode(nodeVo, nodeRegisterReqDto.getOperatorId());
 
         return node;
     }
 
     public List<NodeVo> findAll(String jobName) {
         return nodeRepository.findAll().stream()
-                .map(node -> nodeEntityVoConverter.toVo(node, jobName))
+                .map(node -> nodeEntityVoConverter.toVo(node))
                 .toList();
     }
 
@@ -148,6 +144,6 @@ public class NodeService {
 
     public NodeVo findByBusStationId(String busStationId, String jobName){
         Node node = nodeRepository.findByNodeSrcId(busStationId).orElseThrow(() -> new IllegalArgumentException("해당 버정이 존재하지 않습니다. id=" + busStationId));
-        return nodeEntityVoConverter.toVo(node, jobName);
+        return nodeEntityVoConverter.toVo(node);
     }
 }

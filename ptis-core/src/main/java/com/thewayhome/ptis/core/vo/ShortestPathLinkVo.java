@@ -8,12 +8,10 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public class RestaurantVo extends BaseVo {
+public class ShortestPathLinkVo extends BaseVo {
     private String id;
-    private String restaurantId;
-    private String restaurantName;
-    private String restaurantAddress;
-    private String restaurantType;
-    private String restaurantPosX;
-    private String restaurantPosY;
+    private NodeVo stNode;
+    private NodeVo edNode;
+    private NodeVo prevNode;
+    private Long cost;
 }

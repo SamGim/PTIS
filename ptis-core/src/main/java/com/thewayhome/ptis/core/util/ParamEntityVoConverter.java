@@ -27,7 +27,7 @@ public class ParamEntityVoConverter implements IEntityVoConverter<Param, ParamVo
                         Param.builder()
                                 .id(id)
                                 .createdAt(LocalDateTime.now())
-                                .createdBy(vo.getOperatorId())
+                                .createdBy(operatorId)
                                 .build()
                 );
 
@@ -42,7 +42,7 @@ public class ParamEntityVoConverter implements IEntityVoConverter<Param, ParamVo
 
     @Override
     @NotNull
-    public ParamVo toVo(Param entity, String operatorId) {
+    public ParamVo toVo(Param entity) {
         return ParamVo.builder()
                 .groupName(entity.getId().getGroupName())
                 .paramName(entity.getId().getParamName())
@@ -52,7 +52,6 @@ public class ParamEntityVoConverter implements IEntityVoConverter<Param, ParamVo
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

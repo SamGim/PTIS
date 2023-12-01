@@ -1,10 +1,7 @@
-package com.thewayhome.ptis.batch.job.b0014;
+package com.thewayhome.ptis.batch.job.b0020;
 
-import com.thewayhome.ptis.core.entity.BusStation;
-import com.thewayhome.ptis.core.service.BusStationService;
+import com.thewayhome.ptis.batch.job.b0010.B0010DoMainLogicItemInput;
 import com.thewayhome.ptis.core.service.NodeService;
-import com.thewayhome.ptis.core.util.BusStationEntityVoConverter;
-import com.thewayhome.ptis.core.vo.BusStationVo;
 import com.thewayhome.ptis.core.vo.NodeVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
@@ -22,32 +19,40 @@ import java.util.List;
 
 @Slf4j
 @Component
-@Qualifier("B0014DoMainLogicItemReader")
+@Qualifier("B0020DoMainLogicItemReader")
 @StepScope
-public class B0014DoMainLogicItemReader implements ItemStreamReader<B0014DoMainLogicItemInput> {
+public class B0020DoMainLogicItemReader implements ItemStreamReader<B0020DoMainLogicItemInput> {
     private final String jobName;
     private final String jobDate;
+    private final String srcNodeIdSt;
+    private final String srcNodeIdEd;
+    private final String destNodeIdSt;
+    private final String destNodeIdEd;
     private StepExecution stepExecution;
-    private final List<BusStationVo> items;
+    private final List<NodeVo> items;
     private final NodeService nodeService;
-    private final BusStationService busStationService;
-    private final BusStationEntityVoConverter busStationEntityVoConverter;
 
-    private int idx = 0;
+    private int iIndex = 0;
+    private int kIndex = 0;
+    private int maxIndex = 0;
 
-
-    public B0014DoMainLogicItemReader(
+    public B0020DoMainLogicItemReader(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
-            NodeService nodeService,
-            BusStationService busStationService,
-            BusStationEntityVoConverter busStationEntityVoConverter
+            @Value("#{jobParameters[srcNodeIdSt]}") String srcNodeIdSt,
+            @Value("#{jobParameters[srcNodeIdEd]}") String srcNodeIdEd,
+            @Value("#{jobParameters[destNodeIdSt]}") String destNodeIdSt,
+            @Value("#{jobParameters[destNodeIdEd]}") String destNodeIdEd,
+            NodeService nodeService
     ) throws IOException, IndexOutOfBoundsException, JobInterruptedException {
         this.jobName = jobName;
         this.jobDate = jobDate;
+        this.srcNodeIdSt = srcNodeIdSt;
+        this.srcNodeIdEd = srcNodeIdEd;
+        this.destNodeIdSt = destNodeIdSt;
+        this.destNodeIdEd = destNodeIdEd;
         this.nodeService = nodeService;
-        this.busStationService = busStationService;
-        this.busStationEntityVoConverter = busStationEntityVoConverter;
+
         this.items = new ArrayList<>();
         initialize();
     }
@@ -61,25 +66,32 @@ public class B0014DoMainLogicItemReader implements ItemStreamReader<B0014DoMainL
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
             throw new JobInterruptedException("Job is stopping");
         }
-        busStationService.findAll().forEach(busStation -> {
-            if (nodeService.isExist(busStation.getId())) {
-                items.add(busStationEntityVoConverter.toVo(busStation));
-            }
-        });
 
+        List<NodeVo> items = nodeService.findAll(jobName);
+        this.maxIndex = items.size();
     }
 
     @Override
-    public B0014DoMainLogicItemInput read() {
+    public B0020DoMainLogicItemInput read() {
         if (stepExecution.isTerminateOnly()) {
             return null;
         }
+        NodeVo curINode = items.get(iIndex);
+        NodeVo curKNode = items.get(kIndex);
 
-        if (this.idx >= this.items.size()) {
-            return null;
+        if (iIndex == maxIndex) {
+            iIndex = 0;
+            kIndex++;
+            if (kIndex > maxIndex) {
+                return null;
+            }
         }
-        return B0014DoMainLogicItemInput.builder()
-                .targetNode(this.items.get(this.idx++))
+        else {
+            iIndex++;
+        }
+        return B0020DoMainLogicItemInput.builder()
+                .iNode(curINode)
+                .kNode(curKNode)
                 .build();
     }
 }

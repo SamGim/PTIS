@@ -80,10 +80,10 @@ public class BusRouteProcessEntityVoConverter implements IEntityVoConverter<BusR
 
     @Override
     @NotNull
-    public BusRouteProcessVo toVo(BusRouteProcess entity, String operatorId) {
+    public BusRouteProcessVo toVo(BusRouteProcess entity) {
         BusRouteVo busRouteVo = null;
 
-        if (entity.getBusRoute() != null) busRouteVo = busRouteEntityVoConverter.toVo(entity.getBusRoute(), operatorId);
+        if (entity.getBusRoute() != null) busRouteVo = busRouteEntityVoConverter.toVo(entity.getBusRoute());
 
         return BusRouteProcessVo.builder()
                 .id(entity.getId())
@@ -98,7 +98,6 @@ public class BusRouteProcessEntityVoConverter implements IEntityVoConverter<BusR
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

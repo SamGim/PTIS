@@ -32,12 +32,10 @@ public class LinkEntityVoConverter implements IEntityVoConverter<Link, LinkVo> {
                                 .stNode(startStation)
                                 .edNode(endStation)
                                 .createdAt(LocalDateTime.now())
-                                .createdBy(vo.getOperatorId())
+                                .createdBy(operatorId)
                                 .build()
                 );
 
-        if (vo.getLinkName() != null) entity.setLinkName(vo.getLinkName());
-        if (vo.getLinkType() != null) entity.setLinkType(vo.getLinkType());
         if (vo.getCost() != null) entity.setCost(vo.getCost());
 
         entity.setUpdatedAt(LocalDateTime.now());
@@ -48,12 +46,12 @@ public class LinkEntityVoConverter implements IEntityVoConverter<Link, LinkVo> {
 
     @Override
     @NotNull
-    public LinkVo toVo(Link entity, String operatorId) {
+    public LinkVo toVo(Link entity) {
         NodeVo startStation = null;
         NodeVo endStation = null;
 
-        if (entity.getStNode() != null) startStation = nodeEntityVoConverter.toVo(entity.getStNode(), operatorId);
-        if (entity.getEdNode() != null) endStation = nodeEntityVoConverter.toVo(entity.getEdNode(), operatorId);
+        if (entity.getStNode() != null) startStation = nodeEntityVoConverter.toVo(entity.getStNode());
+        if (entity.getEdNode() != null) endStation = nodeEntityVoConverter.toVo(entity.getEdNode());
 
         return LinkVo.builder()
                 .id(entity.getId())
@@ -66,7 +64,6 @@ public class LinkEntityVoConverter implements IEntityVoConverter<Link, LinkVo> {
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }

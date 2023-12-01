@@ -21,8 +21,8 @@ public class ParamService {
     public Optional<Param> findById(ParamKey id) {
         return paramRepository.findById(id);
     }
-    public Param saveParam(ParamVo req) {
-        Param entity = paramEntityDtoConverter.toEntity(req, req.getOperatorId());
+    public Param saveParam(ParamVo req, String operatorId) {
+        Param entity = paramEntityDtoConverter.toEntity(req, operatorId);
         return paramRepository.save(entity);
     }
     public Optional<Param> getBatchJobInputParam(String jobName) {
@@ -41,10 +41,9 @@ public class ParamService {
                 .paramName(req.getParamName())
                 .value(req.getValue())
                 .useYn(req.getUseYn())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        Param param = this.saveParam(paramVo);
+        Param param = this.saveParam(paramVo, req.getOperatorId());
 
         return param;
     }

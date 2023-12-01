@@ -23,8 +23,8 @@ public class BusRouteCourseService {
         return busRouteCourseRepository.findById(id);
     }
 
-    private BusRouteCourse saveBusRouteCourse(BusRouteCourseVo req) {
-        BusRouteCourse entity = busRouteCourseEntityDtoConverter.toEntity(req, req.getOperatorId());
+    private BusRouteCourse saveBusRouteCourse(BusRouteCourseVo req, String operatorId) {
+        BusRouteCourse entity = busRouteCourseEntityDtoConverter.toEntity(req, operatorId);
         return busRouteCourseRepository.save(entity);
     }
 
@@ -45,22 +45,26 @@ public class BusRouteCourseService {
                 .busStation(req.getBusStation())
                 .firstBusTime(req.getFirstBusTime())
                 .lastBusTime(req.getLastBusTime())
-                .operatorId(req.getOperatorId())
                 .build();
 
-        BusRouteCourse busRouteCourse = this.saveBusRouteCourse(busRouteCourseVo);
+        BusRouteCourse busRouteCourse = this.saveBusRouteCourse(busRouteCourseVo, req.getOperatorId());
 
-        return busRouteCourseEntityDtoConverter.toVo(busRouteCourse, req.getOperatorId());
+        return busRouteCourseEntityDtoConverter.toVo(busRouteCourse);
     }
 
-    public List<BusRouteCourse> getBusRouteCourseByBusStationId(String stationId) {
-        return busRouteCourseRepository.findByBusStationIdAndFirstBusTimeIsNotNull(stationId);
-    }
+    public List<BusRouteCourseVo> getBusRouteCourseByBusStationId(String stationId) {
+        return busRouteCourseRepository.findByBusStationIdAndFirstBusTimeIsNotNull(stationId).stream().map(
+                busRouteCourseEntityDtoConverter::toVo
+        ).toList();
+    };
 
     // 해당 BusRouteCourse의 fisrtBusTime 이후이면서 BusRoute가 동일한 BusRouteCourse를 가져온다.
-    public List<BusRouteCourse> getBusRouteCourseByBusRouteIdAndTimeAfter(String busRouteCoruseId) {
+    public List<BusRouteCourseVo> getBusRouteCourseByBusRouteIdAndTimeAfter(String busRouteCoruseId) {
         BusRouteCourse busRouteCourse = busRouteCourseRepository.findById(busRouteCoruseId).orElseThrow(() -> new RuntimeException("BusRouteCourse not found"));
-        return busRouteCourseRepository.findByFirstBusTimeIsNotNullAndBusRouteIdAndFirstBusTimeAfter(busRouteCourse.getBusRoute().getBusRouteId(), busRouteCourse.getFirstBusTime());
+
+        return busRouteCourseRepository.findByFirstBusTimeIsNotNullAndBusRouteIdAndFirstBusTimeAfter(busRouteCourse.getBusRoute().getBusRouteId(), busRouteCourse.getFirstBusTime())
+        .stream().map(busRouteCourseEntityDtoConverter::toVo).toList();
+
     }
 
 }

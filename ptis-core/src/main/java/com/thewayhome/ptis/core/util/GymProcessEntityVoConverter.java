@@ -74,10 +74,10 @@ public class GymProcessEntityVoConverter implements IEntityVoConverter<GymProces
 
     @Override
     @NotNull
-    public GymProcessVo toVo(GymProcess entity, String operatorId) {
+    public GymProcessVo toVo(GymProcess entity) {
         GymVo gymVo = null;
 
-        if (entity.getGym() != null) gymVo = gymEntityVoConverter.toVo(entity.getGym(), operatorId);
+        if (entity.getGym() != null) gymVo = gymEntityVoConverter.toVo(entity.getGym());
 
         return GymProcessVo.builder()
                 .id(entity.getId())
@@ -89,7 +89,6 @@ public class GymProcessEntityVoConverter implements IEntityVoConverter<GymProces
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
                 .updatedBy(entity.getUpdatedBy())
-                .operatorId(operatorId)
                 .build();
     }
 }
