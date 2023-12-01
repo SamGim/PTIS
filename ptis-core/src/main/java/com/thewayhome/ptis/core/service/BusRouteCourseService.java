@@ -52,14 +52,19 @@ public class BusRouteCourseService {
         return busRouteCourseEntityDtoConverter.toVo(busRouteCourse);
     }
 
-    public List<BusRouteCourse> getBusRouteCourseByBusStationId(String stationId) {
-        return busRouteCourseRepository.findByBusStationIdAndFirstBusTimeIsNotNull(stationId);
-    }
+    public List<BusRouteCourseVo> getBusRouteCourseByBusStationId(String stationId) {
+        return busRouteCourseRepository.findByBusStationIdAndFirstBusTimeIsNotNull(stationId).stream().map(
+                busRouteCourseEntityDtoConverter::toVo
+        ).toList();
+    };
 
     // 해당 BusRouteCourse의 fisrtBusTime 이후이면서 BusRoute가 동일한 BusRouteCourse를 가져온다.
-    public List<BusRouteCourse> getBusRouteCourseByBusRouteIdAndTimeAfter(String busRouteCoruseId) {
+    public List<BusRouteCourseVo> getBusRouteCourseByBusRouteIdAndTimeAfter(String busRouteCoruseId) {
         BusRouteCourse busRouteCourse = busRouteCourseRepository.findById(busRouteCoruseId).orElseThrow(() -> new RuntimeException("BusRouteCourse not found"));
-        return busRouteCourseRepository.findByFirstBusTimeIsNotNullAndBusRouteIdAndFirstBusTimeAfter(busRouteCourse.getBusRoute().getBusRouteId(), busRouteCourse.getFirstBusTime());
+
+        return busRouteCourseRepository.findByFirstBusTimeIsNotNullAndBusRouteIdAndFirstBusTimeAfter(busRouteCourse.getBusRoute().getBusRouteId(), busRouteCourse.getFirstBusTime())
+        .stream().map(busRouteCourseEntityDtoConverter::toVo).toList();
+
     }
 
 }
