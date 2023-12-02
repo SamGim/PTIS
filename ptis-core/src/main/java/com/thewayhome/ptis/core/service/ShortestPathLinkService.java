@@ -15,6 +15,7 @@ import com.thewayhome.ptis.core.vo.NodeVo;
 import com.thewayhome.ptis.core.vo.ShortestPathLinkVo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ShortestPathLinkService {
     private final ShortestPathLinkRepository shortestPathLinkRepository;
@@ -34,7 +36,9 @@ public class ShortestPathLinkService {
     public ShortestPathLinkVo getSPLBySrcNodeIdAndDestNodeId(NodeVo stNodeVo, NodeVo edNodeVo, String jobName) {
         Node stNode = nodeEntityVoConverter.toEntity(stNodeVo, jobName);
         Node edNode = nodeEntityVoConverter.toEntity(edNodeVo, jobName);
-        Optional<ShortestPathLink> resSpl = shortestPathLinkRepository.findByStNodeAndEdNode(stNode, edNode);
+//        log.info("stNode: {}, edNode: {}", stNode, edNode);
+        Optional<ShortestPathLink> resSpl = shortestPathLinkRepository.findByStNode_IdAndEdNode_Id(stNodeVo.getId(), edNodeVo.getId());
+//        log.info("stNode: {}, edNode: {}-----", stNode, edNode);
         if (resSpl.isPresent()) {
             return shortestPathLinkVoConverter.toVo(resSpl.get());
         } else {
@@ -59,6 +63,7 @@ public class ShortestPathLinkService {
                                 .edNode(shortestPathLinkVo.getEdNode())
                                 .prevNode(shortestPathLinkVo.getPrevNode())
                                 .cost(shortestPathLinkVo.getCost())
+                                .operatorId(jobName)
                                 .build()
                 );
                 return shortestPathLinkVo;
@@ -104,6 +109,6 @@ public class ShortestPathLinkService {
 
     private ShortestPathLink saveShortestPathLink(ShortestPathLinkVo req, String operatorId) {
         ShortestPathLink entity = shortestPathLinkVoConverter.toEntity(req, operatorId);
-        return shortestPathLinkRepository.save(entity);
+        return shortestPathLinkRepository.saveAndFlush(entity);
     }
 }
