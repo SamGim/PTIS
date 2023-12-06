@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class B0009DoMainLogicItemInput {
-    private String companyId;
+    private Long companyId;
     private String companyName;
     private Double companyPosX;
     private Double companyPosY;

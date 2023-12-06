@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class B0008DoMainLogicItemOutput {
-    private String complexId;
+    private Long complexId;
     private NodeRegisterRequestDto nodeRegisterReqDto;
 }

@@ -27,7 +27,7 @@ public class Gym extends BaseEntity {
     @Size(min = 12, max = 12)
     private String id;
 
-    @Column(name="gym_id", nullable = false)
+    @Column(name="gym_id", nullable = false, unique = true)
     private String gymId;
 
     @Column(name="gym_name", nullable = false)
