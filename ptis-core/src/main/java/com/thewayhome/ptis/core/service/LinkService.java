@@ -68,4 +68,8 @@ public class LinkService {
         return linkRepository.findByStNodeAndEdNodeAndLinkType(srcNodeE, destNodeE, linkType)
                 .map(linkEntityDtoConverter::toVo);
     }
+
+    public Optional<Long> findMinCostLinkByStNodeAndEdNode(String stNodeId, String edNodeId) {
+        return linkRepository.findMinCostLinkByStNodeAndEdNode(stNodeId, edNodeId);
+    }
 }

@@ -26,8 +26,9 @@ public class NodeService {
     private final RealComplexRepository realComplexRepository;
 
 
-    public Optional<Node> findById(String id) {
-        return nodeRepository.findById(id);
+    public Optional<NodeVo> findById(String id) {
+        return nodeRepository.findById(id)
+                .map(nodeEntityVoConverter::toVo);
     }
     public List<NodeVo[]> findByIdsBetween(String srcNodeIdSt, String srcNodeIdEd, String destNodeIdSt, String destNodeIdEd, String operatorId) {
         List<Node> srcNodes = nodeRepository.findByIdsBetween(srcNodeIdSt, srcNodeIdEd);

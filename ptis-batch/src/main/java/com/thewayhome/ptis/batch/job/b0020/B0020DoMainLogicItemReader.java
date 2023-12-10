@@ -1,6 +1,5 @@
 package com.thewayhome.ptis.batch.job.b0020;
 
-import com.thewayhome.ptis.batch.job.b0010.B0010DoMainLogicItemInput;
 import com.thewayhome.ptis.core.service.NodeService;
 import com.thewayhome.ptis.core.vo.NodeVo;
 import lombok.extern.slf4j.Slf4j;
@@ -76,15 +75,17 @@ public class B0020DoMainLogicItemReader implements ItemStreamReader<B0020DoMainL
         if (stepExecution.isTerminateOnly()) {
             return null;
         }
+
+        if (kIndex > maxIndex) {
+            return null;
+        }
+
         NodeVo curINode = items.get(iIndex);
         NodeVo curKNode = items.get(kIndex);
 
         if (iIndex == maxIndex) {
             iIndex = 0;
             kIndex++;
-            if (kIndex > maxIndex) {
-                return null;
-            }
         }
         else {
             iIndex++;
