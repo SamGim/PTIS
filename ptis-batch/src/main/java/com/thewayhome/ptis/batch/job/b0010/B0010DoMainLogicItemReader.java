@@ -7,7 +7,6 @@ import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,15 +67,17 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
         if (stepExecution.isTerminateOnly()) {
             return null;
         }
+
+        if (srcIndex > maxIndex) {
+            return null;
+        }
+
         NodeVo curSrcNode = items.get(srcIndex);
         NodeVo curDestNode = items.get(destIndex);
 
         if (destIndex == maxIndex) {
             destIndex = 0;
             srcIndex++;
-            if (srcIndex > maxIndex) {
-                return null;
-            }
         }
         else {
             destIndex++;

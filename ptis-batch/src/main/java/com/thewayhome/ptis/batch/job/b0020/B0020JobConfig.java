@@ -1,9 +1,6 @@
 package com.thewayhome.ptis.batch.job.b0020;
 
-import com.thewayhome.ptis.batch.job.base.AbstractFailureHandlingTasklet;
-import com.thewayhome.ptis.batch.job.base.AbstractFinalizeJobTasklet;
-import com.thewayhome.ptis.batch.job.base.AbstractInitValueTasklet;
-import com.thewayhome.ptis.batch.job.base.AbstractValidateInputTasklet;
+import com.thewayhome.ptis.batch.job.base.*;
 import com.thewayhome.ptis.batch.job.util.BatchJobStatusNotificationListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,18 +78,20 @@ public class B0020JobConfig {
             @Qualifier("B0020DoMainLogicItemProcessor") ItemProcessor<B0020DoMainLogicItemInput, B0020DoMainLogicItemOutput> doMainLogicItemProcessor,
             @Qualifier("B0020DoMainLogicItemWriter") ItemWriter<B0020DoMainLogicItemOutput> doMainLogicItemWriter,
             @Qualifier("B0020DoMainLogicChunkListener") ChunkListener doMainLogicChunkListener,
-            B0020DoMainLogicRetryTemplate retryTemplate
+            B0020DoMainLogicRetryTemplate retryTemplate,
+            @Qualifier("B0020DoMainLogicTasklet") AbstractDoMainLogicTasklet doMainLogicTasklet
     ) {
         return new StepBuilder("B0020DoMainLogicStep", jobRepository)
-                .<B0020DoMainLogicItemInput, B0020DoMainLogicItemOutput> chunk(1, transactionManager)
-                .reader(doMainLogicItemReader)
-                .processor(doMainLogicItemProcessor)
-                .writer(doMainLogicItemWriter)
-                .listener(doMainLogicChunkListener)
-                .faultTolerant()
-                .retryPolicy(retryTemplate.retryPolicy())
-                .backOffPolicy(retryTemplate.backOffPolicy())
-                .listener(doMainLogicChunkListener)
+                .tasklet(doMainLogicTasklet, transactionManager)
+//                .<B0020DoMainLogicItemInput, B0020DoMainLogicItemOutput> chunk(1, transactionManager)
+//                .reader(doMainLogicItemReader)
+//                .processor(doMainLogicItemProcessor)
+//                .writer(doMainLogicItemWriter)
+//                .listener(doMainLogicChunkListener)
+//                .faultTolerant()
+//                .retryPolicy(retryTemplate.retryPolicy())
+//                .backOffPolicy(retryTemplate.backOffPolicy())
+//                .listener(doMainLogicChunkListener)
                 .build();
     }
 

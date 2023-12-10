@@ -24,22 +24,20 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class ShortestPathLink extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name="id", length = 12, nullable = false)
     @Size(min = 12, max = 12)
-    private String id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "st_node_id")
-    private Node stNode;
+    @Column(name = "st_node_id")
+    private String stNodeId;
 
-    @ManyToOne
-    @JoinColumn(name = "ed_node_id")
-    private Node edNode;
+    @Column(name = "ed_node_id")
+    private String edNodeId;
 
     @Column(name="cost", nullable = false)
     private Long cost;
 
-    @ManyToOne
-    @JoinColumn(name = "prev_node_id")
-    private Node prevNode;
+    @Column(name = "prev_node_id")
+    private String prevNodeId;
 }
