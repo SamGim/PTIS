@@ -61,11 +61,19 @@ public class LinkService {
     }
 
 
-
-    public Optional<LinkVo> findByStNodeAndEdNodeAndLinkType(NodeVo srcNode, NodeVo destNode, String linkType, String jobname) {
-        Node srcNodeE = nodeEntityVoConverter.toEntity(srcNode, jobname);
-        Node destNodeE = nodeEntityVoConverter.toEntity(destNode, jobname);
-        return linkRepository.findByStNodeAndEdNodeAndLinkType(srcNodeE, destNodeE, linkType)
-                .map(linkEntityDtoConverter::toVo);
+    public LinkVo findBySourceNodeAndDestNode(NodeVo stNode, NodeVo edNode, String linkType, String jobname) {
+        Node stNodeE = nodeEntityVoConverter.toEntity(stNode, jobname);
+        Node edNodeE = nodeEntityVoConverter.toEntity(edNode, jobname);
+        return linkRepository.findByStNodeAndEdNodeAndLinkType(stNodeE, edNodeE, linkType)
+                .map(linkEntityDtoConverter::toVo)
+                .orElse(
+                        LinkVo.builder()
+                                .stNode(stNode)
+                                .linkName(String.format("%s-%s", stNode.getNodeName(), edNode.getNodeName()))
+                                .edNode(edNode)
+                                .linkType(linkType)
+                                .cost(Long.MAX_VALUE)
+                                .build()
+                );
     }
 }

@@ -5,7 +5,6 @@ import com.thewayhome.ptis.core.dto.request.GymRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.Gym;
 import com.thewayhome.ptis.core.entity.GymProcess;
 import com.thewayhome.ptis.core.entity.IdSequence;
-import com.thewayhome.ptis.core.entity.Gym;
 import com.thewayhome.ptis.core.repository.GymProcessRepository;
 import com.thewayhome.ptis.core.repository.GymRepository;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
@@ -37,20 +36,14 @@ public class GymService {
 
     public GymVo registerGym(GymRegisterRequestDto req) {
         // ID
-        Gym gym = gymRepository.findByGymId(req.getGymId()).orElse(null);
-        if (gym != null) {
-            req.setId(gym.getId());
-        }
-        else {
-            IdSequence idSequence = idSequenceRepository.findById("GYM")
-                    .orElse(new IdSequence("GYM", 0L));
-            Long id = idSequence.getNextId() + 1;
+        IdSequence idSequence = idSequenceRepository.findById("BUS_STATION")
+                .orElse(new IdSequence("BUS_STATION", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(id);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            req.setId(String.format("%012d", id));
-        }
+        req.setId(String.format("%012d", id));
 
         // Gym
         GymVo gymVo = GymVo.builder()
@@ -62,8 +55,8 @@ public class GymService {
                 .gymPosY(req.getGymPosY())
                 .build();
 
-        Gym res = this.saveGym(gymVo, req.getOperatorId());
-        return gymEntityDtoConverter.toVo(res);
+        Gym gym = this.saveGym(gymVo, req.getOperatorId());
+        return gymEntityDtoConverter.toVo(gym);
     }
     public GymProcessVo registerGymProcess(GymRegisterProcessRequestDto req) {
         // Gym

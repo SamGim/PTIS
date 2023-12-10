@@ -21,7 +21,6 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -80,23 +79,18 @@ public class B0014DoMainLogicItemProcessor implements ItemProcessor<B0014DoMainL
                 long diff = Duration.between(stBusRouteCourse.getFirstBusTime(), curDestBusTime).toNanos();
                 // targetNode와 DestNode로 이루어진 Link를 찾아온다.
 
-                Optional<LinkVo> link = linkService.findByStNodeAndEdNodeAndLinkType(stNode, edNode, "B", jobName);
-
+                LinkVo link = linkService.findBySourceNodeAndDestNode(stNode, edNode, "B", jobName);
                 LinkRegisterRequestDto req = LinkRegisterRequestDto.builder()
-                        .stNode(stNode)
-                        .linkName(String.format("%s-%s", stNode.getNodeName(), edNode.getNodeName()))
-                        .edNode(edNode)
-                        .linkType("B")
-                        .cost(Long.MAX_VALUE)
+                        .id(link.getId())
+                        .stNode(link.getStNode())
+                        .linkName(link.getLinkName())
+                        .edNode(link.getEdNode())
+                        .linkType(link.getLinkType())
+                        .cost(link.getCost())
                         .operatorId(jobName)
                         .build();
-
-                if (link.isPresent()) {
-                    req.setId(link.get().getId());
-                    req.setCost(link.get().getCost());
-                }
                 // diff값이 기존 Link의 cost보다 작으면 Link의 cost를 diff값으로 변경한다. 그리고 Link를 저장한다.
-                if (req.getCost() > diff) {
+                if (link.getCost() > diff) {
                     req.setCost(diff);
                     linkRegisterReqDtoList.add(req);
                 }

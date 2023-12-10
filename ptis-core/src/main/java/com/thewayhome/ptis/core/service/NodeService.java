@@ -1,8 +1,10 @@
 package com.thewayhome.ptis.core.service;
 
 import com.thewayhome.ptis.core.dto.request.NodeRegisterRequestDto;
-import com.thewayhome.ptis.core.entity.*;
-import com.thewayhome.ptis.core.repository.*;
+import com.thewayhome.ptis.core.entity.IdSequence;
+import com.thewayhome.ptis.core.entity.Node;
+import com.thewayhome.ptis.core.repository.IdSequenceRepository;
+import com.thewayhome.ptis.core.repository.NodeRepository;
 import com.thewayhome.ptis.core.util.NodeEntityVoConverter;
 import com.thewayhome.ptis.core.vo.BusStationProcessVo;
 import com.thewayhome.ptis.core.vo.NodeVo;
@@ -21,10 +23,6 @@ public class NodeService {
     private final NodeRepository nodeRepository;
     private final IdSequenceRepository idSequenceRepository;
     private final NodeEntityVoConverter nodeEntityVoConverter;
-    private final BusStationRepository busStationRepository;
-    private final CompanyRepository companyRepository;
-    private final RealComplexRepository realComplexRepository;
-
 
     public Optional<Node> findById(String id) {
         return nodeRepository.findById(id);
@@ -48,20 +46,15 @@ public class NodeService {
         return nodeRepository.save(entity);
     }
     public Node createNodeFromBusStation(NodeRegisterRequestDto req, String busStationId) {
-        BusStation busStation = busStationRepository.findById(busStationId).orElse(null);
-        if (busStation != null) {
-            req.setId(busStation.getId());
-        }
-        else {
-            IdSequence idSequence = idSequenceRepository.findById("NODE")
-                    .orElse(new IdSequence("NODE", 0L));
-            Long id = idSequence.getNextId() + 1;
+        // ID
+        IdSequence idSequence = idSequenceRepository.findById("NODE")
+                .orElse(new IdSequence("NODE", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(id);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            req.setId(String.format("%012d", id));
-        }
+        req.setId(String.format("%012d", id));
 
         // Node
         NodeVo nodeVo = NodeVo.builder()
@@ -87,71 +80,61 @@ public class NodeService {
         return node;
     }
 
-    public Node createNodeFromCompany(NodeRegisterRequestDto req, Long companyId) {
-        Company company = companyRepository.findById(companyId).orElse(null);
-        if (company != null) {
-            req.setId(String.format("%012d", company.getCompanyId()));
-        }
-        else {
-            IdSequence idSequence = idSequenceRepository.findById("NODE")
-                    .orElse(new IdSequence("NODE", 0L));
-            Long id = idSequence.getNextId() + 1;
+    public Node createNodeFromCompany(NodeRegisterRequestDto nodeRegisterReqDto, String companyID) {
+        // ID
+        IdSequence idSequence = idSequenceRepository.findById("NODE")
+                .orElse(new IdSequence("NODE", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(id);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            req.setId(String.format("%012d", id));
-        }
+        nodeRegisterReqDto.setId(String.format("%012d", id));
 
         // Node
         NodeVo nodeVo = NodeVo.builder()
-                .id(req.getId())
-                .nodeName(req.getNodeName())
+                .id(nodeRegisterReqDto.getId())
+                .nodeName(nodeRegisterReqDto.getNodeName())
                 .nodeSrcType("cp")
-                .nodeSrcId(req.getId())
-                .nodePosX(req.getNodePosX())
-                .nodePosY(req.getNodePosY())
+                .nodeSrcId(companyID)
+                .nodePosX(nodeRegisterReqDto.getNodePosX())
+                .nodePosY(nodeRegisterReqDto.getNodePosY())
                 .build();
 
-        Node node = this.saveNode(nodeVo, req.getOperatorId());
+        Node node = this.saveNode(nodeVo, nodeRegisterReqDto.getOperatorId());
 
         return node;
     }
 
-    public Node createNodeFromComplex(NodeRegisterRequestDto req, Long complexId) {
-        RealComplex complex = realComplexRepository.findById(complexId).orElse(null);
-        if (complex != null) {
-            req.setId(String.format("%012d", complex.getId()));
-        }
-        else {
-            IdSequence idSequence = idSequenceRepository.findById("NODE")
-                    .orElse(new IdSequence("NODE", 0L));
-            Long id = idSequence.getNextId() + 1;
+    public Node createNodeFromComplex(NodeRegisterRequestDto nodeRegisterReqDto, String complexId) {
+        // ID
+        IdSequence idSequence = idSequenceRepository.findById("NODE")
+                .orElse(new IdSequence("NODE", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(id);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            req.setId(String.format("%012d", id));
-        }
+        nodeRegisterReqDto.setId(String.format("%012d", id));
 
         // Node
         NodeVo nodeVo = NodeVo.builder()
-                .id(req.getId())
-                .nodeName(req.getNodeName())
+                .id(nodeRegisterReqDto.getId())
+                .nodeName(nodeRegisterReqDto.getNodeName())
                 .nodeSrcType("cx")
-                .nodeSrcId(req.getId())
-                .nodePosX(req.getNodePosX())
-                .nodePosY(req.getNodePosY())
+                .nodeSrcId(complexId)
+                .nodePosX(nodeRegisterReqDto.getNodePosX())
+                .nodePosY(nodeRegisterReqDto.getNodePosY())
                 .build();
 
-        Node node = this.saveNode(nodeVo, req.getOperatorId());
+        Node node = this.saveNode(nodeVo, nodeRegisterReqDto.getOperatorId());
 
         return node;
     }
 
     public List<NodeVo> findAll(String jobName) {
         return nodeRepository.findAll().stream()
-                .map(nodeEntityVoConverter::toVo)
+                .map(node -> nodeEntityVoConverter.toVo(node))
                 .toList();
     }
 

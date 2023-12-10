@@ -57,7 +57,7 @@ public class B0008DoMainLogicItemReader implements ItemStreamReader<B0008DoMainL
         for (RealComplex complex : complexList) {
             this.items.add(B0008DoMainLogicItemInput
                     .builder()
-                    .complexId(complex.getId())
+                    .complexId(String.format("%012d", complex.getId()))
                     .complexName(complex.getName())
                     .complexPosX(complex.getLongitude())
                     .complexPosY(complex.getLatitude())

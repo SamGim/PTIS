@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class B0009DoMainLogicItemOutput {
-    private Long companyId;
+    private String companyId;
     private NodeRegisterRequestDto nodeRegisterReqDto;
 }

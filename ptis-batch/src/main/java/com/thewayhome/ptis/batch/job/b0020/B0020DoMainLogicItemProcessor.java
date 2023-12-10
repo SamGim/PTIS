@@ -59,9 +59,7 @@ public class B0020DoMainLogicItemProcessor implements ItemProcessor<B0020DoMainL
         List<NodeVo> items = nodeService.findAll(jobName);
         NodeVo iNode = input.getINode();
         NodeVo kNode = input.getKNode();
-        int i=0;
         for (NodeVo jNode : items){
-            if (i++ > 100) break;
             ShortestPathLinkVo curSpl = shortestPathLinkService.getSPLBySrcNodeIdAndDestNodeId(iNode, jNode, jobName);
             ShortestPathLinkVo ikSpl = shortestPathLinkService.getSPLBySrcNodeIdAndDestNodeId(iNode, kNode, jobName);
             ShortestPathLinkVo kjSpl = shortestPathLinkService.getSPLBySrcNodeIdAndDestNodeId(kNode, jNode, jobName);
@@ -76,7 +74,6 @@ public class B0020DoMainLogicItemProcessor implements ItemProcessor<B0020DoMainL
                         .edNode(curSpl.getEdNode())
                         .prevNode(curSpl.getPrevNode())
                         .stNode(curSpl.getStNode())
-                        .operatorId(jobName)
                         .build());
 
             }

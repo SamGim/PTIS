@@ -29,8 +29,6 @@ public class LinkEntityVoConverter implements IEntityVoConverter<Link, LinkVo> {
                 .orElse(
                         Link.builder()
                                 .id(vo.getId())
-                                .linkName(vo.getLinkName())
-                                .linkType(vo.getLinkType())
                                 .stNode(startStation)
                                 .edNode(endStation)
                                 .createdAt(LocalDateTime.now())

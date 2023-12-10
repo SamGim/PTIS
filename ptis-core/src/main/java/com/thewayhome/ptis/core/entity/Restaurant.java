@@ -23,7 +23,7 @@ public class Restaurant extends BaseEntity {
     @Size(min = 12, max = 12)
     private String id;
 
-    @Column(name="restaurant_id", nullable = false, unique = true)
+    @Column(name="restaurant_id", nullable = false)
     private String restaurantId;
 
     @Column(name="restaurant_name", nullable = false)

@@ -48,7 +48,7 @@ public class B0009DoMainLogicItemWriter implements ItemWriter<B0009DoMainLogicIt
 
         for (B0009DoMainLogicItemOutput item : chunk.getItems()) {
             NodeRegisterRequestDto nodeRegisterReqDto = item.getNodeRegisterReqDto();
-            Long companyID = item.getCompanyId();
+            String companyID = item.getCompanyId();
 
             nodeService.createNodeFromCompany(nodeRegisterReqDto, companyID);
         }

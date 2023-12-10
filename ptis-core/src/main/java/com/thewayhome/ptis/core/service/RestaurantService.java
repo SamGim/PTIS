@@ -45,21 +45,14 @@ public class RestaurantService {
 
     public RestaurantVo registerRestaurant(RestaurantRegisterRequestDto req) {
         // ID
-        // ID가 없을 경우에만
-        Restaurant restaurant = restaurantRepository.findByRestaurantId(req.getRestaurantId()).orElse(null);
-        if (restaurant != null) {
-            req.setId(restaurant.getId());
-        }
-        else {
-            IdSequence idSequence = idSequenceRepository.findById("RESTAURANT")
-                    .orElse(new IdSequence("RESTAURANT", 0L));
-            Long id = idSequence.getNextId() + 1;
+        IdSequence idSequence = idSequenceRepository.findById("RESTAURANT")
+                .orElse(new IdSequence("RESTAURANT", 0L));
+        Long id = idSequence.getNextId() + 1;
 
-            idSequence.setNextId(id);
-            idSequenceRepository.save(idSequence);
+        idSequence.setNextId(id);
+        idSequenceRepository.save(idSequence);
 
-            req.setId(String.format("%012d", id));
-        }
+        req.setId(String.format("%012d", id));
 
         // Restaurant
         RestaurantVo restaurantVo = RestaurantVo.builder()
@@ -72,9 +65,9 @@ public class RestaurantService {
                 .restaurantPosY(req.getRestaurantPosY())
                 .build();
 
-        Restaurant res = this.saveRestaurant(restaurantVo, req.getOperatorId());
+        Restaurant restaurant = this.saveRestaurant(restaurantVo, req.getOperatorId());
 
-        return restaurantEntityDtoConverter.toVo(res);
+        return restaurantEntityDtoConverter.toVo(restaurant);
     }
 
     public RestaurantProcessVo registerRestaurantProcess(RestaurantRegisterProcessRequestDto req) {

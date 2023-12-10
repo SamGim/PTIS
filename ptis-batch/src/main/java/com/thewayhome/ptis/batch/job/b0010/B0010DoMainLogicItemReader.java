@@ -24,7 +24,10 @@ import java.util.List;
 public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainLogicItemInput> {
     private final String jobName;
     private final String jobDate;
-    private final String isColdStart;
+    private final String srcNodeIdSt;
+    private final String srcNodeIdEd;
+    private final String destNodeIdSt;
+    private final String destNodeIdEd;
     private StepExecution stepExecution;
     private final List<NodeVo> items;
     private final NodeService nodeService;
@@ -36,13 +39,18 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
     public B0010DoMainLogicItemReader(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
-            @Value("#{jobParameters[isColdStart]}") String isColdStart,
+            @Value("#{jobParameters[srcNodeIdSt]}") String srcNodeIdSt,
+            @Value("#{jobParameters[srcNodeIdEd]}") String srcNodeIdEd,
+            @Value("#{jobParameters[destNodeIdSt]}") String destNodeIdSt,
+            @Value("#{jobParameters[destNodeIdEd]}") String destNodeIdEd,
             NodeService nodeService
     ) throws IOException, IndexOutOfBoundsException, JobInterruptedException {
         this.jobName = jobName;
         this.jobDate = jobDate;
-        this.isColdStart = isColdStart;
-
+        this.srcNodeIdSt = srcNodeIdSt;
+        this.srcNodeIdEd = srcNodeIdEd;
+        this.destNodeIdSt = destNodeIdSt;
+        this.destNodeIdEd = destNodeIdEd;
         this.nodeService = nodeService;
 
         this.items = new ArrayList<>();
@@ -59,8 +67,8 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
             throw new JobInterruptedException("Job is stopping");
         }
 
-        this.items.addAll(nodeService.findAll(jobName));
-        this.maxIndex = items.size() - 1;
+        List<NodeVo> items = nodeService.findAll(jobName);
+        this.maxIndex = items.size();
     }
 
     @Override
