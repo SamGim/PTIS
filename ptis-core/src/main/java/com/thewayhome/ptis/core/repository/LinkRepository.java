@@ -18,4 +18,13 @@ public interface LinkRepository extends JpaRepository<Link, String> {
     @Query("SELECT l.stNode.id, l.edNode.id, MIN(l.cost) FROM Link l GROUP BY l.stNode.id, l.edNode.id")
     List<Object[]> findAllMinCost();
     List<Link> findByStNodeAndEdNode(Node stNode, Node edNode);
+
+    @Query("SELECT l.stNode.id, l.edNode.id, l.cost, l.linkType FROM Link l " +
+            "WHERE (l.stNode.id, l.edNode.id, l.cost) IN " +
+            "(SELECT l2.stNode.id, l2.edNode.id, MIN(l2.cost) " +
+            "FROM Link l2 " +
+            "GROUP BY l2.stNode.id, l2.edNode.id)")
+    List<Object[]> findAllMinCostLinks();
+
+    Link findByStNode_IdAndEdNode_IdOrderByCostAsc(String stNodeId, String edNodeId);
 }
