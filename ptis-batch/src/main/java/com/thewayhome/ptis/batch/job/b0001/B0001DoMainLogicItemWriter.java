@@ -3,6 +3,7 @@ package com.thewayhome.ptis.batch.job.b0001;
 import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusStationService;
+import com.thewayhome.ptis.core.vo.BusStationVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
@@ -45,10 +46,10 @@ public class B0001DoMainLogicItemWriter implements ItemWriter<B0001DoMainLogicIt
                     .operatorId(this.jobName)
                     .build();
 
-            busStationService.registerBusStation(req);
+            BusStationVo busStationVo = busStationService.registerBusStation(req);
 
             BusStationProcessRegisterRequestDto prcReq = BusStationProcessRegisterRequestDto.builder()
-                    .id(req.getId())
+                    .id(busStationVo.getId())
                     .busStationLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                     .busStationGatheringStatusCode("01")
                     .busRouteLastGatheringDate(" ")

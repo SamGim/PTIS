@@ -26,8 +26,8 @@ public class BusStationService {
     private final BusStationRepository busStationRepository;
     private final BusStationProcessRepository busStationProcessRepository;
     private final IdSequenceRepository idSequenceRepository;
-    private final BusStationEntityVoConverter busStationEntityDtoConverter;
-    private final BusStationProcessEntityVoConverter busStationProcessEntityDtoConverter;
+    private final BusStationEntityVoConverter busStationEntityVoConverter;
+    private final BusStationProcessEntityVoConverter busStationProcessEntityVoConverter;
 
 
     public List<BusStation> getAllBusStation() {
@@ -58,12 +58,12 @@ public class BusStationService {
     }
 
     public BusStation saveBusStation(BusStationVo req, String operatorId) {
-        BusStation entity = busStationEntityDtoConverter.toEntity(req, operatorId);
+        BusStation entity = busStationEntityVoConverter.toEntity(req, operatorId);
         return busStationRepository.save(entity);
     }
 
     public BusStationProcess saveBusStationProcess(BusStationProcessVo req, String operatorId) {
-        BusStationProcess entity = busStationProcessEntityDtoConverter.toEntity(req, operatorId);
+        BusStationProcess entity = busStationProcessEntityVoConverter.toEntity(req, operatorId);
         return busStationProcessRepository.save(entity);
     }
 
@@ -71,7 +71,7 @@ public class BusStationService {
         Optional<BusStation> byArsId = this.findByArsId(req.getBusStationId());
 
         if (byArsId.isPresent()) {
-            return busStationEntityDtoConverter.toVo(byArsId.get());
+            return busStationEntityVoConverter.toVo(byArsId.get());
         } else {
             // ID
             IdSequence idSequence = idSequenceRepository.findById("BUS_STATION")
@@ -95,7 +95,7 @@ public class BusStationService {
 
             BusStation busStation = this.saveBusStation(busStationVo, req.getOperatorId());
 
-            return busStationEntityDtoConverter.toVo(busStation);
+            return busStationEntityVoConverter.toVo(busStation);
         }
     }
 
@@ -119,7 +119,7 @@ public class BusStationService {
 
         BusStationProcess busStationProcess = this.saveBusStationProcess(busStationProcessVo, req.getOperatorId());
 
-        return busStationProcessEntityDtoConverter.toVo(busStationProcess);
+        return busStationProcessEntityVoConverter.toVo(busStationProcess);
     }
 
     public BusStationVo updateBusStationDetail(BusStationRegisterRequestDto req) {
@@ -133,7 +133,7 @@ public class BusStationService {
 
         this.saveBusStationProcess(busStationProcessVo, req.getOperatorId());
 
-        return busStationEntityDtoConverter.toVo(busStation);
+        return busStationEntityVoConverter.toVo(busStation);
     }
 
     public BusStationProcessVo updateBusRoutesGatheringStatusCode(BusStationProcessRegisterRequestDto req) {
@@ -141,14 +141,14 @@ public class BusStationService {
 
         BusStationProcessVo busStationProcessVo = BusStationProcessVo.builder()
                 .id(req.getId())
-                .busStation(busStationEntityDtoConverter.toVo(busStation))
+                .busStation(busStationEntityVoConverter.toVo(busStation))
                 .busRouteLastGatheringDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .busRouteGatheringStatusCode(req.getBusRouteGatheringStatusCode())
                 .build();
 
         BusStationProcess busStationProcess = this.saveBusStationProcess(busStationProcessVo, req.getOperatorId());
 
-        return busStationProcessEntityDtoConverter.toVo(busStationProcess);
+        return busStationProcessEntityVoConverter.toVo(busStationProcess);
     }
 
     public List<BusStation> findAll() {
