@@ -42,6 +42,8 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
     private ParamService paramService;
     private ObjectMapper objectMapper;
     private BusStationService busStationService;
+    private int skipFlag = 0;
+
     public B0003DoMainLogicItemProcessor(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
@@ -84,9 +86,16 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("busRouteId", busRouteId);
 
-        String dataFromAPI = APIConnector.getDataFromAPI(endpoint, path, queryParams).block();
+        String dataFromAPI = APIConnector.getDataFromAPI(endpoint, path, queryParams).doOnError(
+                e -> {
+                    log.error("Error occurred while getting data from API. Jobname: [" + jobName + "], BusRouteId: [" + busRouteId + "], Error: [" + e.getMessage() + "]");
+                    skipFlag = 1;
+                }
+        ).block();
 
         if (dataFromAPI == null) {
+            return null;
+        } else if (skipFlag == 1) {
             return null;
         }
 
