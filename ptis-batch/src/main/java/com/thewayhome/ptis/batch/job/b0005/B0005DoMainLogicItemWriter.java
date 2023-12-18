@@ -1,6 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0005;
 
 import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterRequestDto;
+import com.thewayhome.ptis.core.dto.response.BusStationRegisterResponseDto;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.MessageService;
@@ -61,7 +62,8 @@ public class B0005DoMainLogicItemWriter implements ItemWriter<B0005DoMainLogicIt
             busRouteService.updateBusStationsGatheringStatusCode(item.getBusRouteProcessRegisterRequestDto());
 
             for (BusStationRegisterRequestDto req : item.getBusStationRegisterRequestDtoList()) {
-                BusStationVo busStationVo = busStationService.registerBusStation(req);
+                BusStationRegisterResponseDto busStationRegisterResponseDto = busStationService.registerBusStation(req);
+                BusStationVo busStationVo = busStationRegisterResponseDto.getBusStationVo();
 
                 BusStationProcessRegisterRequestDto prcReq = BusStationProcessRegisterRequestDto.builder()
                         .id(busStationVo.getId())

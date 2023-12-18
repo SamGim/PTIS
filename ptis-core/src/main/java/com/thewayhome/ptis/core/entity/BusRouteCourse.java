@@ -40,9 +40,9 @@ public class BusRouteCourse extends BaseEntity {
     @Size(max=12)
     private BusStation busStation;
 
-    @Column(name = "first_bus_time", nullable = false)
+    @Column(name = "first_bus_time", nullable = true)
     private LocalTime firstBusTime;
 
-    @Column(name = "last_bus_time", nullable = false)
+    @Column(name = "last_bus_time", nullable = true)
     private LocalTime lastBusTime;
 }

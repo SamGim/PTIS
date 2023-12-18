@@ -2,6 +2,7 @@ package com.thewayhome.ptis.batch.job.b0001;
 
 import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
+import com.thewayhome.ptis.core.dto.response.BusStationRegisterResponseDto;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.vo.BusStationVo;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,8 @@ public class B0001DoMainLogicItemWriter implements ItemWriter<B0001DoMainLogicIt
                     .operatorId(this.jobName)
                     .build();
 
-            BusStationVo busStationVo = busStationService.registerBusStation(req);
+            BusStationRegisterResponseDto busStationRegisterResponseDto = busStationService.registerBusStation(req);
+            BusStationVo busStationVo = busStationRegisterResponseDto.getBusStationVo();
 
             BusStationProcessRegisterRequestDto prcReq = BusStationProcessRegisterRequestDto.builder()
                     .id(busStationVo.getId())
