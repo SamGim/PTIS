@@ -6,6 +6,7 @@ import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.core.dto.request.BusRouteAddCourseItemRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusRouteProcessRegisterRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
+import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.ParamService;
@@ -123,16 +124,21 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
                 String busStationBeginTm = Objects.isNull(nextItem) ? null : nextItem.get("beginTm").asText();
                 String busStationLastTm = Objects.isNull(nextItem) ? null : nextItem.get("lastTm").asText();
 
-                BusStationRegisterRequestDto req = BusStationRegisterRequestDto.builder()
-                        .busStationId(busStationId)
-                        .busStationNo(busStationNo)
-                        .busStationName(busStationName)
-                        .busStationPosX(busStationPosX)
-                        .busStationPosY(busStationPosY)
-                        .operatorId(jobName)
-                        .build();
+//                BusStationRegisterRequestDto req = BusStationRegisterRequestDto.builder()
+//                        .busStationId(busStationId)
+//                        .busStationNo(busStationNo)
+//                        .busStationName(busStationName)
+//                        .busStationPosX(busStationPosX)
+//                        .busStationPosY(busStationPosY)
+//                        .operatorId(jobName)
+//                        .build();
+//
+//                stationReqList.add(req);
 
-                stationReqList.add(req);
+                Optional<BusStation> byArsId = busStationService.findByArsId(busStationId);
+                if (byArsId.isEmpty()) {
+                    continue;
+                }
 
                 BusRouteAddCourseItemRequestDto courseReq = BusRouteAddCourseItemRequestDto.builder()
                         .busRoute(BusRouteVo.builder().id(busRouteId).build())
