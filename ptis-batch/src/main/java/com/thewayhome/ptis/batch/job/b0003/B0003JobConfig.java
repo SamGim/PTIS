@@ -84,7 +84,7 @@ public class B0003JobConfig {
             B0003DoMainLogicRetryTemplate retryTemplate
     ) {
         return new StepBuilder("B0003DoMainLogicStep", jobRepository)
-                .<B0003DoMainLogicItemInput, B0003DoMainLogicItemOutput> chunk(20, transactionManager)
+                .<B0003DoMainLogicItemInput, B0003DoMainLogicItemOutput> chunk(1, transactionManager)
                 .reader(doMainLogicItemReader)
                 .processor(doMainLogicItemProcessor)
                 .writer(doMainLogicItemWriter)

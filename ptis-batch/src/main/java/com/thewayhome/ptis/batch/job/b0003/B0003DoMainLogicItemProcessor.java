@@ -6,6 +6,7 @@ import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.core.dto.request.BusRouteAddCourseItemRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusRouteProcessRegisterRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
+import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.ParamService;
@@ -42,6 +43,8 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
     private ParamService paramService;
     private ObjectMapper objectMapper;
     private BusStationService busStationService;
+    private int skipFlag = 0;
+
     public B0003DoMainLogicItemProcessor(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
@@ -84,9 +87,16 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("busRouteId", busRouteId);
 
-        String dataFromAPI = APIConnector.getDataFromAPI(endpoint, path, queryParams).block();
+        String dataFromAPI = APIConnector.getDataFromAPI(endpoint, path, queryParams).doOnError(
+                e -> {
+                    log.error("Error occurred while getting data from API. Jobname: [" + jobName + "], BusRouteId: [" + busRouteId + "], Error: [" + e.getMessage() + "]");
+                    skipFlag = 1;
+                }
+        ).block();
 
         if (dataFromAPI == null) {
+            return null;
+        } else if (skipFlag == 1) {
             return null;
         }
 
@@ -114,16 +124,21 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
                 String busStationBeginTm = Objects.isNull(nextItem) ? null : nextItem.get("beginTm").asText();
                 String busStationLastTm = Objects.isNull(nextItem) ? null : nextItem.get("lastTm").asText();
 
-                BusStationRegisterRequestDto req = BusStationRegisterRequestDto.builder()
-                        .busStationId(busStationId)
-                        .busStationNo(busStationNo)
-                        .busStationName(busStationName)
-                        .busStationPosX(busStationPosX)
-                        .busStationPosY(busStationPosY)
-                        .operatorId(jobName)
-                        .build();
+//                BusStationRegisterRequestDto req = BusStationRegisterRequestDto.builder()
+//                        .busStationId(busStationId)
+//                        .busStationNo(busStationNo)
+//                        .busStationName(busStationName)
+//                        .busStationPosX(busStationPosX)
+//                        .busStationPosY(busStationPosY)
+//                        .operatorId(jobName)
+//                        .build();
+//
+//                stationReqList.add(req);
 
-                stationReqList.add(req);
+                Optional<BusStation> byArsId = busStationService.findByArsId(busStationId);
+                if (byArsId.isEmpty()) {
+                    continue;
+                }
 
                 BusRouteAddCourseItemRequestDto courseReq = BusRouteAddCourseItemRequestDto.builder()
                         .busRoute(BusRouteVo.builder().id(busRouteId).build())

@@ -49,7 +49,7 @@ public class NodeService {
         return nodeRepository.save(entity);
     }
     public Node createNodeFromBusStation(NodeRegisterRequestDto req, String busStationId) {
-        BusStation busStation = busStationRepository.findById(busStationId).orElse(null);
+        Node busStation = nodeRepository.findByNodeSrcId(busStationId).orElse(null);
         if (busStation != null) {
             req.setId(busStation.getId());
         }
@@ -157,7 +157,8 @@ public class NodeService {
     }
 
     public boolean isExist(String id) {
-        return nodeRepository.existsByNodeName(id);
+//        return nodeRepository.existsByNodeName(id);
+        return nodeRepository.existsByNodeSrcId(id);
     }
 
     public NodeVo findByBusStationId(String busStationId, String jobName){
