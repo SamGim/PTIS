@@ -124,30 +124,15 @@ public class ShortestPathLinkService {
 //        return shortestPathLinkRepository.save(req);
 //    }
 
-    public List<Object> getSplListByStNodeAndEdNode(String stNodeId, String edNodeId) {
-        // 반환할 빈 res 리스트 생성
-        List<Object> res = new ArrayList<>();
-        ShortestPathLink curSpl = shortestPathLinkRepository.findByStNodeIdAndEdNodeId(stNodeId, edNodeId).orElseThrow(() -> new IllegalArgumentException("No SPL found"));
-        String prevNodeId = curSpl.getPrevNodeId();
-        if (prevNodeId.equals(curSpl.getStNodeId())) {
-            res.add(Arrays.asList(curSpl.getStNodeId(), curSpl.getEdNodeId(), curSpl.getCost(), curSpl.getLinkType()));
-            return res;
-        }
-        else {
-            // prevNodeid가 stNodeId가 아니라면
-            // stNode부터 prevNode까지의 SPL을 res에 추가하고, prevNode를 stNode로 바꾸고 stNode부터 edNode까지의 SPL을 다시 찾는다.
-            while (!prevNodeId.equals(curSpl.getStNodeId())) {
-                curSpl = shortestPathLinkRepository.findByStNodeIdAndEdNodeId(curSpl.getStNodeId(), curSpl.getPrevNodeId()).orElseThrow(() -> new IllegalArgumentException("No SPL found"));
-                res.add(Arrays.asList(curSpl.getStNodeId(), curSpl.getEdNodeId(), curSpl.getCost(), curSpl.getLinkType()));
-                stNodeId = curSpl.getPrevNodeId();
-            }
-        }
-        return res;
-    }
+
     public ArrayList<SPLResponseDto> getSplByStNodeAndEdNodeByRecursive(String stNodeId, String edNodeId){
         ArrayList<SPLResponseDto> res = new ArrayList<>();
         ShortestPathLink curSpl = shortestPathLinkRepository.findByStNodeIdAndEdNodeId(stNodeId, edNodeId).orElseThrow(() -> new IllegalArgumentException("No SPL found " + stNodeId + " -> " + edNodeId));
         String prevNodeId = curSpl.getPrevNodeId();
+        String linkId = curSpl.getLinkId();
+        Link link = linkRepository.findById(linkId).orElseThrow(() -> new IllegalArgumentException("No Link found " + linkId));
+        String linkName = link.getLinkName();
+        String linkType = link.getLinkType();
         if (prevNodeId.equals(curSpl.getStNodeId())) {
             Node stNode = nodeRepository.findById(stNodeId).orElseThrow(() -> new IllegalArgumentException("No Node found " + stNodeId));
             Node edNode = nodeRepository.findById(edNodeId).orElseThrow(() -> new IllegalArgumentException("No Node found " + edNodeId));
@@ -158,7 +143,8 @@ public class ShortestPathLinkService {
                             .edNodeName(edNode.getNodeName())
                             .edNodeSrcType(edNode.getNodeSrcType())
                             .cost(curSpl.getCost().toString())
-                            .linkType(curSpl.getLinkType())
+                            .linkName(linkName)
+                            .linkType(linkType)
                             .build()
             );
         }
@@ -173,7 +159,8 @@ public class ShortestPathLinkService {
                             .edNodeName(edNode.getNodeName())
                             .edNodeSrcType(edNode.getNodeSrcType())
                             .cost(curSpl.getCost().toString())
-                            .linkType(curSpl.getLinkType())
+                            .linkName(linkName)
+                            .linkType(linkType)
                             .build()
             );
             res.addAll(getSplByStNodeAndEdNodeByRecursive(curSpl.getEdNodeId(), edNodeId));
