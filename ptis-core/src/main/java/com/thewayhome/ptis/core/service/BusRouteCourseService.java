@@ -10,6 +10,7 @@ import com.thewayhome.ptis.core.vo.BusRouteCourseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +24,19 @@ public class BusRouteCourseService {
         return busRouteCourseRepository.findById(id);
     }
 
-    private BusRouteCourse saveBusRouteCourse(BusRouteCourseVo req, String operatorId) {
+//    public boolean existsByBusRouteIdAndBusStationIdAndFirstBusTime(String busRouteId, String busStationId, LocalTime firstBusTime) {
+//        return busRouteCourseRepository.existsByBusRouteIdAndBusStationIdAndFirstBusTime(busRouteId, busStationId, firstBusTime);
+//    }
+//    public boolean existsByBusRouteIdAndBusStationIdAndLastBusTime(String busRouteId, String busStationId, LocalTime lastBusTime) {
+//        return busRouteCourseRepository.existsByBusRouteIdAndBusStationIdAndLastBusTime(busRouteId, busStationId, lastBusTime);
+//    }
+
+    private BusRouteCourse saveBusRouteCourse(BusRouteCourseVo req, String operatorId, Boolean forceSave) throws SQLException {
         BusRouteCourse entity = busRouteCourseEntityDtoConverter.toEntity(req, operatorId);
-        return busRouteCourseRepository.save(entity);
+        return forceSave ? busRouteCourseRepository.saveAndFlush(entity) : busRouteCourseRepository.save(entity);
     }
 
-    public BusRouteCourseVo registerBusRouteCourse(BusRouteAddCourseItemRequestDto req) {
+    public BusRouteCourseVo registerBusRouteCourse(BusRouteAddCourseItemRequestDto req) throws SQLException {
         // ID
         IdSequence idSequence = idSequenceRepository.findById("BUS_ROUTE_COURSE")
                 .orElse(new IdSequence("BUS_ROUTE_COURSE", 0L));
@@ -47,7 +55,7 @@ public class BusRouteCourseService {
                 .lastBusTime(req.getLastBusTime())
                 .build();
 
-        BusRouteCourse busRouteCourse = this.saveBusRouteCourse(busRouteCourseVo, req.getOperatorId());
+        BusRouteCourse busRouteCourse = this.saveBusRouteCourse(busRouteCourseVo, req.getOperatorId(), false);
 
         return busRouteCourseEntityDtoConverter.toVo(busRouteCourse);
     }
