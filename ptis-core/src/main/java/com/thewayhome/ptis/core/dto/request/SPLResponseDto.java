@@ -15,5 +15,6 @@ public class SPLResponseDto {
     private String edNodeName;
     private String edNodeSrcType;
     private String cost;
+    private String linkName;
     private String linkType;
 }
