@@ -39,7 +39,7 @@ public class BusRouteService {
         return busRouteRepository.findByBusRouteId(busRouteId);
     }
 
-    public List<BusRoute> findBusRouteByGatheringStatusCode(String gatheringStatusCode, boolean notCondition) {
+    public List<BusRoute> findBusStationByGatheringStatusCode(String gatheringStatusCode, boolean notCondition) {
         List<BusRouteProcess> busRouteProcess = notCondition ?
                 busRouteProcessRepository.findByBusStationGatheringStatusCodeNotOrderById(gatheringStatusCode) :
                 busRouteProcessRepository.findByBusStationGatheringStatusCodeOrderById(gatheringStatusCode);
