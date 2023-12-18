@@ -90,15 +90,16 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
 
         Long[][] calcCostTable = new Long[size][size];
         Integer[][] calcPrevTable = new Integer[size][size];
-        String[][] prevTypeTable = new String[size][size];
+        String[][] prevLinkIdTable = new String[size][size];
 
 //        for (int i = 0; i < size; i++) {
 //            calcIdTable[i] = nodeList.get(i).getId();
 //        }
 
-        log.info("calcTable: {} 1", calcCostTable.length);
+        log.info("시작");
 
         // 노드간의 최단 링크만을 전부 가져온다.
+        // l.stNode.id, l.edNode.id, l.cost, l.linkId
         List<Object[]> allMinCost = linkRepository.findAllMinCostLinks();
 
 //        // stNode = i, edNode = j 일때, i->j링크를 매번 allMinCost에서 찾는다.
@@ -125,14 +126,14 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         for (int i = 0; i < nodeList.size(); i++) {
             idIndexMap.put(nodeList.get(i).getId(), i);
         }
-
+        log.info("MinCostLink 개수 : {}, node * node : {}", allMinCost.size(), size * size);
         // 반대로 allMinCost를 하나씩 가져와서 i->j 테이블에 넣는다. (최단시간테이블 초기화)
         // 단 allMinCost의 개수가 노드 * 노드 개수와 같아야만 한다. 매우 중요
         for (Object[] minCost : allMinCost){
             Integer curStNodeIndex = idIndexMap.get((String) minCost[0]);
             Integer curEdNodeIndex = idIndexMap.get((String) minCost[1]);
             calcCostTable[curStNodeIndex][curEdNodeIndex] = (Long) minCost[2];
-            prevTypeTable[curStNodeIndex][curEdNodeIndex] = (String) minCost[3];
+            prevLinkIdTable[curStNodeIndex][curEdNodeIndex] = (String) minCost[3];
         }
 
         // prevTable 초기화
@@ -142,22 +143,24 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
             }
         }
 
-        log.info("calcTable: {} 2", calcCostTable.length);
+        log.info("테이블 초기화 끝, 플로이드 시작");
 
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
+                log.info("i = {}, k = {}", i, k);
+                if (i == k) continue;
                 for (int j = 0; j < size; j++){
                     if (calcCostTable[i][j] > calcCostTable[i][k] + calcCostTable[k][j]){
                         calcCostTable[i][j] = calcCostTable[i][k] + calcCostTable[k][j];
                         calcPrevTable[i][j] = k;
-                        prevTypeTable[i][j] = prevTypeTable[i][k];
-                        log.info("calcCostTable[{}][{}] = {}", i, j, calcCostTable[i][j]);
+                        prevLinkIdTable[i][j] = prevLinkIdTable[i][k];
+//                        log.info("calcCostTable[{}][{}] = {}", i, j, calcCostTable[i][j]);
                     }
                 }
             }
         }
 
-        log.info("calcTable: {} 3", calcCostTable.length);
+        log.info("플로이드 끝, 테이블 -> SPL 변환 시작");
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -168,7 +171,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                         .edNodeId(nodeList.get(j).getId())
                         .cost(calcCostTable[i][j])
                         .prevNodeId(nodeList.get(prevNodeIndex).getId())
-                        .linkType(prevTypeTable[i][j])
+                        .linkId(prevLinkIdTable[i][j])
                         .createdAt(LocalDateTime.now())
                         .createdBy(this.getJobName())
                         .updatedAt(LocalDateTime.now())
@@ -179,7 +182,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
             }
         }
 
-        log.info("calcTable: {} 4", calcCostTable.length);
+        log.info("플로이드 끝");
 
         return RepeatStatus.FINISHED;
     }
