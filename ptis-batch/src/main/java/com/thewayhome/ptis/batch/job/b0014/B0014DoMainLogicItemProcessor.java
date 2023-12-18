@@ -65,12 +65,12 @@ public class B0014DoMainLogicItemProcessor implements ItemProcessor<B0014DoMainL
         List<LinkRegisterRequestDto> linkRegisterReqDtoList = new ArrayList<>();
         // targetNode = stNode로 시작점이 되는 BusStation과 노드를 먼저 가져온다.
         BusStationVo stBusStation = input.getTargetNode();
-        NodeVo stNode = nodeService.findByBusStationId(stBusStation.getBusStationId(), jobName);
+        NodeVo stNode = nodeService.findByBusStationId(stBusStation.getId(), jobName);
         // stNode를 포함하는 BusRouteCourse를 가져온다. 단 시간이 Null이면 안됨
         List<BusRouteCourseVo> busRouteCourseListIncludeStNode = busRouteCourseService.getBusRouteCourseByBusStationId(input.getTargetNode().getId());
         for (BusRouteCourseVo stBusRouteCourse : busRouteCourseListIncludeStNode) {
             // stNode를 포함한 BusRouteCourse와 동일한 BusRoute를 가지고있으면서, stBusRouteCourse의 firstBusTime보다 큰 BusRouteCourse를 가져온다. 단 당연히 시간이 Null이면 안됨
-            List<BusRouteCourseVo> busRouteCourseListIncludeEdNode = busRouteCourseService.getBusRouteCourseByBusRouteIdAndTimeAfter(stBusRouteCourse.getBusRoute().getId());
+            List<BusRouteCourseVo> busRouteCourseListIncludeEdNode = busRouteCourseService.getBusRouteCourseByBusRouteIdAndTimeAfter(stBusRouteCourse.getId());
             for (BusRouteCourseVo edBusRouteCourse : busRouteCourseListIncludeEdNode) {
                 // edBusRouteCourse의 BusStation과 Node를 가져온다.
                 BusStationVo curDestBusStation = edBusRouteCourse.getBusStation();

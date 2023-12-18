@@ -14,6 +14,7 @@ public interface NodeRepository extends JpaRepository<Node, String> {
     @Query("SELECT o FROM Node o WHERE o.id >= :nodeIdSt AND o.id <= :nodeIdEd")
     List<Node> findByIdsBetween(@Param("nodeIdSt") String nodeIdSt, @Param("nodeIdEd") String nodeIdEd);
     Boolean existsByNodeName(String nodeName);
+    Boolean existsByNodeSrcId(String nodeSrcId);
 
     Optional<Node> findByNodeName(String nodeName);
 

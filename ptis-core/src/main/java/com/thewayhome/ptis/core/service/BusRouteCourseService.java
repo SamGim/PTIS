@@ -70,7 +70,7 @@ public class BusRouteCourseService {
     public List<BusRouteCourseVo> getBusRouteCourseByBusRouteIdAndTimeAfter(String busRouteCoruseId) {
         BusRouteCourse busRouteCourse = busRouteCourseRepository.findById(busRouteCoruseId).orElseThrow(() -> new RuntimeException("BusRouteCourse not found"));
 
-        return busRouteCourseRepository.findByFirstBusTimeIsNotNullAndBusRouteIdAndFirstBusTimeAfter(busRouteCourse.getBusRoute().getBusRouteId(), busRouteCourse.getFirstBusTime())
+        return busRouteCourseRepository.findByBusRouteIdAndFirstBusTimeAfter(busRouteCourse.getBusRoute().getBusRouteId(), busRouteCourse.getFirstBusTime())
         .stream().map(busRouteCourseEntityDtoConverter::toVo).toList();
 
     }
