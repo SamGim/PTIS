@@ -2,6 +2,7 @@ package com.thewayhome.ptis.core.service;
 
 import com.thewayhome.ptis.core.dto.request.BusStationProcessRegisterRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
+import com.thewayhome.ptis.core.dto.response.BusStationRegisterResponseDto;
 import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.BusStationProcess;
 import com.thewayhome.ptis.core.entity.IdSequence;
@@ -67,11 +68,14 @@ public class BusStationService {
         return busStationProcessRepository.save(entity);
     }
 
-    public BusStationVo registerBusStation(BusStationRegisterRequestDto req) {
+    public BusStationRegisterResponseDto registerBusStation(BusStationRegisterRequestDto req) {
         Optional<BusStation> byArsId = this.findByArsId(req.getBusStationId());
 
         if (byArsId.isPresent()) {
-            return busStationEntityVoConverter.toVo(byArsId.get());
+            return BusStationRegisterResponseDto.builder()
+                    .busStationVo(busStationEntityVoConverter.toVo(byArsId.get()))
+                    .isRegistered(true)
+                    .build();
         } else {
             // ID
             IdSequence idSequence = idSequenceRepository.findById("BUS_STATION")
@@ -95,7 +99,10 @@ public class BusStationService {
 
             BusStation busStation = this.saveBusStation(busStationVo, req.getOperatorId());
 
-            return busStationEntityVoConverter.toVo(busStation);
+            return BusStationRegisterResponseDto.builder()
+                    .busStationVo(busStationEntityVoConverter.toVo(busStation))
+                    .isRegistered(false)
+                    .build();
         }
     }
 
