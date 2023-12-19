@@ -64,9 +64,9 @@ public class B0010DoMainLogicItemProcessor implements ItemProcessor<B0010DoMainL
 
         long distance = GeoUtils.calculateDistance(srcNode.getNodePosX(), srcNode.getNodePosY(), destNode.getNodePosX(), destNode.getNodePosY(), true);
         long cost = GeoUtils.calculateTime(distance, lnWalkSpeed);
-
+        String linkName = String.format("%s-%s", srcNodeName, destNodeName);
         LinkRegisterRequestDto req = LinkRegisterRequestDto.builder()
-                .linkName(String.format("%s-%s", srcNodeName, destNodeName))
+                .linkName(linkName)
                 .linkType("W")
                 .stNode(input.getSrcNode())
                 .edNode(input.getDestNode())
@@ -75,9 +75,9 @@ public class B0010DoMainLogicItemProcessor implements ItemProcessor<B0010DoMainL
                 .build();
 
         if (!"Y".equalsIgnoreCase(this.isColdStart)) {
-            // stNode, edNode, linkType이 동일한 노드가 이미 있는지확인해서 있다면 가져와서 업데이트한다.
+            // stNode, edNode, linkType이 동일한 노드가 이미 있는지 확인해서 있다면 가져와서 업데이트한다.
             // 없다면 새로 생성한다.
-            Optional<LinkVo> presentLink = linkService.findByStNodeAndEdNodeAndLinkType(srcNode, destNode, "W", this.jobName);
+            Optional<LinkVo> presentLink = linkService.findByStNodeAndEdNodeAndLinkTypeAndLinkName(srcNode, destNode,"W", linkName, this.jobName);
 
             if (presentLink.isPresent()) {
                 LinkVo linkVo = presentLink.get();
