@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface LinkRepository extends JpaRepository<Link, String> {
-    Optional<Link> findByStNodeAndEdNodeAndLinkType(Node stNode, Node edNode, String linkType);
+    Optional<Link> findByStNodeAndEdNodeAndLinkTypeAndLinkName(Node stNode, Node edNode, String linkType, String linkName);
 
     @Query("SELECT MIN(l.cost) FROM Link l WHERE l.stNode.id = :stNodeId AND l.edNode.id = :edNodeId")
     Optional<Long> findMinCostLinkByStNodeAndEdNode(String stNodeId, String edNodeId);
@@ -23,9 +23,8 @@ public interface LinkRepository extends JpaRepository<Link, String> {
             "WHERE (l.stNode.id, l.edNode.id, l.cost) IN " +
             "(SELECT l2.stNode.id, l2.edNode.id, MIN(l2.cost) " +
             "FROM Link l2 " +
-            "GROUP BY l2.stNode.id, l2.edNode.id)" +
-            "limit 1"
-    )
+            "GROUP BY l2.stNode.id, l2.edNode.id) "
+            )
     List<Object[]> findAllMinCostLinks();
 
     Link findByStNode_IdAndEdNode_IdOrderByCostAsc(String stNodeId, String edNodeId);
