@@ -41,6 +41,6 @@ public class ShortestPathLink extends BaseEntity {
     @Column(name = "prev_node_id")
     private String prevNodeId;
 
-    @Column(name = "link_type")
+    @Column(name = "link_id")
     private String linkId;
 }
