@@ -62,10 +62,10 @@ public class LinkService {
 
 
 
-    public Optional<LinkVo> findByStNodeAndEdNodeAndLinkType(NodeVo srcNode, NodeVo destNode, String linkType, String jobname) {
+    public Optional<LinkVo> findByStNodeAndEdNodeAndLinkTypeAndLinkName(NodeVo srcNode, NodeVo destNode, String linkType, String linkName, String jobname) {
         Node srcNodeE = nodeEntityVoConverter.toEntity(srcNode, jobname);
         Node destNodeE = nodeEntityVoConverter.toEntity(destNode, jobname);
-        return linkRepository.findByStNodeAndEdNodeAndLinkType(srcNodeE, destNodeE, linkType)
+        return linkRepository.findByStNodeAndEdNodeAndLinkTypeAndLinkName(srcNodeE, destNodeE, linkType, linkName)
                 .map(linkEntityDtoConverter::toVo);
     }
 
