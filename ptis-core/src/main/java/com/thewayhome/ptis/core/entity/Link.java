@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @Table(
         name = "Link",
         indexes = {
-                @Index(name = "Link_X1", columnList = "st_node_id, ed_node_id, link_type", unique = true),
+//                @Index(name = "Link_X1", columnList = "st_node_id, ed_node_id, link_type"),
                 @Index(name = "Link_X2", columnList = "link_type, link_name")
         }
 )
