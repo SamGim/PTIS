@@ -69,22 +69,24 @@ public class B0014DoMainLogicItemProcessor implements ItemProcessor<B0014DoMainL
         // stNode를 포함하는 BusRouteCourse를 가져온다. 단 시간이 Null이면 안됨
         List<BusRouteCourseVo> busRouteCourseListIncludeStNode = busRouteCourseService.getBusRouteCourseByBusStationId(input.getTargetNode().getId());
         for (BusRouteCourseVo stBusRouteCourse : busRouteCourseListIncludeStNode) {
+            log.info("stBusStation : {}, routeId : {}", stBusStation.getBusStationName(), stBusRouteCourse.getBusRoute().getBusRouteName());
             // stNode를 포함한 BusRouteCourse와 동일한 BusRoute를 가지고있으면서, stBusRouteCourse의 firstBusTime보다 큰 BusRouteCourse를 가져온다. 단 당연히 시간이 Null이면 안됨
-            List<BusRouteCourseVo> busRouteCourseListIncludeEdNode = busRouteCourseService.getBusRouteCourseByBusRouteIdAndTimeAfter(stBusRouteCourse.getId());
+            List<BusRouteCourseVo> busRouteCourseListIncludeEdNode = busRouteCourseService.getBusRouteCourseByBusRouteIdAndTimeAfter(stBusRouteCourse);
+            String routeName = stBusRouteCourse.getBusRoute().getBusRouteName();
             for (BusRouteCourseVo edBusRouteCourse : busRouteCourseListIncludeEdNode) {
                 // edBusRouteCourse의 BusStation과 Node를 가져온다.
                 BusStationVo curDestBusStation = edBusRouteCourse.getBusStation();
-                NodeVo edNode = nodeService.findByBusStationId(curDestBusStation.getBusStationId(), jobName);
+                NodeVo edNode = nodeService.findByBusStationId(curDestBusStation.getId(), jobName);
                 LocalTime curDestBusTime = edBusRouteCourse.getFirstBusTime();
                 // targetBusRouteCourse
-                long diff = Duration.between(stBusRouteCourse.getFirstBusTime(), curDestBusTime).toNanos();
+                long diff = Duration.between(stBusRouteCourse.getFirstBusTime(), curDestBusTime).toMinutes();
                 // targetNode와 DestNode로 이루어진 Link를 찾아온다.
-
-                Optional<LinkVo> link = linkService.findByStNodeAndEdNodeAndLinkType(stNode, edNode, "B", jobName);
+                String linkName = String.format("%s-%s:%s", stNode.getNodeName(), edNode.getNodeName(), routeName);
+                Optional<LinkVo> link = linkService.findByStNodeAndEdNodeAndLinkTypeAndLinkName(stNode, edNode, "B", linkName, jobName);
 
                 LinkRegisterRequestDto req = LinkRegisterRequestDto.builder()
                         .stNode(stNode)
-                        .linkName(String.format("%s-%s", stNode.getNodeName(), edNode.getNodeName()))
+                        .linkName(linkName)
                         .edNode(edNode)
                         .linkType("B")
                         .cost(Long.MAX_VALUE)
@@ -95,9 +97,11 @@ public class B0014DoMainLogicItemProcessor implements ItemProcessor<B0014DoMainL
                     req.setId(link.get().getId());
                     req.setCost(link.get().getCost());
                 }
+                log.info("stNode : {}, edNode : {}, oldcost : {}, newcost : {}", stNode.getNodeName(), edNode.getNodeName(), req.getCost(), diff);
                 // diff값이 기존 Link의 cost보다 작으면 Link의 cost를 diff값으로 변경한다. 그리고 Link를 저장한다.
                 if (req.getCost() > diff) {
                     req.setCost(diff);
+                    req.setLinkName(linkName);
                     linkRegisterReqDtoList.add(req);
                 }
 
