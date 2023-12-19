@@ -8,6 +8,7 @@ import com.thewayhome.ptis.core.repository.IdSequenceRepository;
 import com.thewayhome.ptis.core.util.BusRouteCourseEntityVoConverter;
 import com.thewayhome.ptis.core.vo.BusRouteCourseVo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BusRouteCourseService {
     private final IdSequenceRepository idSequenceRepository;
@@ -67,11 +69,11 @@ public class BusRouteCourseService {
     };
 
     // 해당 BusRouteCourse의 fisrtBusTime 이후이면서 BusRoute가 동일한 BusRouteCourse를 가져온다.
-    public List<BusRouteCourseVo> getBusRouteCourseByBusRouteIdAndTimeAfter(String busRouteCoruseId) {
-        BusRouteCourse busRouteCourse = busRouteCourseRepository.findById(busRouteCoruseId).orElseThrow(() -> new RuntimeException("BusRouteCourse not found"));
-
-        return busRouteCourseRepository.findByBusRouteIdAndFirstBusTimeAfter(busRouteCourse.getBusRoute().getBusRouteId(), busRouteCourse.getFirstBusTime())
-        .stream().map(busRouteCourseEntityDtoConverter::toVo).toList();
+    public List<BusRouteCourseVo> getBusRouteCourseByBusRouteIdAndTimeAfter(BusRouteCourseVo busRouteCourse) {
+        List<BusRouteCourseVo> routeCourseVoList = busRouteCourseRepository.findByBusRouteIdAndFirstBusTimeAfter(busRouteCourse.getBusRoute().getId(), busRouteCourse.getFirstBusTime())
+                .stream().map(busRouteCourseEntityDtoConverter::toVo).toList();
+        log.info("routeCourseVoList size: {}", routeCourseVoList.size());
+        return routeCourseVoList;
 
     }
 
