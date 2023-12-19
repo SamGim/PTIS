@@ -39,6 +39,11 @@ public class LinkEntityVoConverter implements IEntityVoConverter<Link, LinkVo> {
                 );
 
         if (vo.getCost() != null) entity.setCost(vo.getCost());
+        if (vo.getLinkName() != null) entity.setLinkName(vo.getLinkName());
+        if (vo.getLinkType() != null) entity.setLinkType(vo.getLinkType());
+        if (vo.getStNode() != null) entity.setStNode(startStation);
+        if (vo.getEdNode() != null) entity.setEdNode(endStation);
+
 
         entity.setUpdatedAt(LocalDateTime.now());
         entity.setUpdatedBy(operatorId);
