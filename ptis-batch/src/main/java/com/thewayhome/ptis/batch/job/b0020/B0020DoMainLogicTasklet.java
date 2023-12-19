@@ -147,14 +147,14 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
 
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
-                log.info("i = {}, k = {}", i, k);
+//                log.info("i = {}, k = {}", i, k);
                 if (i == k) continue;
                 for (int j = 0; j < size; j++){
                     if (calcCostTable[i][j] > calcCostTable[i][k] + calcCostTable[k][j]){
                         calcCostTable[i][j] = calcCostTable[i][k] + calcCostTable[k][j];
                         calcPrevTable[i][j] = k;
                         prevLinkIdTable[i][j] = prevLinkIdTable[i][k];
-//                        log.info("calcCostTable[{}][{}] = {}", i, j, calcCostTable[i][j]);
+                        log.info("i = {}, j = {}, k = {}", i, j, k);
                     }
                 }
             }
