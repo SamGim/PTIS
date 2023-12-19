@@ -1,12 +1,15 @@
 package com.thewayhome.ptis.batch.controller;
 
 import com.thewayhome.ptis.batch.util.BatchJobManipulateUtil;
+import com.thewayhome.ptis.core.dto.request.SPLResponseDto;
+import com.thewayhome.ptis.core.service.ShortestPathLinkService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -15,6 +18,8 @@ public class BatchController {
 
     @Autowired
     private BatchJobManipulateUtil batchJobManipulateUtil;
+    @Autowired
+    private ShortestPathLinkService shortestPathLinkService;
 
     @Autowired
     private JobLauncher jobLauncher;
@@ -52,5 +57,13 @@ public class BatchController {
     ) {
         batchJobManipulateUtil.stopJobExecution(jobName);
         return "Batch job " + jobName +" has been stopped.";
+    }
+
+    @GetMapping("/spl")
+    public List<SPLResponseDto> getSPL(
+            @RequestParam String srcNodeName,
+            @RequestParam String destNodeName
+    ) {
+        return shortestPathLinkService.getSplByStNodeAndEdNodeByRecursive(srcNodeName, destNodeName);
     }
 }
