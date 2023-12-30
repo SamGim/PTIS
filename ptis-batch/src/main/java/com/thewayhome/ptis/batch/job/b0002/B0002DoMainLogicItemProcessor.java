@@ -80,9 +80,6 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
 
         String dataFromAPI = APIConnector.getDataFromAPI(endpoint, path, queryParams).block();
 
-        if (dataFromAPI == null) {
-            return null;
-        }
 
         BusStationProcessRegisterRequestDto stationProcessReq = BusStationProcessRegisterRequestDto.builder()
                 .id(id)
@@ -92,26 +89,31 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
                 .build();
 
         List<BusRouteRegisterRequestDto> routeReqList = new ArrayList<>();
-        try {
-            JsonNode rootNode = objectMapper.readTree(dataFromAPI);
 
-            for (JsonNode item : rootNode) {
-                String busRouteAbrv = item.get("busRouteAbrv").asText();
-                String busRouteId = item.get("busRouteId").asText();
-                String busRouteNm = item.get("busRouteNm").asText();
+        if (dataFromAPI == null) {
+            stationProcessReq.setBusRouteGatheringStatusCode("99");
+        } else {
+            try {
+                JsonNode rootNode = objectMapper.readTree(dataFromAPI);
 
-                BusRouteRegisterRequestDto req = BusRouteRegisterRequestDto.builder()
-                        .busRouteId(busRouteId)
-                        .busRouteName(busRouteNm)
-                        .busRouteNo(busRouteAbrv)
-                        .busRouteSubNo(busRouteNm.substring(busRouteAbrv.length()))
-                        .operatorId(jobName)
-                        .build();
+                for (JsonNode item : rootNode) {
+                    String busRouteAbrv = item.get("busRouteAbrv").asText();
+                    String busRouteId = item.get("busRouteId").asText();
+                    String busRouteNm = item.get("busRouteNm").asText();
 
-                routeReqList.add(req);
+                    BusRouteRegisterRequestDto req = BusRouteRegisterRequestDto.builder()
+                            .busRouteId(busRouteId)
+                            .busRouteName(busRouteNm)
+                            .busRouteNo(busRouteAbrv)
+                            .busRouteSubNo(busRouteNm.substring(busRouteAbrv.length()))
+                            .operatorId(jobName)
+                            .build();
+
+                    routeReqList.add(req);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return B0002DoMainLogicItemOutput.builder()
