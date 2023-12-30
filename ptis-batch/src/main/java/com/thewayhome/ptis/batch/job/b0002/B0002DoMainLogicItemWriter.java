@@ -53,15 +53,26 @@ public class B0002DoMainLogicItemWriter implements ItemWriter<B0002DoMainLogicIt
 
     @Override
     public void write(Chunk<? extends B0002DoMainLogicItemOutput> chunk) throws Exception {
+        log.info("### B0002 Writer :: write 시작 ###");
+
+        log.info("### B0002 Writer :: B0002 Step 종료상태 검증 시작 ###");
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
+            log.warn("### B0002 Writer :: B0002 Step 종료상태 확인 ###");
             throw new JobInterruptedException("Job is stopping");
         }
+        log.info("### B0002 Writer :: B0002 Step 종료상태 검증 완료 ###");
 
+        log.info("### B0002 Writer :: Chunk 처리 시작 ###");
         for (B0002DoMainLogicItemOutput item : chunk.getItems()) {
+            log.info("### B0002 Writer :: 버스정류장 상태코드 변경 시작 ###");
             busStationService.updateBusRoutesGatheringStatusCode(item.getBusStationProcessRegisterRequestDto());
+            log.info("### B0002 Writer :: 버스정류장 상태코드 변경 완료 ###");
 
+            log.info("### B0002 Writer :: 버스노선 목록 등록 처리 시작 ###");
             for (BusRouteRegisterRequestDto req : item.getBusRouteRegisterRequestDtoList()) {
+                log.info("### B0002 Writer :: 버스노선 개별 등록 시작 ###");
                 BusRouteVo busRouteVo = busRouteService.registerBusRoute(req);
+                log.info("### B0002 Writer :: 버스노선 개별 등록 완료 ###");
 
                 BusRouteProcessRegisterRequestDto prcReq = BusRouteProcessRegisterRequestDto.builder()
                                         .id(busRouteVo.getId())
@@ -70,8 +81,14 @@ public class B0002DoMainLogicItemWriter implements ItemWriter<B0002DoMainLogicIt
                                         .operatorId(this.jobName)
                                 .build();
 
+                log.info("### B0002 Writer :: 버스노선 개별 처리결과 등록 시작 ###");
                 busRouteService.registerBusRouteProcess(prcReq);
+                log.info("### B0002 Writer :: 버스노선 개별 처리결과 등록 완료 ###");
             }
+            log.info("### B0002 Writer :: 버스노선 목록 등록 처리 완료 ###");
         }
+
+
+        log.info("### B0002 Writer :: write 완료 ###");
     }
 }

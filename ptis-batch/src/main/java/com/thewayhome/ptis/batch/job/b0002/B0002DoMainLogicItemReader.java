@@ -46,12 +46,20 @@ public class B0002DoMainLogicItemReader implements ItemReader<B0002DoMainLogicIt
     }
 
     public void initialize() throws IndexOutOfBoundsException, JobInterruptedException {
+        log.info("### B0002 Reader :: Initialize 시작 ###");
+
+        log.info("### B0002 Reader :: B0002 Step 종료상태 검증 시작 ###");
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
+            log.warn("### B0002 Reader :: B0002 Step 종료상태 확인 ###");
             throw new JobInterruptedException("Job is stopping");
         }
+        log.info("### B0002 Reader :: B0002 Step 종료상태 검증 완료 ###");
 
+        log.info("### B0002 Reader :: 버스노선을 수집하지 않은 버스정류장 목록 발췌 시작 ###");
         List<BusStation> busStationList = busStationService.findBusStationByBusRouteGatheringStatusCode("00", false);
+        log.info("### B0002 Reader :: 버스노선을 수집하지 않은 버스정류장 목록 발췌 완료 ###");
 
+        log.info("### B0002 Reader :: 버스정류장 목록을 B0002DoMainLogicItemInput 객체로 변환 시작 ###");
         for (BusStation busStation : busStationList) {
             this.items.add(B0002DoMainLogicItemInput
                     .builder()
@@ -60,13 +68,24 @@ public class B0002DoMainLogicItemReader implements ItemReader<B0002DoMainLogicIt
                     .build()
             );
         }
+        log.info("### B0002 Reader :: 버스정류장 목록을 B0002DoMainLogicItemInput 객체로 변환 완료 ###");
+
+        log.info("### B0002 Reader :: Initialize 종료 ###");
     }
 
     @Override
     public B0002DoMainLogicItemInput read() {
+        log.info("### B0002 Reader :: read 시작 ###");
+
+        log.info("### B0002 Reader :: B0002 Step 종료상태 검증 ###");
         if (stepExecution.isTerminateOnly()) {
+            log.warn("### B0002 Step 종료상태 확인 ###");
             return null;
         }
+        log.info("### B0002 Reader :: B0002 Job 종료상태 검증 완료 ###");
+
+        log.info("### B0002 Reader :: read 종료 ###");
+
         return items.isEmpty() ? null : items.remove(0);
     }
 }
