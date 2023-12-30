@@ -2,6 +2,7 @@ package com.thewayhome.ptis.batch.controller;
 
 import com.thewayhome.ptis.batch.util.BatchJobManipulateUtil;
 import com.thewayhome.ptis.core.dto.request.SPLResponseDto;
+import com.thewayhome.ptis.core.dto.response.ComplexTimeDto;
 import com.thewayhome.ptis.core.service.ShortestPathLinkService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -9,6 +10,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,5 +67,14 @@ public class BatchController {
             @RequestParam String destNodeName
     ) {
         return shortestPathLinkService.getSplByStNodeAndEdNodeByRecursive(srcNodeName, destNodeName);
+    }
+
+    @GetMapping("/complexIds")
+    public Map<String, List<ComplexTimeDto>> getComplexIdsAndDurationByCompanyId(
+            @RequestParam String companyId
+    ){
+        Map<String, List<ComplexTimeDto>> result = new HashMap<>();
+        result.put("items", shortestPathLinkService.getComplexIdsAndDuration(companyId));
+        return result;
     }
 }
