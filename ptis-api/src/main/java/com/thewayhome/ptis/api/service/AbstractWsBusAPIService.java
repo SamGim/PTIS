@@ -15,6 +15,7 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
@@ -58,13 +59,17 @@ public abstract class AbstractWsBusAPIService {
                         .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS))
                 );
 
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+
         WebClient client = WebClient.builder()
-                .baseUrl(endpoint)
+                .uriBuilderFactory(factory)
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
 
-        WebClient.RequestBodySpec bodySpec = client.method(HttpMethod.GET)
-                .uri(uriBuilder -> uriBuilder
+        WebClient.RequestBodySpec bodySpec = client
+                .method(HttpMethod.GET)
+                .uri(this.endpoint, uriBuilder -> uriBuilder
                         .path(this.path)
                         .queryParams(queryParams)
                         .build()
