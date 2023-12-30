@@ -3,6 +3,7 @@ package com.thewayhome.ptis.batch.job.b0007;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thewayhome.ptis.core.dto.request.NodeRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusStationService;
+import com.thewayhome.ptis.core.service.NodeService;
 import com.thewayhome.ptis.core.service.ParamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
@@ -25,18 +26,21 @@ public class B0007DoMainLogicItemProcessor implements ItemProcessor<B0007DoMainL
     private ParamService paramService;
     private ObjectMapper objectMapper;
     private BusStationService busStationService;
+    private NodeService nodeService;
     public B0007DoMainLogicItemProcessor(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             ParamService paramService,
             ObjectMapper objectMapper,
-            BusStationService busStationService
+            BusStationService busStationService,
+            NodeService nodeService
     ) {
         this.jobName = jobName;
         this.jobDate = jobDate;
         this.paramService = paramService;
         this.objectMapper = objectMapper;
         this.busStationService = busStationService;
+        this.nodeService = nodeService;
     }
 
     @BeforeStep
@@ -55,6 +59,11 @@ public class B0007DoMainLogicItemProcessor implements ItemProcessor<B0007DoMainL
                 .nodePosY(input.getBusStationPosY())
                 .operatorId(jobName)
                 .build();
+
+        boolean exist = nodeService.isExist(input.getBusStationId());
+        if (exist) {
+            return null;
+        }
 
         return B0007DoMainLogicItemOutput.builder()
                 .busStationId(input.getBusStationId())

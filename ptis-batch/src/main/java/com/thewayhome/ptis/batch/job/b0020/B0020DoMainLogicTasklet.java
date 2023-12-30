@@ -23,7 +23,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -79,62 +81,97 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         log.info("[" + taskletName + "] jobDate = " + jobDate);
 
 
-
+        // nodeList의 인덱스를 calcCostTable의 인덱스로 그대로 쓴다.
+        // 즉 calcCostTable[i]는 nodeList[i]의 노드이다.
+        // 인덱스를 통해 id를 가져오는것은 가능하지만 id를 통해서 인덱스를 찾는게 불가능하기에 map을 하나 만들어준다.
         List<NodeVo> nodeList = nodeService.findAll(jobName);
         int size = nodeList.size();
 
-        String[] calcIdTable = new String[size];
-        Long[][] calcCostTable = new Long[size][size];
 
-        for (int i = 0; i < size; i++) {
-            calcIdTable[i] = nodeList.get(i).getId();
+        Long[][] calcCostTable = new Long[size][size];
+        Integer[][] calcPrevTable = new Integer[size][size];
+        String[][] prevLinkIdTable = new String[size][size];
+
+//        for (int i = 0; i < size; i++) {
+//            calcIdTable[i] = nodeList.get(i).getId();
+//        }
+
+        log.info("시작");
+
+        // 노드간의 최단 링크만을 전부 가져온다.
+        // l.stNode.id, l.edNode.id, l.cost, l.linkId
+        List<Object[]> allMinCost = linkRepository.findAllMinCostLinks();
+
+//        // stNode = i, edNode = j 일때, i->j링크를 매번 allMinCost에서 찾는다.
+//        for (int i = 0; i < size; i++) {
+//            for (int j = 0; j < size; j++) {
+////                Optional<Long> minCost = linkService.findMinCostLinkByStNodeAndEdNode(calcIdTable[i], calcIdTable[j]);
+//
+////                if (minCost.isPresent()){
+////                    calcCostTable[i][j] = minCost.get();
+////                } else {
+////                    throw new IllegalStateException("Link가 존재하지 않습니다.");
+////                }
+//                for (Object[] minCost : allMinCost) {
+//                    if (calcIdTable[i].equals(minCost[0]) && calcIdTable[j].equals(minCost[1])) {
+//                        calcCostTable[i][j] = (Long) minCost[2];
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+
+        // nodeId를 이용해서 인덱스를 찾는 map을 만든다.
+        Map<String, Integer> idIndexMap = new HashMap<>();
+        for (int i = 0; i < nodeList.size(); i++) {
+            idIndexMap.put(nodeList.get(i).getId(), i);
+        }
+        log.info("MinCostLink 개수 : {}, node * node : {}", allMinCost.size(), size * size);
+        // 반대로 allMinCost를 하나씩 가져와서 i->j 테이블에 넣는다. (최단시간테이블 초기화)
+        // 단 allMinCost의 개수가 노드 * 노드 개수와 같아야만 한다. 매우 중요
+        for (Object[] minCost : allMinCost){
+            Integer curStNodeIndex = idIndexMap.get((String) minCost[0]);
+            Integer curEdNodeIndex = idIndexMap.get((String) minCost[1]);
+            calcCostTable[curStNodeIndex][curEdNodeIndex] = (Long) minCost[2];
+            prevLinkIdTable[curStNodeIndex][curEdNodeIndex] = (String) minCost[3];
         }
 
-        log.info("calcTable: {} 1", calcCostTable.length);
-
-        List<Object[]> allMinCost = linkRepository.findAllMinCost();
-
+        // prevTable 초기화
         for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-//                Optional<Long> minCost = linkService.findMinCostLinkByStNodeAndEdNode(calcIdTable[i], calcIdTable[j]);
-
-//                if (minCost.isPresent()){
-//                    calcCostTable[i][j] = minCost.get();
-//                } else {
-//                    throw new IllegalStateException("Link가 존재하지 않습니다.");
-//                }
-                for (Object[] minCost : allMinCost) {
-                    if (calcIdTable[i].equals(minCost[0]) && calcIdTable[j].equals(minCost[1])) {
-                        calcCostTable[i][j] = (Long) minCost[2];
-                        break;
-                    }
-                }
+            for (int j = 0; j < size; j++){
+                calcPrevTable[i][j] = i;
             }
         }
 
-        log.info("calcTable: {} 2", calcCostTable.length);
+        log.info("테이블 초기화 끝, 플로이드 시작");
 
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
+//                log.info("i = {}, k = {}", i, k);
+                if (i == k) continue;
                 for (int j = 0; j < size; j++){
                     if (calcCostTable[i][j] > calcCostTable[i][k] + calcCostTable[k][j]){
                         calcCostTable[i][j] = calcCostTable[i][k] + calcCostTable[k][j];
-                        log.info("calcCostTable[{}][{}] = {}", i, j, calcCostTable[i][j]);
+                        calcPrevTable[i][j] = k;
+                        prevLinkIdTable[i][j] = prevLinkIdTable[i][k];
+                        log.info("i = {}, j = {}, k = {}", i, j, k);
                     }
                 }
             }
         }
 
-        log.info("calcTable: {} 3", calcCostTable.length);
+        log.info("플로이드 끝, 테이블 -> SPL 변환 시작");
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
+                int prevNodeIndex = calcPrevTable[i][j];
                 ShortestPathLink req = ShortestPathLink.builder()
                         .id(null)
-                        .stNodeId(calcIdTable[i])
-                        .edNodeId(calcIdTable[j])
+                        .stNodeId(nodeList.get(i).getId())
+                        .edNodeId(nodeList.get(j).getId())
                         .cost(calcCostTable[i][j])
-                        .prevNodeId(calcIdTable[i])
+                        .prevNodeId(nodeList.get(prevNodeIndex).getId())
+                        .linkId(prevLinkIdTable[i][j])
                         .createdAt(LocalDateTime.now())
                         .createdBy(this.getJobName())
                         .updatedAt(LocalDateTime.now())
@@ -145,7 +182,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
             }
         }
 
-        log.info("calcTable: {} 4", calcCostTable.length);
+        log.info("플로이드 끝");
 
         return RepeatStatus.FINISHED;
     }
