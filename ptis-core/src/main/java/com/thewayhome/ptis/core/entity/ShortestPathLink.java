@@ -32,8 +32,14 @@ public class ShortestPathLink extends BaseEntity {
     @Column(name = "st_node_id")
     private String stNodeId;
 
+    @Column(name = "st_node_type")
+    private String stNodeType;
+
     @Column(name = "ed_node_id")
     private String edNodeId;
+
+    @Column(name = "ed_node_type")
+    private String edNodeType;
 
     @Column(name="cost", nullable = false)
     private Long cost;
