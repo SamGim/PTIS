@@ -50,7 +50,7 @@ public class B0002DoMainLogicItemReader implements ItemReader<B0002DoMainLogicIt
             throw new JobInterruptedException("Job is stopping");
         }
 
-        List<BusStation> busStationList = busStationService.findBusStationByBusRouteGatheringStatusCode("01", true);
+        List<BusStation> busStationList = busStationService.findBusStationByBusRouteGatheringStatusCode("00", false);
 
         for (BusStation busStation : busStationList) {
             this.items.add(B0002DoMainLogicItemInput
