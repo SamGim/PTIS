@@ -56,6 +56,7 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
     }
     @Override
     public B0002DoMainLogicItemOutput process(B0002DoMainLogicItemInput input) throws Exception {
+        log.info("### B0002 Processor :: process 시작 ###");
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
             throw new JobInterruptedException("Job is stopping");
         }
@@ -78,8 +79,9 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("arsId", arsId);
 
+        log.info("### B0002 Processor :: API 호출 시작 ###");
         String dataFromAPI = APIConnector.getDataFromAPI(endpoint, path, queryParams).block();
-
+        log.info("### B0002 Processor :: API 호출 종료 ###");
 
         BusStationProcessRegisterRequestDto stationProcessReq = BusStationProcessRegisterRequestDto.builder()
                 .id(id)
@@ -91,11 +93,18 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
         List<BusRouteRegisterRequestDto> routeReqList = new ArrayList<>();
 
         if (dataFromAPI == null) {
+            log.info("### B0002 Processor :: API 호출 결과 - 실패 ###");
+
+            log.info("### B0002 Processor :: 버스노선 수집상태코드 99 변경 처리 ###");
             stationProcessReq.setBusRouteGatheringStatusCode("99");
         } else {
+            log.info("### B0002 Processor :: API 호출 결과 - 성공 ###");
+
+            log.info("### B0002 Processor :: 버스노선 수집상태코드 01 변경 처리 ###");
             try {
                 JsonNode rootNode = objectMapper.readTree(dataFromAPI);
 
+                log.info("### B0002 Processor :: 버스노선 내 버스정류장 목록 JSON 파싱 시작 ###");
                 for (JsonNode item : rootNode) {
                     String busRouteAbrv = item.get("busRouteAbrv").asText();
                     String busRouteId = item.get("busRouteId").asText();
@@ -111,10 +120,13 @@ public class B0002DoMainLogicItemProcessor implements ItemProcessor<B0002DoMainL
 
                     routeReqList.add(req);
                 }
+                log.info("### B0002 Processor :: 버스노선 내 버스정류장 목록 JSON 파싱 종료 ###");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        log.info("### B0002 Processor :: process 종료 ###");
 
         return B0002DoMainLogicItemOutput.builder()
                 .id(id)
