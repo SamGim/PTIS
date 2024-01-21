@@ -78,6 +78,7 @@ public class B0014DoMainLogicItemReader implements ItemStreamReader<B0014DoMainL
         if (this.idx >= this.items.size()) {
             return null;
         }
+        log.info("배치 14번 진행중 {}%", (double)(this.idx) / (double)(this.items.size()) * 100);
         return B0014DoMainLogicItemInput.builder()
                 .targetNode(this.items.get(this.idx++))
                 .build();
