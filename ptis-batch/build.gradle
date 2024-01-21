@@ -1,9 +1,3 @@
-plugins {
-    id 'java'
-    id 'war'
-    id 'com.bmuschko.docker-spring-boot-application' version '9.3.4'
-}
-
 dependencies {
     implementation 'com.jcraft:jsch:0.1.55'
 }
@@ -14,6 +8,6 @@ docker {
         images = ['ptis/ptis-batch:latest']
         ports = [8080]
         mainClassName = 'com.thewayhome.ptis.batch.PtisBatchApplication'
-        jvmArgs = ['-Dspring.profiles.active=prod', '-Xmx2048m']
+        jvmArgs = ['-Dspring.profiles.active=prod', '-Xmx8192m']
     }
 }
