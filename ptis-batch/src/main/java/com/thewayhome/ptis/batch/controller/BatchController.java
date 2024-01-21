@@ -62,11 +62,13 @@ public class BatchController {
     }
 
     @GetMapping("/spl")
-    public List<SPLResponseDto> getSPL(
+    public Map<String, List<SPLResponseDto>> getSPL(
             @RequestParam String srcNodeName,
             @RequestParam String destNodeName
     ) {
-        return shortestPathLinkService.getSplByStNodeAndEdNodeByRecursive(srcNodeName, destNodeName);
+        Map<String, List<SPLResponseDto>> result = new HashMap<>();
+        result.put("items", shortestPathLinkService.getSplByStNodeAndEdNodeByRecursive(srcNodeName, destNodeName));
+        return result;
     }
 
     @GetMapping("/complexIds")

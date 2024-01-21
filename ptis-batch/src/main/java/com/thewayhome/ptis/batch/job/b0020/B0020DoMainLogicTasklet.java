@@ -97,6 +97,8 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
 //        }
 
         log.info("시작");
+        // 시간 측정을 위한 변수 선언
+        long startTime = System.currentTimeMillis();
 
         // 노드간의 최단 링크만을 전부 가져온다.
         // l.stNode.id, l.edNode.id, l.cost, l.linkId
@@ -140,10 +142,14 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++){
                 calcPrevTable[i][j] = i;
+                log.info("테이블 초기화중 {}%", (double)(i * size + j) / (double)(size * size) * 100);
             }
         }
 
         log.info("테이블 초기화 끝, 플로이드 시작");
+        long checkPoint1 = System.currentTimeMillis();
+        log.info("플로이드 초기화 시간 : {}", checkPoint1 - startTime);
+
 
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
@@ -154,13 +160,15 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                         calcCostTable[i][j] = calcCostTable[i][k] + calcCostTable[k][j];
                         calcPrevTable[i][j] = k;
                         prevLinkIdTable[i][j] = prevLinkIdTable[i][k];
-                        log.info("i = {}, j = {}, k = {}", i, j, k);
+                        log.info("플로이드-워셜 진행중 {}%", (double)(i * size + j) / (double)(size * size) * 100);
                     }
                 }
             }
         }
 
         log.info("플로이드 끝, 테이블 -> SPL 변환 시작");
+        long checkPoint2 = System.currentTimeMillis();
+        log.info("플로이드 시간 : {}", checkPoint2 - checkPoint1);
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -181,10 +189,13 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                         .build();
 
                 shortestPathLinkRepository.save(req);
+                log.info("디비에 SPL 저장중 : {}%", (double)(i * size + j) / (double)(size * size) * 100);
             }
         }
 
         log.info("플로이드 끝");
+        long checkPoint3 = System.currentTimeMillis();
+        log.info("SPL 저장 시간 : {}", checkPoint3 - checkPoint2);
 
         return RepeatStatus.FINISHED;
     }
