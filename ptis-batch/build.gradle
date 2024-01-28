@@ -14,6 +14,6 @@ docker {
         images = ['ptis/ptis-batch:latest']
         ports = [8080]
         mainClassName = 'com.thewayhome.ptis.batch.PtisBatchApplication'
-        jvmArgs = ['-Dspring.profiles.active=prod', '-Xmx8192m']
+        jvmArgs = ['-Dspring.profiles.active=prod', '-Xmx65536m']
     }
 }
