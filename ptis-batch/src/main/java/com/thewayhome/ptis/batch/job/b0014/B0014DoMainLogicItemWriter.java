@@ -1,6 +1,5 @@
 package com.thewayhome.ptis.batch.job.b0014;
 
-import com.thewayhome.ptis.batch.job.b0010.B0010DoMainLogicItemOutput;
 import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.LinkService;
@@ -60,7 +59,8 @@ public class B0014DoMainLogicItemWriter implements ItemWriter<B0014DoMainLogicIt
             for (LinkRegisterRequestDto linkRegisterReqDto : linkRegisterReqDtoList) {
                 linkService.registerLink(linkRegisterReqDto);
             }
-
         }
+
+        chunk.clear();
     }
 }
