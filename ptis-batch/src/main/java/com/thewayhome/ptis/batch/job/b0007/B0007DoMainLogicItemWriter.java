@@ -57,6 +57,11 @@ public class B0007DoMainLogicItemWriter implements ItemWriter<B0007DoMainLogicIt
             String busStationId = item.getBusStationId();
 
             nodeService.createNodeFromBusStation(nodeRegisterReqDto, busStationId);
+
+            nodeRegisterReqDto = null;
+            busStationId = null;
         }
+
+        chunk.clear();
     }
 }
