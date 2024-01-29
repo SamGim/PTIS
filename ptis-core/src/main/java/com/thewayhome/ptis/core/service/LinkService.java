@@ -62,6 +62,7 @@ public class LinkService {
 
 
 
+    @Transactional
     public Optional<LinkVo> findByStNodeAndEdNodeAndLinkTypeAndLinkName(NodeVo srcNode, NodeVo destNode, String linkType, String linkName, String jobname) {
         Node srcNodeE = nodeEntityVoConverter.toEntity(srcNode, jobname);
         Node destNodeE = nodeEntityVoConverter.toEntity(destNode, jobname);
