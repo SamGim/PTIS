@@ -4,6 +4,7 @@ import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.LinkService;
 import com.thewayhome.ptis.core.service.MessageService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -46,6 +47,7 @@ public class B0010DoMainLogicItemWriter implements ItemWriter<B0010DoMainLogicIt
         this.stepExecution = stepExecution;
     }
 
+    @Transactional
     @Override
     public void write(Chunk<? extends B0010DoMainLogicItemOutput> chunk) throws Exception {
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
