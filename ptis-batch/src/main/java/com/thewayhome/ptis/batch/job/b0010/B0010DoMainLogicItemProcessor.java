@@ -5,6 +5,7 @@ import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.service.LinkService;
 import com.thewayhome.ptis.core.vo.LinkVo;
 import com.thewayhome.ptis.core.vo.NodeVo;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -48,6 +49,7 @@ public class B0010DoMainLogicItemProcessor implements ItemProcessor<B0010DoMainL
     public void saveStepExecution(StepExecution stepExecution) {
         this.stepExecution = stepExecution;
     }
+    @Transactional
     @Override
     public B0010DoMainLogicItemOutput process(B0010DoMainLogicItemInput input) throws Exception {
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {

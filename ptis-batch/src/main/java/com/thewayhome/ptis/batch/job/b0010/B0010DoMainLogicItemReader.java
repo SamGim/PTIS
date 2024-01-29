@@ -2,6 +2,7 @@ package com.thewayhome.ptis.batch.job.b0010;
 
 import com.thewayhome.ptis.core.service.NodeService;
 import com.thewayhome.ptis.core.vo.NodeVo;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -53,6 +54,7 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
         this.stepExecution = stepExecution;
     }
 
+    @Transactional
     public void initialize() throws IndexOutOfBoundsException, JobInterruptedException {
         if (this.stepExecution != null && this.stepExecution.isTerminateOnly()) {
             throw new JobInterruptedException("Job is stopping");
@@ -62,6 +64,7 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
         this.maxIndex = items.size() - 1;
     }
 
+    @Transactional
     @Override
     public B0010DoMainLogicItemInput read() {
         if (stepExecution.isTerminateOnly()) {
