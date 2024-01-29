@@ -1,11 +1,15 @@
 package com.thewayhome.ptis.core.service;
 
 import com.thewayhome.ptis.core.dto.request.NodeRegisterRequestDto;
-import com.thewayhome.ptis.core.entity.*;
+import com.thewayhome.ptis.core.entity.Company;
+import com.thewayhome.ptis.core.entity.IdSequence;
+import com.thewayhome.ptis.core.entity.Node;
+import com.thewayhome.ptis.core.entity.RealComplex;
 import com.thewayhome.ptis.core.repository.*;
 import com.thewayhome.ptis.core.util.NodeEntityVoConverter;
 import com.thewayhome.ptis.core.vo.BusStationProcessVo;
 import com.thewayhome.ptis.core.vo.NodeVo;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -150,6 +154,7 @@ public class NodeService {
         return node;
     }
 
+    @Transactional
     public List<NodeVo> findAll(String jobName) {
         return nodeRepository.findAll().stream()
                 .map(nodeEntityVoConverter::toVo)
