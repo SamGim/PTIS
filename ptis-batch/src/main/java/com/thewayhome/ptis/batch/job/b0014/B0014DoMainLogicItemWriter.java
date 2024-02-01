@@ -4,6 +4,8 @@ import com.thewayhome.ptis.core.dto.request.LinkRegisterRequestDto;
 import com.thewayhome.ptis.core.service.BusRouteService;
 import com.thewayhome.ptis.core.service.LinkService;
 import com.thewayhome.ptis.core.service.MessageService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
@@ -28,19 +30,23 @@ public class B0014DoMainLogicItemWriter implements ItemWriter<B0014DoMainLogicIt
     private final MessageService messageService;
     private final BusRouteService busRouteService;
     private final LinkService linkService;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     public B0014DoMainLogicItemWriter(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             MessageService messageService,
             BusRouteService busRouteService,
-            LinkService linkService
+            LinkService linkService,
+            EntityManager entityManager
     ) {
         this.jobName = jobName;
         this.jobDate = jobDate;
         this.messageService = messageService;
         this.busRouteService = busRouteService;
         this.linkService = linkService;
+        this.entityManager = entityManager;
     }
 
     @BeforeStep
@@ -62,5 +68,6 @@ public class B0014DoMainLogicItemWriter implements ItemWriter<B0014DoMainLogicIt
         }
 
         chunk.clear();
+        entityManager.clear();
     }
 }
