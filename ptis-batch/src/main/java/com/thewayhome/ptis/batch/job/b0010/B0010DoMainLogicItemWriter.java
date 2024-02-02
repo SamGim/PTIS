@@ -65,7 +65,8 @@ public class B0010DoMainLogicItemWriter implements ItemWriter<B0010DoMainLogicIt
             linkService.registerLink(linkRegisterRequestDto);
         }
 
-        chunk.clear();
+        entityManager.flush();
         entityManager.clear();
+        chunk.clear();
     }
 }

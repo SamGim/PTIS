@@ -67,7 +67,8 @@ public class B0014DoMainLogicItemWriter implements ItemWriter<B0014DoMainLogicIt
             }
         }
 
-        chunk.clear();
+        entityManager.flush();
         entityManager.clear();
+        chunk.clear();
     }
 }
