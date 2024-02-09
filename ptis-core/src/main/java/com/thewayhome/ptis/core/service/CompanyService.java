@@ -1,5 +1,6 @@
 package com.thewayhome.ptis.core.service;
 
+import com.thewayhome.ptis.core.dto.request.CompanyRequestDto;
 import com.thewayhome.ptis.core.entity.Company;
 import com.thewayhome.ptis.core.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +20,16 @@ public class CompanyService {
 
     public List<Company> getAllCompany() {
         return companyRepository.findAll();
+    }
+
+    public void saveCompany(CompanyRequestDto companyRequestDto) {
+        Company company = Company.builder()
+                .companyId(companyRequestDto.getId())
+                .companyName(companyRequestDto.getCompanyName())
+                .address(companyRequestDto.getAddress())
+                .latitude(companyRequestDto.getLatitude())
+                .longitude(companyRequestDto.getLongitude())
+                .build();
+        companyRepository.save(company);
     }
 }
