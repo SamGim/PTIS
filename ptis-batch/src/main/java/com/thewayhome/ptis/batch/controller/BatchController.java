@@ -1,13 +1,18 @@
 package com.thewayhome.ptis.batch.controller;
 
 import com.thewayhome.ptis.batch.util.BatchJobManipulateUtil;
+import com.thewayhome.ptis.core.dto.request.CompanyRequestDto;
+import com.thewayhome.ptis.core.dto.request.RealComplexRequestDto;
 import com.thewayhome.ptis.core.dto.request.SPLResponseDto;
 import com.thewayhome.ptis.core.dto.response.ComplexTimeDto;
+import com.thewayhome.ptis.core.service.CompanyService;
+import com.thewayhome.ptis.core.service.RealComplexService;
 import com.thewayhome.ptis.core.service.ShortestPathLinkService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,6 +27,10 @@ public class BatchController {
     private BatchJobManipulateUtil batchJobManipulateUtil;
     @Autowired
     private ShortestPathLinkService shortestPathLinkService;
+    @Autowired
+    private RealComplexService realComplexService;
+    @Autowired
+    private CompanyService companyService;
 
     @Autowired
     private JobLauncher jobLauncher;
@@ -78,5 +87,21 @@ public class BatchController {
         Map<String, List<ComplexTimeDto>> result = new HashMap<>();
         result.put("items", shortestPathLinkService.getComplexIdsAndDuration(companyId));
         return result;
+    }
+
+    @PostMapping("/complex/upload")
+    public ResponseEntity<?> uploadComplexData(
+            @RequestBody RealComplexRequestDto realComplexRequestDto
+            ) {
+        realComplexService.saveRealComplex(realComplexRequestDto);
+        return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping("/company/upload")
+    public ResponseEntity<?> uploadCompanyData(
+            @RequestBody CompanyRequestDto companyRequestDto
+    ) {
+        companyService.saveCompany(companyRequestDto);
+        return ResponseEntity.ok("ok");
     }
 }
