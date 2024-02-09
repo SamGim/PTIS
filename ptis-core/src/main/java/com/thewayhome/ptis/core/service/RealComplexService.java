@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.core.service;
 
-import com.thewayhome.ptis.core.entity.RealComplex;
+import com.thewayhome.ptis.core.entity.complex.RealComplex;
 import com.thewayhome.ptis.core.repository.RealComplexRepository;
 import org.springframework.stereotype.Service;
 
