@@ -76,7 +76,9 @@ public class BatchController {
             @RequestParam String destNodeName
     ) {
         Map<String, List<SPLResponseDto>> result = new HashMap<>();
-        result.put("items", shortestPathLinkService.getSplByStNodeAndEdNodeByRecursive(srcNodeName, destNodeName));
+        // param으로 받은 String을 Long 타입으로 변환
+
+        result.put("items", shortestPathLinkService.getSplFull(Long.parseLong(srcNodeName), Long.parseLong(destNodeName)));
         return result;
     }
 
