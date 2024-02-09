@@ -3,14 +3,9 @@ package com.thewayhome.ptis.core.service;
 import com.thewayhome.ptis.core.dto.request.SPLResponseDto;
 import com.thewayhome.ptis.core.dto.request.ShortestPathLinkRegisterDto;
 import com.thewayhome.ptis.core.dto.response.ComplexTimeDto;
-import com.thewayhome.ptis.core.entity.IdSequence;
-import com.thewayhome.ptis.core.entity.Link;
-import com.thewayhome.ptis.core.entity.Node;
-import com.thewayhome.ptis.core.entity.ShortestPathLink;
-import com.thewayhome.ptis.core.repository.IdSequenceRepository;
-import com.thewayhome.ptis.core.repository.LinkRepository;
-import com.thewayhome.ptis.core.repository.NodeRepository;
-import com.thewayhome.ptis.core.repository.ShortestPathLinkRepository;
+import com.thewayhome.ptis.core.entity.*;
+import com.thewayhome.ptis.core.entity.complex.RealComplex;
+import com.thewayhome.ptis.core.repository.*;
 import com.thewayhome.ptis.core.util.NodeEntityVoConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +17,48 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 public class ShortestPathLinkService {
+    private final RealComplexRepository realComplexRepository;
     private final ShortestPathLinkRepository shortestPathLinkRepository;
     private final NodeRepository nodeRepository;
     private final NodeEntityVoConverter nodeEntityVoConverter;
     private final LinkRepository linkRepository;
     private final IdSequenceRepository idSequenceRepository;
+    private final CompanyRepository companyRepository;
 
+
+    public ArrayList<SPLResponseDto> getSplFull(Long stNodeId, Long edNodeId){
+        RealComplex RealComplex = realComplexRepository.findById(edNodeId).orElseThrow(() -> new IllegalArgumentException("No RealComplex found " + stNodeId));
+        Company company = companyRepository.findById(stNodeId).orElseThrow(() -> new IllegalArgumentException("No Company found " + stNodeId));
+        String stBusStationId = company.getNearestNodeId();
+        Node stNode = nodeRepository.findById(stBusStationId).orElseThrow(() -> new IllegalArgumentException("No Node found " + stBusStationId));
+        String edBusStationId = RealComplex.getNearestNodeId();
+        Node edNode = nodeRepository.findById(edBusStationId).orElseThrow(() -> new IllegalArgumentException("No Node found " + edBusStationId));
+        ArrayList<SPLResponseDto> res = new ArrayList<>();
+        res.add(
+                SPLResponseDto.builder()
+                        .stNodeName(company.getCompanyName())
+                        .stNodeSrcType("cp")
+                        .edNodeName(stNode.getNodeName())
+                        .edNodeSrcType(stNode.getNodeSrcType())
+                        .cost(company.getNearestNodeTime().toString())
+                        .linkName(String.format("%s-%s", company.getCompanyName(), stNode.getNodeName()))
+                        .linkType("W")
+                        .build()
+        );
+        res.addAll(getSplByStNodeAndEdNodeByRecursive(stBusStationId, edBusStationId));
+        res.add(
+                SPLResponseDto.builder()
+                        .stNodeName(edNode.getNodeName())
+                        .stNodeSrcType(edNode.getNodeSrcType())
+                        .edNodeName(RealComplex.getName())
+                        .edNodeSrcType("cx")
+                        .cost(RealComplex.getNearestNodeTime().toString())
+                        .linkName(String.format("%s-%s", edNode.getNodeName(), RealComplex.getName()))
+                        .linkType("W")
+                        .build()
+        );
+        return res;
+    }
     public ArrayList<SPLResponseDto> getSplByStNodeAndEdNodeByRecursive(String stNodeId, String edNodeId){
         ArrayList<SPLResponseDto> res = new ArrayList<>();
         ShortestPathLink curSpl = shortestPathLinkRepository.findByStNodeIdAndEdNodeId(stNodeId, edNodeId).orElseThrow(() -> new IllegalArgumentException("No SPL found " + stNodeId + " -> " + edNodeId));
