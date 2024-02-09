@@ -1,8 +1,8 @@
 package com.thewayhome.ptis.batch.job.b0000;
 
 import com.thewayhome.ptis.batch.job.base.AbstractDoMainLogicTasklet;
-import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.core.dto.request.ParamsRegisterRequestDto;
+import com.thewayhome.ptis.core.service.ParamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -87,6 +87,15 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                 .operatorId(jobName)
                 .build();
         paramService.registerParam(B0006InputParams);
+
+        ParamsRegisterRequestDto B0021InputParams = ParamsRegisterRequestDto.builder()
+                .groupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME)
+                .paramName("B0021")
+                .value(this.apiEndpoint+"|/ws-pure/getStationsByPosList")
+                .useYn("Y")
+                .operatorId(jobName)
+                .build();
+        paramService.registerParam(B0021InputParams);
 
         return RepeatStatus.FINISHED;
     }
