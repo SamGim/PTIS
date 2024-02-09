@@ -29,19 +29,32 @@ public class B0010DoMainLogicItemReader implements ItemStreamReader<B0010DoMainL
     private final List<NodeVo> items;
     private final NodeService nodeService;
 
-    private int srcIndex = 0;
-    private int destIndex = 0;
+    private int srcIndex;
+    private int destIndex;
     private int maxIndex = 0;
 
     public B0010DoMainLogicItemReader(
             @Value("#{jobParameters[jobName]}") String jobName,
             @Value("#{jobParameters[jobDate]}") String jobDate,
             @Value("#{jobParameters[isColdStart]}") String isColdStart,
+            @Value("#{jobParameters[startIdx]}") String stIdx,
+            @Value("#{jobParameters[endIdx]}") String edIdx,
             NodeService nodeService
     ) throws IOException, IndexOutOfBoundsException, JobInterruptedException {
         this.jobName = jobName;
         this.jobDate = jobDate;
         this.isColdStart = isColdStart;
+
+        if ("Y".equals(isColdStart))
+        {
+            this.srcIndex  = 0;
+            this.destIndex = 0;
+        }
+        else
+        {
+            this.srcIndex  = Integer.parseInt(stIdx);
+            this.destIndex = Integer.parseInt(edIdx);
+        }
 
         this.nodeService = nodeService;
 
