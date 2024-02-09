@@ -48,7 +48,7 @@ public class B0008DoMainLogicItemWriter implements ItemWriter<B0008DoMainLogicIt
             NodeRegisterRequestDto nodeRegisterReqDto = item.getNodeRegisterReqDto();
             Long complexId = item.getComplexId();
 
-            nodeService.createNodeFromComplex(nodeRegisterReqDto, complexId);
+//            nodeService.createNodeFromComplex(nodeRegisterReqDto, complexId);
         }
     }
 }

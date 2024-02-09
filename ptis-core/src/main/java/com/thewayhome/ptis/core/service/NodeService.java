@@ -4,7 +4,7 @@ import com.thewayhome.ptis.core.dto.request.NodeRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.Company;
 import com.thewayhome.ptis.core.entity.IdSequence;
 import com.thewayhome.ptis.core.entity.Node;
-import com.thewayhome.ptis.core.entity.RealComplex;
+import com.thewayhome.ptis.core.entity.complex.RealComplex;
 import com.thewayhome.ptis.core.repository.*;
 import com.thewayhome.ptis.core.util.NodeEntityVoConverter;
 import com.thewayhome.ptis.core.vo.BusStationProcessVo;
@@ -123,36 +123,36 @@ public class NodeService {
         return node;
     }
 
-    public Node createNodeFromComplex(NodeRegisterRequestDto req, Long complexId) {
-        RealComplex complex = realComplexRepository.findById(complexId).orElse(null);
-        if (complex != null) {
-            req.setId(String.format("%012d", complex.getId()));
-        }
-        else {
-            IdSequence idSequence = idSequenceRepository.findById("NODE")
-                    .orElse(new IdSequence("NODE", 0L));
-            Long id = idSequence.getNextId() + 1;
-
-            idSequence.setNextId(id);
-            idSequenceRepository.save(idSequence);
-
-            req.setId(String.format("%012d", id));
-        }
-
-        // Node
-        NodeVo nodeVo = NodeVo.builder()
-                .id(req.getId())
-                .nodeName(req.getNodeName())
-                .nodeSrcType("cx")
-                .nodeSrcId(req.getId())
-                .nodePosX(req.getNodePosX())
-                .nodePosY(req.getNodePosY())
-                .build();
-
-        Node node = this.saveNode(nodeVo, req.getOperatorId());
-
-        return node;
-    }
+//    public Node createNodeFromComplex(NodeRegisterRequestDto req, Long complexId) {
+//        RealComplex complex = realComplexRepository.findById(complexId).orElse(null);
+//        if (complex != null) {
+//            req.setId(String.format("%012d", complex.getId()));
+//        }
+//        else {
+//            IdSequence idSequence = idSequenceRepository.findById("NODE")
+//                    .orElse(new IdSequence("NODE", 0L));
+//            Long id = idSequence.getNextId() + 1;
+//
+//            idSequence.setNextId(id);
+//            idSequenceRepository.save(idSequence);
+//
+//            req.setId(String.format("%012d", id));
+//        }
+//
+//        // Node
+//        NodeVo nodeVo = NodeVo.builder()
+//                .id(req.getId())
+//                .nodeName(req.getNodeName())
+//                .nodeSrcType("cx")
+//                .nodeSrcId(req.getId())
+//                .nodePosX(req.getNodePosX())
+//                .nodePosY(req.getNodePosY())
+//                .build();
+//
+//        Node node = this.saveNode(nodeVo, req.getOperatorId());
+//
+//        return node;
+//    }
 
     @Transactional
     public List<NodeVo> findAll(String jobName) {

@@ -24,5 +24,9 @@ public class Company extends BaseEntity {
     private Double latitude;
     @Column(name = "longitude")
     private Double longitude;
+    @Column(name = "nearest_node_id", nullable = true)
+    private String nearestNodeId;
+    @Column(name = "nearest_node_time", nullable = true)
+    private Long nearestNodeTime;
 }
 

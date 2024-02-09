@@ -1,6 +1,6 @@
 package com.thewayhome.ptis.batch.job.b0008;
 
-import com.thewayhome.ptis.core.entity.RealComplex;
+import com.thewayhome.ptis.core.entity.complex.RealComplex;
 import com.thewayhome.ptis.core.service.RealComplexService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
@@ -52,18 +52,18 @@ public class B0008DoMainLogicItemReader implements ItemStreamReader<B0008DoMainL
             throw new JobInterruptedException("Job is stopping");
         }
 
-        List<RealComplex> complexList = complexService.findAll();
-
-        for (RealComplex complex : complexList) {
-            this.items.add(B0008DoMainLogicItemInput
-                    .builder()
-                    .complexId(complex.getId())
-                    .complexName(complex.getName())
-                    .complexPosX(complex.getLongitude())
-                    .complexPosY(complex.getLatitude())
-                    .build()
-            );
-        }
+//        List<RealComplex> complexList = complexService.findAll();
+//
+//        for (RealComplex complex : complexList) {
+//            this.items.add(B0008DoMainLogicItemInput
+//                    .builder()
+//                    .complexId(complex.getId())
+//                    .complexName(complex.getName())
+//                    .complexPosX(complex.getLongitude())
+//                    .complexPosY(complex.getLatitude())
+//                    .build()
+//            );
+//        }
     }
 
     @Override
