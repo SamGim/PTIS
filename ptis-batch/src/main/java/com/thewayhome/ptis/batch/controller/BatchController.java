@@ -82,12 +82,23 @@ public class BatchController {
         return result;
     }
 
-    @GetMapping("/complexIds")
+    @GetMapping("/{complexId}")
     public Map<String, List<ComplexTimeDto>> getComplexIdsAndDurationByCompanyId(
-            @RequestParam String companyId
+            @PathVariable String companyId
     ){
         Map<String, List<ComplexTimeDto>> result = new HashMap<>();
         result.put("items", shortestPathLinkService.getComplexIdsAndDuration(companyId));
+        return result;
+    }
+
+    @GetMapping("/{complexId}")
+    public Map<String, List<ComplexTimeDto>> getComplexIdsAndDurationByLocation(
+            @PathVariable String companyId,
+            @RequestBody List<String> complexIds
+
+    ){
+        Map<String, List<ComplexTimeDto>> result = new HashMap<>();
+        result.put("items", shortestPathLinkService.getComplexIdsAndDurationsByLocation(companyId, complexIds));
         return result;
     }
 

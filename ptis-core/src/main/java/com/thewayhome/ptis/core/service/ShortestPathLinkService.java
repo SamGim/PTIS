@@ -102,20 +102,75 @@ public class ShortestPathLinkService {
         return res;
     }
 
+    // 모든 매물을 불러와서 직장과의 시간을 계산해 시간 기준으로 정렬한다.
+    // 10개만 complexTimeDto로 변환하여 반환한다.
+    // 만약 nearestTime이 없는 매물은? -> 예외처리
     public List<ComplexTimeDto> getComplexIdsAndDuration(String companyId) {
-        // companyid를 stNode로 가지면서 edNodeSrc가 "cx"인 SPL을 time기준 상위 10개만 가져온다.
-        List<ShortestPathLink> splList = shortestPathLinkRepository.findByStNodeIdAndEdNodeTypeOrderByCostAsc(companyId, "bs");
-        log.info("companyId: {}", companyId);
-        log.info("splList: {}", splList);
-        List<ComplexTimeDto> res = new ArrayList<>();
-        for(ShortestPathLink spl : splList) {
-            res.add(
+        // 전체 매물 가져오기
+        List<RealComplex> realComplexes = realComplexRepository.findAll();
+        List<ComplexTimeDto> complexTimeDtos = new ArrayList<>();
+
+        Company company = companyRepository.findById(Long.parseLong(companyId)).orElseThrow(() -> new IllegalArgumentException("No Company found " + companyId));
+        if (company.getNearestNodeTime() == null) {
+            throw new IllegalArgumentException("No nearestNodeTime found " + companyId);
+        }
+        String stNodeId = company.getNearestNodeId();
+        Long duration1 = company.getNearestNodeTime();
+        log.info("직장부터 가장 가까운 정류장까지 소요시간 : {}", duration1);
+
+        for (RealComplex realComplex : realComplexes) {
+            // 직장부터 가장 가까운 노드까지의 거리 계산
+            // 해당 노드부터 매물과 가장 가까운 노드까지의 거리 계산
+            // 매물부터 가장 가까운 노드까지의 거리 계산
+            Long complexId = realComplex.getId();
+            String edNodeId = realComplex.getNearestNodeId();
+            log.info("매물부터 가장 가까운 정류장까지 소요시간 : {}", realComplex.getNearestNodeTime());
+            if (realComplex.getNearestNodeTime() == null) {
+                throw new IllegalArgumentException("No nearestNodeTime found " + complexId);
+            }
+            Long duration3 = realComplex.getNearestNodeTime();
+            ShortestPathLink spl = shortestPathLinkRepository.findByStNodeIdAndEdNodeId(stNodeId, edNodeId).orElseThrow(() -> new IllegalArgumentException("No SPL found " + stNodeId + " -> " + edNodeId));
+            Long duration2 = spl.getCost();
+            log.info("직장부터 매물까지 소요시간 : {}", duration2);
+            complexTimeDtos.add(
                     ComplexTimeDto.builder()
-                            .id(Long.valueOf(spl.getEdNodeId()))
-                            .duration(Math.toIntExact(spl.getCost()))
+                            .id(complexId)
+                            .duration(Math.toIntExact(duration1 + duration2 + duration3))
                             .build()
             );
         }
-        return res;
+        complexTimeDtos.sort(Comparator.comparing(ComplexTimeDto::getDuration));
+        return complexTimeDtos.subList(0, 10);
+    }
+
+    public List<ComplexTimeDto> getComplexIdsAndDurationsByLocation(String companyId, List<String> complexIds){
+        Company company = companyRepository.findById(Long.parseLong(companyId)).orElseThrow(() -> new IllegalArgumentException("No Company found " + companyId));
+        if (company.getNearestNodeTime() == null) {
+            throw new IllegalArgumentException("No nearestNodeTime found " + companyId);
+        }
+        String stNodeId = company.getNearestNodeId();
+        Long duration1 = company.getNearestNodeTime();
+        log.info("직장부터 가장 가까운 정류장까지 소요시간 : {}", duration1);
+        List<ComplexTimeDto> complexTimeDtos = new ArrayList<>();
+        for (String complexId : complexIds) {
+            RealComplex realComplex = realComplexRepository.findById(Long.parseLong(complexId)).orElseThrow(() -> new IllegalArgumentException("No RealComplex found " + complexId));
+            if (realComplex.getNearestNodeTime() == null) {
+                throw new IllegalArgumentException("No nearestNodeTime found " + complexId);
+            }
+            String edNodeId = realComplex.getNearestNodeId();
+            log.info("매물부터 가장 가까운 정류장까지 소요시간 : {}", realComplex.getNearestNodeTime());
+            Long duration3 = realComplex.getNearestNodeTime();
+            ShortestPathLink spl = shortestPathLinkRepository.findByStNodeIdAndEdNodeId(stNodeId, edNodeId).orElseThrow(() -> new IllegalArgumentException("No SPL found " + stNodeId + " -> " + edNodeId));
+            Long duration2 = spl.getCost();
+            log.info("직장부터 매물까지 소요시간 : {}", duration2);
+            complexTimeDtos.add(
+                    ComplexTimeDto.builder()
+                            .id(Long.parseLong(complexId))
+                            .duration(Math.toIntExact(duration1 + duration2 + duration3))
+                            .build()
+            );
+        }
+        complexTimeDtos.sort(Comparator.comparing(ComplexTimeDto::getDuration));
+        return complexTimeDtos;
     }
 }

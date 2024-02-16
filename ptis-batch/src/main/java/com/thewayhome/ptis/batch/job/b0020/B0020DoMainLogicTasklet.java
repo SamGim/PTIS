@@ -104,24 +104,6 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         // l.stNode.id, l.edNode.id, l.cost, l.linkId
         List<Object[]> allMinCost = linkRepository.findAllMinCostLinks();
 
-//        // stNode = i, edNode = j 일때, i->j링크를 매번 allMinCost에서 찾는다.
-//        for (int i = 0; i < size; i++) {
-//            for (int j = 0; j < size; j++) {
-////                Optional<Long> minCost = linkService.findMinCostLinkByStNodeAndEdNode(calcIdTable[i], calcIdTable[j]);
-//
-////                if (minCost.isPresent()){
-////                    calcCostTable[i][j] = minCost.get();
-////                } else {
-////                    throw new IllegalStateException("Link가 존재하지 않습니다.");
-////                }
-//                for (Object[] minCost : allMinCost) {
-//                    if (calcIdTable[i].equals(minCost[0]) && calcIdTable[j].equals(minCost[1])) {
-//                        calcCostTable[i][j] = (Long) minCost[2];
-//                        break;
-//                    }
-//                }
-//            }
-//        }
 
         // nodeId를 이용해서 인덱스를 찾는 map을 만든다.
         Map<String, Integer> idIndexMap = new HashMap<>();
