@@ -1,6 +1,7 @@
 package com.thewayhome.ptis.batch.job.b0020;
 
 import com.thewayhome.ptis.batch.job.base.AbstractDoMainLogicTasklet;
+import com.thewayhome.ptis.core.entity.Link;
 import com.thewayhome.ptis.core.entity.ShortestPathLink;
 import com.thewayhome.ptis.core.repository.IdSequenceRepository;
 import com.thewayhome.ptis.core.repository.LinkRepository;
@@ -89,42 +90,64 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
 
 
         Long[][] calcCostTable = new Long[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                calcCostTable[i][j] = Long.MAX_VALUE;
+            }
+        }
         Integer[][] calcPrevTable = new Integer[size][size];
         String[][] prevLinkIdTable = new String[size][size];
-
-//        for (int i = 0; i < size; i++) {
-//            calcIdTable[i] = nodeList.get(i).getId();
-//        }
-
-        log.info("시작");
-        // 시간 측정을 위한 변수 선언
-        long startTime = System.currentTimeMillis();
-
-        // 노드간의 최단 링크만을 전부 가져온다.
-        // l.stNode.id, l.edNode.id, l.cost, l.linkId
-        List<Object[]> allMinCost = linkRepository.findAllMinCostLinks();
-
 
         // nodeId를 이용해서 인덱스를 찾는 map을 만든다.
         Map<String, Integer> idIndexMap = new HashMap<>();
         for (int i = 0; i < nodeList.size(); i++) {
             idIndexMap.put(nodeList.get(i).getId(), i);
         }
-        log.info("MinCostLink 개수 : {}, node * node : {}", allMinCost.size(), size * size);
-        // 반대로 allMinCost를 하나씩 가져와서 i->j 테이블에 넣는다. (최단시간테이블 초기화)
-        // 단 allMinCost의 개수가 노드 * 노드 개수와 같아야만 한다. 매우 중요
-        for (Object[] minCost : allMinCost){
-            Integer curStNodeIndex = idIndexMap.get((String) minCost[0]);
-            Integer curEdNodeIndex = idIndexMap.get((String) minCost[1]);
-            calcCostTable[curStNodeIndex][curEdNodeIndex] = (Long) minCost[2];
-            prevLinkIdTable[curStNodeIndex][curEdNodeIndex] = (String) minCost[3];
+
+
+        log.info("시작");
+        // 시간 측정을 위한 변수 선언
+        long startTime = System.currentTimeMillis();
+
+        // 노드간의 최단 링크만을 전부 가져온다.
+//        List<Object[]> allMinCost = linkRepository.findAllMinCostLinks();
+        // Linkid를 000000000000부터 끝까지 1000개씩 가져온다.
+        int stIndex = 0;
+        int edIndex = 999;
+        while (true) {
+            String curStId = String.format("%012d", stIndex);
+            String curEdId = String.format("%012d", edIndex);
+            List<Link> allMinCost = linkRepository.findByIdBetween(curStId, curEdId);
+            if (allMinCost.isEmpty()) break;
+            for (Link link : allMinCost){
+               Integer curStNodeIndex = idIndexMap.get(link.getStNode().getId());
+               Integer curEdNodeIndex = idIndexMap.get(link.getEdNode().getId());
+               if(calcCostTable[curStNodeIndex][curEdNodeIndex] > link.getCost()){
+                   calcCostTable[curStNodeIndex][curEdNodeIndex] = link.getCost();
+                   prevLinkIdTable[curStNodeIndex][curEdNodeIndex] = link.getId();
+               }
+            }
+            log.info("테이블 초기화중 처리한 링크 개수 : {}", edIndex + 1);
+            stIndex += 1000;
+            edIndex += 1000;
         }
+
+
+//        log.info("MinCostLink 개수 : {}, node * node : {}", allMinCost.size(), size * size);
+//        // 반대로 allMinCost를 하나씩 가져와서 i->j 테이블에 넣는다. (최단시간테이블 초기화)
+//        // 단 allMinCost의 개수가 노드 * 노드 개수와 같아야만 한다. 매우 중요
+//        for (Object[] minCost : allMinCost){
+//            Integer curStNodeIndex = idIndexMap.get((String) minCost[0]);
+//            Integer curEdNodeIndex = idIndexMap.get((String) minCost[1]);
+//            calcCostTable[curStNodeIndex][curEdNodeIndex] = (Long) minCost[2];
+//            prevLinkIdTable[curStNodeIndex][curEdNodeIndex] = (String) minCost[3];
+//        }
 
         // prevTable 초기화
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++){
                 calcPrevTable[i][j] = i;
-                log.info("테이블 초기화중 {}%", (double)(i * size + j) / (double)(size * size) * 100);
+//                log.info("테이블 초기화중 {}%", (double)(i * size + j) / (double)(size * size) * 100);
             }
         }
 
