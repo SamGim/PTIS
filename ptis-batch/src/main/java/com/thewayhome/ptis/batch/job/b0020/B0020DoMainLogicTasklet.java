@@ -10,6 +10,8 @@ import com.thewayhome.ptis.core.repository.ShortestPathLinkRepository;
 import com.thewayhome.ptis.core.service.LinkService;
 import com.thewayhome.ptis.core.service.NodeService;
 import com.thewayhome.ptis.core.vo.NodeVo;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobExecutionException;
 import org.springframework.batch.core.JobInterruptedException;
@@ -41,6 +43,9 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
     private final NodeRepository nodeRepository;
     private final IdSequenceRepository idSequenceRepository;
     private final ShortestPathLinkRepository shortestPathLinkRepository;
+    @PersistenceContext
+    private final EntityManager entityManager;
+
 
     public B0020DoMainLogicTasklet(
             @Value("#{jobParameters[jobName]}") String jobName,
@@ -51,7 +56,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
             NodeRepository nodeRepository,
             IdSequenceRepository idSequenceRepository,
             ShortestPathLinkRepository shortestPathLinkRepository,
-            LinkRepository linkRepository
+            LinkRepository linkRepository, EntityManager entityManager
     ) {
         super(jobName, jobDate);
         this.nodeService = nodeService;
@@ -61,6 +66,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         this.idSequenceRepository = idSequenceRepository;
         this.shortestPathLinkRepository = shortestPathLinkRepository;
         this.linkRepository = linkRepository;
+        this.entityManager = entityManager;
     }
 
     @BeforeStep
@@ -130,6 +136,8 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
             log.info("테이블 초기화중 처리한 링크 개수 : {}", edIndex + 1);
             stIndex += 1000;
             edIndex += 1000;
+            entityManager.flush();
+            entityManager.clear();
         }
 
 
