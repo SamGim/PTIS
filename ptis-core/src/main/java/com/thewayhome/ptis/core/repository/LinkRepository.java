@@ -17,6 +17,11 @@ public interface LinkRepository extends JpaRepository<Link, String> {
     Optional<Long> findMinCostLinkByStNodeAndEdNode(String stNodeId, String edNodeId);
     @Query("SELECT l.stNode.id, l.edNode.id, MIN(l.cost) FROM Link l GROUP BY l.stNode.id, l.edNode.id")
     List<Object[]> findAllMinCost();
+
+    // Id가 a보다 크거나 같고 b보다 작거나 같은 모든 링크 쿼리
+    @Query("SELECT l FROM Link l WHERE l.id >= :a AND l.id <= :b")
+    List<Link> findByIdBetween(String a, String b);
+
     List<Link> findByStNodeAndEdNode(Node stNode, Node edNode);
 
     @Query("SELECT l.stNode.id, l.edNode.id, l.cost, l.id FROM Link l " +
