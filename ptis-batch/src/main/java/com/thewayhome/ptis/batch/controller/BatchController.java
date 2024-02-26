@@ -82,7 +82,7 @@ public class BatchController {
         return result;
     }
 
-    @GetMapping("/{complexId}")
+    @GetMapping("/complex/company/{companyId}")
     public Map<String, List<ComplexTimeDto>> getComplexIdsAndDurationByCompanyId(
             @PathVariable String companyId
     ){
@@ -91,7 +91,7 @@ public class BatchController {
         return result;
     }
 
-    @GetMapping("/{complexId}")
+    @GetMapping("/complex/location/{companyId}")
     public Map<String, List<ComplexTimeDto>> getComplexIdsAndDurationByLocation(
             @PathVariable String companyId,
             @RequestBody List<String> complexIds
