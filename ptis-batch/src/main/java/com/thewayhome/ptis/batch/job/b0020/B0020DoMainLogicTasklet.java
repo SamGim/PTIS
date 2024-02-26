@@ -95,13 +95,13 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
         int size = nodeList.size();
 
 
-        Long[][] calcCostTable = new Long[size][size];
+        int[][] calcCostTable = new int[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                calcCostTable[i][j] = Long.MAX_VALUE;
+                calcCostTable[i][j] = Integer.MAX_VALUE;
             }
         }
-        Integer[][] calcPrevTable = new Integer[size][size];
+        int[][] calcPrevTable = new int[size][size];
         String[][] prevLinkIdTable = new String[size][size];
 
         // nodeId를 이용해서 인덱스를 찾는 map을 만든다.
@@ -129,7 +129,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                Integer curStNodeIndex = idIndexMap.get(link.getStNode().getId());
                Integer curEdNodeIndex = idIndexMap.get(link.getEdNode().getId());
                if(calcCostTable[curStNodeIndex][curEdNodeIndex] > link.getCost()){
-                   calcCostTable[curStNodeIndex][curEdNodeIndex] = link.getCost();
+                   calcCostTable[curStNodeIndex][curEdNodeIndex] = Math.toIntExact(link.getCost());
                    prevLinkIdTable[curStNodeIndex][curEdNodeIndex] = link.getId();
                }
             }
@@ -192,7 +192,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                         .stNodeType(nodeList.get(i).getNodeSrcType())
                         .edNodeId(nodeList.get(j).getId())
                         .edNodeType(nodeList.get(j).getNodeSrcType())
-                        .cost(calcCostTable[i][j])
+                        .cost((long) calcCostTable[i][j])
                         .prevNodeId(nodeList.get(prevNodeIndex).getId())
                         .linkId(prevLinkIdTable[i][j])
                         .createdAt(LocalDateTime.now())
@@ -204,6 +204,9 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                 shortestPathLinkRepository.save(req);
                 log.info("디비에 SPL 저장중 : {}%", (double)(i * size + j) / (double)(size * size) * 100);
             }
+
+            entityManager.flush();
+            entityManager.clear();
         }
 
         log.info("플로이드 끝");
