@@ -165,6 +165,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
 
 
         for (int k = 0; k < size; k++) {
+            log.info("플로이드 진행중 {}%", (double)k / (double)size * 100);
             for (int i = 0; i < size; i++) {
 //                log.info("i = {}, k = {}", i, k);
                 if (i == k) continue;
@@ -173,7 +174,7 @@ public class B0020DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                         calcCostTable[i][j] = calcCostTable[i][k] + calcCostTable[k][j];
                         calcPrevTable[i][j] = k;
                         prevLinkIdTable[i][j] = prevLinkIdTable[i][k];
-                        log.info("플로이드-워셜 진행중 {}%", (double)(i * size + j) / (double)(size * size) * 100);
+                        //log.info("플로이드-워셜 진행중 {}%", (double)(i * size + j) / (double)(size * size) * 100);
                     }
                 }
             }
