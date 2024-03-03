@@ -35,6 +35,15 @@ public class ParamService {
 
         return paramRepository.findById(id);
     }
+    public Optional<Param> getServiceInputParam(String jobName) {
+        // ID
+        ParamKey id = ParamKey.builder()
+                .groupName(SERVICE_INPUT_PARAM_GROUP_NAME)
+                .paramName(jobName)
+                .build();
+
+        return paramRepository.findById(id);
+    }
     public Param registerParam(ParamsRegisterRequestDto req) {
         // Message
         ParamVo paramVo = ParamVo.builder()

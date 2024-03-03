@@ -106,6 +106,7 @@ public class BatchController {
     public ResponseEntity<?> uploadComplexData(
             @RequestBody RealComplexRequestDto realComplexRequestDto
             ) {
+        log.info("### realComplexRequestDto : " + realComplexRequestDto);
         realComplexService.saveRealComplex(realComplexRequestDto);
         return ResponseEntity.ok("ok");
     }
@@ -114,6 +115,7 @@ public class BatchController {
     public ResponseEntity<?> uploadCompanyData(
             @RequestBody CompanyRequestDto companyRequestDto
     ) {
+        log.info("### companyRequestDto : " + companyRequestDto);
         companyService.saveCompany(companyRequestDto);
         return ResponseEntity.ok("ok");
     }

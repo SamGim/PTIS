@@ -2,14 +2,12 @@ package com.thewayhome.ptis.core.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.thewayhome.ptis.core.dto.response.BusStationQueryResponseDto;
 import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.util.APIConnector;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,7 +26,7 @@ public class BatchService {
     private final String SERVICE_NAME = "S0001";
 
     public BusStationQueryResponseDto queryNearestBusStationInfo(String lat, String lng, String radius){
-        Optional<Param> jobOptional = paramService.getBatchJobInputParam(SERVICE_NAME);
+        Optional<Param> jobOptional = paramService.getServiceInputParam(SERVICE_NAME);
 
         Param param = jobOptional.get();
         String[] paramList = param.getValue().split("\\|");
