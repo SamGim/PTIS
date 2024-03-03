@@ -1,16 +1,15 @@
-package com.thewayhome.ptis.batch.service;
+package com.thewayhome.ptis.core.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.batch.util.APIConnector;
+
 import com.thewayhome.ptis.core.dto.response.BusStationQueryResponseDto;
 import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.Param;
-import com.thewayhome.ptis.core.service.BusStationService;
-import com.thewayhome.ptis.core.service.ParamService;
+import com.thewayhome.ptis.core.util.APIConnector;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.launch.NoSuchJobException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,11 +27,8 @@ public class BatchService {
     private final ObjectMapper objectMapper;
     private final String SERVICE_NAME = "S0001";
 
-    public BusStationQueryResponseDto queryNearestBusStationInfo(String lat, String lng, String radius) throws NoSuchJobException {
+    public BusStationQueryResponseDto queryNearestBusStationInfo(String lat, String lng, String radius){
         Optional<Param> jobOptional = paramService.getBatchJobInputParam(SERVICE_NAME);
-        if (jobOptional.isEmpty()) {
-            throw new NoSuchJobException("No such Job Param exists. Service name: [" + SERVICE_NAME + "]");
-        }
 
         Param param = jobOptional.get();
         String[] paramList = param.getValue().split("\\|");

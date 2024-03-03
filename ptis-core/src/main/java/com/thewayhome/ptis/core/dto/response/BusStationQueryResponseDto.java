@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 public class BusStationQueryResponseDto extends BaseDto {
     private String arsId;
     private String dist;
+    private Integer duration;
     private String gpsX;
     private String gpsY;
     private String posX;
