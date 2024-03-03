@@ -2,14 +2,18 @@ package com.thewayhome.ptis.core.entity;
 
 import com.thewayhome.ptis.core.entity.base.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "company")
 public class Company extends BaseEntity {
     @Id

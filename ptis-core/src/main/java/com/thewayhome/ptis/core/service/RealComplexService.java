@@ -9,6 +9,7 @@ import com.thewayhome.ptis.core.repository.RealComplexRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,10 @@ public class RealComplexService {
                 .longitude(realComplexRequestDto.getLongitude())
                 .nearestNodeId(node.getId())
                 .nearestNodeTime(busStationQueryResponseDto.getDuration().longValue())
+                .createdAt(LocalDateTime.now())
+                .createdBy("S0001")
+                .updatedAt(LocalDateTime.now())
+                .updatedBy("S0001")
                 .build();
         realComplexRepository.save(realComplex);
     }

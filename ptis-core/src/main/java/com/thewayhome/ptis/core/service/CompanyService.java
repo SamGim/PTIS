@@ -9,6 +9,7 @@ import com.thewayhome.ptis.core.repository.NodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -38,6 +39,10 @@ public class CompanyService {
                 .longitude(companyRequestDto.getLongitude())
                 .nearestNodeId(node.getId())
                 .nearestNodeTime(busStationQueryResponseDto.getDuration().longValue())
+                .createdAt(LocalDateTime.now())
+                .createdBy("S0001")
+                .updatedAt(LocalDateTime.now())
+                .updatedBy("S0001")
                 .build();
         companyRepository.save(company);
     }

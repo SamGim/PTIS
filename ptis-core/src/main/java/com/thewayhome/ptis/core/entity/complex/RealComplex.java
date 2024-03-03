@@ -1,18 +1,22 @@
 package com.thewayhome.ptis.core.entity.complex;
 
 import com.thewayhome.ptis.core.entity.base.BaseEntity;
-import jakarta.persistence.*;
-import lombok.*;
-import org.locationtech.jts.geom.Point;
-
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "real_complex")
 public class RealComplex extends BaseEntity {
     @Id
