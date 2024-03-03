@@ -1,16 +1,13 @@
 package com.thewayhome.ptis.core.dto.request;
 
-import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
+@ToString
 public class CompanyRequestDto {
     private Long id;
     private String companyName;
