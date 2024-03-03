@@ -135,7 +135,7 @@ public class B0003DoMainLogicItemProcessor implements ItemProcessor<B0003DoMainL
 //
 //                stationReqList.add(req);
 
-                Optional<BusStation> byArsId = busStationService.findByArsId(busStationId);
+                Optional<BusStation> byArsId = busStationService.findByBusStationId(busStationId);
                 if (byArsId.isEmpty()) {
                     continue;
                 }

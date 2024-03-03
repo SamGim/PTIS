@@ -42,7 +42,7 @@ public class BusStationService {
         return busStationProcessRepository.findById(id);
     }
 
-    public Optional<BusStation> findByArsId(String arsId) {
+    public Optional<BusStation> findByBusStationId(String arsId) {
         return busStationRepository.findByBusStationId(arsId);
     }
     public List<BusStation> findBusStationByBusRouteGatheringStatusCode(String gatheringStatusCode, boolean notCondition) {
@@ -69,7 +69,7 @@ public class BusStationService {
     }
 
     public BusStationRegisterResponseDto registerBusStation(BusStationRegisterRequestDto req) {
-        Optional<BusStation> byArsId = this.findByArsId(req.getBusStationId());
+        Optional<BusStation> byArsId = this.findByBusStationId(req.getBusStationId());
 
         if (byArsId.isPresent()) {
             return BusStationRegisterResponseDto.builder()

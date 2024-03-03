@@ -52,9 +52,12 @@ public class BatchService {
 
             try {
                 JsonNode rootNode = objectMapper.readTree(dataFromAPI);
+                JsonNode msgHeaderNode = rootNode.get("msgHeader");
+                JsonNode msgBodyNode = rootNode.get("msgBody");
+                JsonNode itemList = msgBodyNode.get("itemList");
 
                 log.info("### S0001 :: 버스노선 내 버스정류장 목록 JSON 파싱 시작 ###");
-                for (JsonNode item : rootNode) {
+                for (JsonNode item : itemList) {
                     String arsId = item.get("arsId").asText();
                     String dist = item.get("dist").asText();
                     String gpsX = item.get("gpsX").asText();
@@ -65,7 +68,7 @@ public class BatchService {
                     String stationNm = item.get("stationNm").asText();
                     String stationTp = item.get("stationTp").asText();
 
-                    Optional<BusStation> byStationId = busStationService.findByArsId(stationId);
+                    Optional<BusStation> byStationId = busStationService.findByBusStationId(stationId);
 
                     if (byStationId.isEmpty()) {
                         log.info("### S0001 :: DB 내 해당 정류장 정보가 없습니다. ###");

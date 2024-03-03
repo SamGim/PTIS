@@ -133,7 +133,7 @@ public class B0021DoMainLogicItemProcessor implements ItemProcessor<B0021DoMainL
                         continue;
                     }
 
-                    Optional<BusStation> busStationOpt = this.busStationService.findByArsId(busStationArsId);
+                    Optional<BusStation> busStationOpt = this.busStationService.findByBusStationId(busStationArsId);
                     BusStation busStation = null;
 
                     if (busStationOpt.isEmpty()) {
