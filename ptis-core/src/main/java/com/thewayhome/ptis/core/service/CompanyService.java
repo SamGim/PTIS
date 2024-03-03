@@ -6,7 +6,6 @@ import com.thewayhome.ptis.core.entity.Company;
 import com.thewayhome.ptis.core.entity.Node;
 import com.thewayhome.ptis.core.repository.CompanyRepository;
 import com.thewayhome.ptis.core.repository.NodeRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ public class CompanyService {
 
     public void saveCompany(CompanyRequestDto companyRequestDto) {
         BusStationQueryResponseDto busStationQueryResponseDto = batchService.queryNearestBusStationInfo(companyRequestDto.getLatitude().toString(), companyRequestDto.getLongitude().toString(), "1000");
-        Node node = nodeRepository.findByNodeSrcId(busStationQueryResponseDto.getArsId()).orElseThrow(() -> new IllegalArgumentException("해당 정류장 정보가 존재하지 않습니다."));
+        Node node = nodeRepository.findByNodeSrcId(busStationQueryResponseDto.getBusStationId()).orElseThrow(() -> new IllegalArgumentException("해당 정류장 정보가 존재하지 않습니다."));
         Company company = Company.builder()
                 .companyId(companyRequestDto.getId())
                 .companyName(companyRequestDto.getCompanyName())

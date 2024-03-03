@@ -33,7 +33,7 @@ public class RealComplexService {
     public void saveRealComplex(RealComplexRequestDto realComplexRequestDto) {
 
         BusStationQueryResponseDto busStationQueryResponseDto = batchService.queryNearestBusStationInfo(realComplexRequestDto.getLatitude().toString(), realComplexRequestDto.getLongitude().toString(), "1000");
-        Node node = nodeRepository.findByNodeSrcId(busStationQueryResponseDto.getArsId()).orElseThrow(() -> new IllegalArgumentException("해당 정류장 정보가 존재하지 않습니다."));
+        Node node = nodeRepository.findByNodeSrcId(busStationQueryResponseDto.getBusStationId()).orElseThrow(() -> new IllegalArgumentException("해당 정류장 정보가 존재하지 않습니다."));
         RealComplex realComplex = RealComplex.builder()
                 .id(realComplexRequestDto.getId())
                 .name(realComplexRequestDto.getName())
