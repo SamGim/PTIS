@@ -88,14 +88,14 @@ public class B0000DoMainLogicTasklet extends AbstractDoMainLogicTasklet {
                 .build();
         paramService.registerParam(B0006InputParams);
 
-        ParamsRegisterRequestDto B0021InputParams = ParamsRegisterRequestDto.builder()
-                .groupName(ParamService.BATCH_JOB_INPUT_PARAM_GROUP_NAME)
-                .paramName("B0021")
+        ParamsRegisterRequestDto S0001InputParams = ParamsRegisterRequestDto.builder()
+                .groupName(ParamService.SERVICE_INPUT_PARAM_GROUP_NAME)
+                .paramName("S0001")
                 .value(this.apiEndpoint+"|/ws-pure/getStationsByPosList")
                 .useYn("Y")
                 .operatorId(jobName)
                 .build();
-        paramService.registerParam(B0021InputParams);
+        paramService.registerParam(S0001InputParams);
 
         return RepeatStatus.FINISHED;
     }
