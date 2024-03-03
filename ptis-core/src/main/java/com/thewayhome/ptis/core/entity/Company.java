@@ -1,7 +1,10 @@
 package com.thewayhome.ptis.core.entity;
 
 import com.thewayhome.ptis.core.entity.base.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +20,6 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "company")
 public class Company extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "company_id")
     private Long companyId;
     @Column(name = "company_name")
