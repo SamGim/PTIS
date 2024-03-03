@@ -2,7 +2,6 @@ package com.thewayhome.ptis.batch.job.b0003;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.core.dto.request.BusRouteAddCourseItemRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusRouteProcessRegisterRequestDto;
 import com.thewayhome.ptis.core.dto.request.BusStationRegisterRequestDto;
@@ -10,6 +9,7 @@ import com.thewayhome.ptis.core.entity.BusStation;
 import com.thewayhome.ptis.core.entity.Param;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.ParamService;
+import com.thewayhome.ptis.core.util.APIConnector;
 import com.thewayhome.ptis.core.vo.BusRouteVo;
 import com.thewayhome.ptis.core.vo.BusStationVo;
 import lombok.extern.slf4j.Slf4j;

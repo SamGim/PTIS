@@ -2,7 +2,6 @@ package com.thewayhome.ptis.batch.job.b0021;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thewayhome.ptis.batch.util.APIConnector;
 import com.thewayhome.ptis.batch.util.GeoUtils;
 import com.thewayhome.ptis.core.dto.request.NearbyBusStationOfRealComplexRegisterRequestDto;
 import com.thewayhome.ptis.core.entity.BusStation;
@@ -11,6 +10,7 @@ import com.thewayhome.ptis.core.entity.complex.RealComplex;
 import com.thewayhome.ptis.core.service.BusStationService;
 import com.thewayhome.ptis.core.service.ParamService;
 import com.thewayhome.ptis.core.service.RealComplexService;
+import com.thewayhome.ptis.core.util.APIConnector;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobInterruptedException;
 import org.springframework.batch.core.StepExecution;
